@@ -1,16 +1,44 @@
 {
-  "posts": [
+  "clients": [
     {
-      "id": 1,
-      "title": "hello"
+      "client_id": 1,
+      "client_name": "Merkelijkheid"
     }
   ],
-  "profile": {
-    "name": "typicode"
-  },
-  "dicks": [
+  "users": [
     {
-      "id": 1
+      "user_id": 1,
+      "user_name": "Daniel",
+      "working": false
+    },
+    {
+      "user_id": 2,
+      "user_name": "Jens",
+      "working": true
+    }
+  ],
+  "sessions": [
+    {
+      "session_id": 1,
+      "title": "Website",
+      "user_id": 2,
+      "category_id": 4,
+      "time_started": null,
+      "time_ended": null,
+      "time_elapsed": null
+    }
+  ],
+  "projects": [
+    {
+      "project_id": 1,
+      "client_id": 2,
+      "project_name": "merkelijkheid intern"
+    }
+  ],
+  "project_categories": [
+    {
+      "project_category": 3,
+      "category_name": "Administratie"
     }
   ]
 }
