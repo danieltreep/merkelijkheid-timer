@@ -7,5 +7,10 @@
   ],
   "profile": {
     "name": "typicode"
-  }
+  },
+  "dicks": [
+    {
+      "id": 1
+    }
+  ]
 }
