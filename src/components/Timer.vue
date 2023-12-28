@@ -13,7 +13,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useDataStore } from "@/stores/data";
 
@@ -23,7 +23,7 @@ defineProps({
 
 const emit = defineEmits(["onStopTimer"]);
 
-const { session } = storeToRefs(useDataStore());
+const { currentSession } = storeToRefs(useDataStore());
 
 const timerRunning = ref(false);
 
@@ -35,13 +35,13 @@ let timerInterval = null;
 
 function startTimer() {
   timerRunning.value = true;
-  session.value.created_at = new Date();
+  currentSession.value.created_at = new Date();
   timerInterval = setInterval(clockRunning, 1000);
 }
 
 function stopTimer() {
   timerRunning.value = false;
-  session.value.stopped_at = new Date();
+  currentSession.value.stopped_at = new Date();
   clearInterval(timerInterval);
   displaySeconds.value = prefixZero(0);
   displayHours.value = prefixZero(0);
@@ -52,10 +52,18 @@ function stopTimer() {
 
 function clockRunning() {
   const currentTime = new Date();
-  session.value.time_elapsed = new Date(currentTime - session.value.created_at);
-  displaySeconds.value = prefixZero(session.value.time_elapsed.getUTCSeconds());
-  displayHours.value = prefixZero(session.value.time_elapsed.getUTCHours());
-  displayMinutes.value = prefixZero(session.value.time_elapsed.getUTCMinutes());
+  currentSession.value.time_elapsed = new Date(
+    currentTime - currentSession.value.created_at
+  );
+  displaySeconds.value = prefixZero(
+    currentSession.value.time_elapsed.getUTCSeconds()
+  );
+  displayHours.value = prefixZero(
+    currentSession.value.time_elapsed.getUTCHours()
+  );
+  displayMinutes.value = prefixZero(
+    currentSession.value.time_elapsed.getUTCMinutes()
+  );
 }
 
 function prefixZero(n) {

@@ -4,16 +4,15 @@ import { defineStore } from "pinia";
 export const useDataStore = defineStore("data", () => {
   const data = ref();
 
-  const session = ref({
-    id: null,
+  const currentSession = ref({
     title: null,
     user_id: 2,
-    category_id: 2,
-    project_id: 4,
+    category_id: null,
+    project_id: null,
     created_at: null,
     stopped_at: null,
     time_elapsed: null,
   });
 
-  return { data, session };
+  return { data, currentSession };
 });
