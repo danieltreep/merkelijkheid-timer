@@ -5,7 +5,8 @@ export const useDataStore = defineStore("data", () => {
   const data = ref();
 
   const session = ref({
-    title: undefined,
+    id: null,
+    title: null,
     user_id: 2,
     category_id: 2,
     project_id: 4,

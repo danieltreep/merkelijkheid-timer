@@ -10,9 +10,6 @@
       Stop
     </button>
   </div>
-  <p>{{ session.created_at }}</p>
-  <p>{{ session.time_elapsed }}</p>
-  <p>{{ session.stopped_at }}</p>
 </template>
 
 <script setup>
@@ -20,13 +17,15 @@ import { ref, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useDataStore } from "@/stores/data";
 
+defineProps({
+  disabled: Boolean,
+});
+
+const emit = defineEmits(["onStopTimer"]);
+
 const { session } = storeToRefs(useDataStore());
 
 const timerRunning = ref(false);
-
-// const timeStarted = session.created_at;
-// const timeStopped = ref();
-// const timeElapsed = ref();
 
 const displaySeconds = ref(prefixZero(0));
 const displayMinutes = ref(prefixZero(0));
@@ -36,7 +35,6 @@ let timerInterval = null;
 
 function startTimer() {
   timerRunning.value = true;
-  // session.value.category_id = 3;
   session.value.created_at = new Date();
   timerInterval = setInterval(clockRunning, 1000);
 }
@@ -45,6 +43,11 @@ function stopTimer() {
   timerRunning.value = false;
   session.value.stopped_at = new Date();
   clearInterval(timerInterval);
+  displaySeconds.value = prefixZero(0);
+  displayHours.value = prefixZero(0);
+  displayMinutes.value = prefixZero(0);
+
+  emit("onStopTimer");
 }
 
 function clockRunning() {
