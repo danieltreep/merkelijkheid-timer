@@ -10,16 +10,23 @@
       Stop
     </button>
   </div>
+  <p>{{ session.created_at }}</p>
+  <p>{{ session.time_elapsed }}</p>
+  <p>{{ session.stopped_at }}</p>
 </template>
 
 <script setup>
 import { ref, computed } from "vue";
+import { storeToRefs } from "pinia";
+import { useDataStore } from "@/stores/data";
+
+const { session } = storeToRefs(useDataStore());
 
 const timerRunning = ref(false);
 
-const timeStarted = ref();
-const timeStopped = ref();
-const timeElapsed = ref();
+// const timeStarted = session.created_at;
+// const timeStopped = ref();
+// const timeElapsed = ref();
 
 const displaySeconds = ref(prefixZero(0));
 const displayMinutes = ref(prefixZero(0));
@@ -29,22 +36,23 @@ let timerInterval = null;
 
 function startTimer() {
   timerRunning.value = true;
-  timeStarted.value = new Date();
+  // session.value.category_id = 3;
+  session.value.created_at = new Date();
   timerInterval = setInterval(clockRunning, 1000);
 }
 
 function stopTimer() {
   timerRunning.value = false;
-  timeStopped.value = new Date();
+  session.value.stopped_at = new Date();
   clearInterval(timerInterval);
 }
 
 function clockRunning() {
   const currentTime = new Date();
-  timeElapsed.value = new Date(currentTime - timeStarted.value);
-  displaySeconds.value = prefixZero(timeElapsed.value.getUTCSeconds());
-  displayHours.value = prefixZero(timeElapsed.value.getUTCHours());
-  displayMinutes.value = prefixZero(timeElapsed.value.getUTCMinutes());
+  session.value.time_elapsed = new Date(currentTime - session.value.created_at);
+  displaySeconds.value = prefixZero(session.value.time_elapsed.getUTCSeconds());
+  displayHours.value = prefixZero(session.value.time_elapsed.getUTCHours());
+  displayMinutes.value = prefixZero(session.value.time_elapsed.getUTCMinutes());
 }
 
 function prefixZero(n) {
