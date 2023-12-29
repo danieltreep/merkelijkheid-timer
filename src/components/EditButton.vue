@@ -1,5 +1,5 @@
 <template>
-  <button class="btn btn-outline-dark" @click="handleEdit(sessionId)">
+  <button class="btn btn-outline-dark" @click="handleEdit(id)">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="16"
@@ -23,10 +23,10 @@
 import deleteFromDatabase from "@/composables/deleteFromDatabase";
 
 defineProps({
-  sessionId: Number,
+  id: Number,
 });
 
-function handleEdit(sessionId) {}
+function handleEdit(id) {}
 </script>
 
 <style scoped></style>
