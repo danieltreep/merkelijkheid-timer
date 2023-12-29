@@ -3,6 +3,14 @@
     {
       "id": 1,
       "client_name": "Merkelijkheid"
+    },
+    {
+      "id": 2,
+      "client_name": "Albeton"
+    },
+    {
+      "client_name": "nieuw",
+      "id": 3
     }
   ],
   "users": [
@@ -21,76 +29,46 @@
   ],
   "sessions": [
     {
-      "id": 2,
-      "title": "van bil gaan",
+      "title": "sdf",
       "user_id": 2,
-      "category_id": 2,
-      "project_id": 4,
-      "created_at": "2023-12-28T12:34:26.797Z",
-      "stopped_at": "2023-12-28T12:34:29.829Z",
-      "time_elapsed": "1970-01-01T00:00:03.008Z"
+      "category_id": 6,
+      "project_id": 2,
+      "created_at": "2023-12-29T10:05:34.589Z",
+      "stopped_at": "2023-12-29T10:07:06.760Z",
+      "time_elapsed": "1970-01-01T00:01:32.008Z",
+      "id": 11
     },
     {
-      "title": "ds",
+      "title": "Teamwork",
       "user_id": 2,
-      "project_id": null,
-      "created_at": "2023-12-28T12:43:24.483Z",
-      "stopped_at": "2023-12-28T12:43:28.603Z",
-      "time_elapsed": "1970-01-01T00:00:04.011Z",
-      "id": 3
-    },
-    {
-      "title": null,
-      "user_id": 2,
-      "category_id": null,
-      "project_id": null,
-      "created_at": "2023-12-28T14:20:46.041Z",
-      "stopped_at": "2023-12-28T14:20:47.937Z",
-      "time_elapsed": "1970-01-01T00:00:01.014Z",
-      "id": 4
-    },
-    {
-      "title": "ik werk hieraan",
-      "user_id": 2,
-      "created_at": "2023-12-28T14:21:11.548Z",
-      "stopped_at": "2023-12-28T14:21:14.596Z",
-      "time_elapsed": "1970-01-01T00:00:03.000Z",
-      "id": 5
-    },
-    {
-      "title": "dfd",
-      "user_id": 2,
-      "created_at": "2023-12-28T14:26:50.955Z",
-      "stopped_at": "2023-12-28T14:26:54.395Z",
-      "time_elapsed": "1970-01-01T00:00:03.011Z",
-      "id": 6
-    },
-    {
-      "title": null,
-      "user_id": 2,
-      "category_id": null,
-      "project_id": null,
-      "created_at": "2023-12-28T14:28:33.791Z",
-      "stopped_at": "2023-12-28T14:32:09.360Z",
-      "time_elapsed": "1970-01-01T00:03:35.009Z",
-      "id": 7
+      "category_id": 4,
+      "project_id": 1,
+      "created_at": "2023-12-29T10:52:49.446Z",
+      "stopped_at": "2023-12-29T10:54:14.807Z",
+      "time_elapsed": "1970-01-01T00:01:25.003Z",
+      "id": 12
     }
   ],
   "projects": [
     {
       "id": 1,
       "project_name": "merkelijkheid intern",
-      "client_id": 2
+      "client_id": 1
     },
     {
       "id": 2,
-      "project_name": "albertus intern",
-      "client_id": 1
+      "project_name": "albeton intern",
+      "client_id": 2
     },
     {
       "id": 3,
-      "project_name": "albertus extern",
-      "client_id": 1
+      "project_name": "albeton extern",
+      "client_id": 2
+    },
+    {
+      "project_name": "Deze man",
+      "client_id": 1,
+      "id": 4
     }
   ],
   "categories": [

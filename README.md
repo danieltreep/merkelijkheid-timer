@@ -3,6 +3,10 @@
 - npm install -g json-server
 - json-server --watch db.json
 
+# database indeling
+
+https://dbdiagram.io/d/Timer-Tools-658c11b089dea627999d8aea
+
 # merkelijkheid-timer
 
 This template should help get you started developing with Vue 3 in Vite.

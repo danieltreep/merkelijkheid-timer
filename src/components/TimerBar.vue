@@ -11,12 +11,12 @@
     />
 
     <select class="form-select" v-model="currentSession.project_id">
-      <option disabled selected>Selecteer bedrijf</option>
+      <option disabled selected>Selecteer project</option>
 
       <option
         v-for="(project, index) in data.projects"
         :key="index"
-        :value="project.project_id"
+        :value="project.id"
       >
         {{ project.project_name }}
       </option>
@@ -25,7 +25,7 @@
     <select class="form-select" v-model="currentSession.category_id">
       <option disabled selected>Selecteer categorie</option>
       <option
-        :value="category.category_id"
+        :value="category.id"
         v-for="(category, index) in data.categories"
         :key="index"
       >
@@ -33,7 +33,7 @@
       </option>
     </select>
 
-    <Timer @onStopTimer="onStopTimer" />
+    <Timer />
   </div>
 </template>
 
@@ -42,9 +42,4 @@ import Timer from "@/components/Timer.vue";
 import { useDataStore } from "@/stores/data";
 import { storeToRefs } from "pinia";
 const { data, currentSession } = storeToRefs(useDataStore());
-import postData from "@/composables/postData";
-
-function onStopTimer() {
-  postData("sessions");
-}
 </script>

@@ -2,7 +2,7 @@ import { useDataStore } from "@/stores/data";
 import { storeToRefs } from "pinia";
 import getAllData from "@/composables/getAllData";
 
-const postData = async (db = "sessions") => {
+const postData = async (db = "sessions", data) => {
   const { currentSession } = storeToRefs(useDataStore());
 
   fetch(`http://localhost:3000/${db}`, {
@@ -10,7 +10,8 @@ const postData = async (db = "sessions") => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(currentSession.value),
+    // body: JSON.stringify(currentSession.value),
+    body: JSON.stringify(data),
   })
     .then((res) => {
       if (!res.ok) {

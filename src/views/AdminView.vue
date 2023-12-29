@@ -1,15 +1,23 @@
 <template>
-  <div class="about">
-    <h1>This is an admin page</h1>
-  </div>
+  <main class="p-5">
+    <div class="container">
+      <div class="row">
+        <ClientList />
+        <ProjectList />
+      </div>
+    </div>
+  </main>
 </template>
 
-<style>
-@media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
-}
-</style>
+<script setup>
+import { onMounted } from "vue";
+import getAllData from "@/composables/getAllData";
+import ClientList from "@/components/ClientList.vue";
+import ProjectList from "@/components/ProjectList.vue";
+
+onMounted(() => {
+  getAllData();
+});
+</script>
+
+<style></style>
