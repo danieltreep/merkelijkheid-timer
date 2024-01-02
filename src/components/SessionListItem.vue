@@ -1,5 +1,5 @@
 <template lang="">
-    <li class="list-group-item d-flex justify-content-between align-items-center gap-3 p-3" v-if="!isEditing">
+    <li class="list-group-item d-grid p-3" v-if="!isEditing">
         <div>{{ session.title }}</div>
         <div>
           {{
@@ -27,6 +27,7 @@
             }}
           </div>
         </div>
+        
         <div class="elapsed">
           <b>
             {{ prefixZero(new Date(session.time_elapsed).getUTCHours()) }}:{{
@@ -34,8 +35,10 @@
             }}
           </b>
         </div>
-        <EditButton @click="isEditing = true"/>
-        <DeleteButton db="sessions" :id="session.id" />
+        <div class="buttons d-flex gap-2">
+            <EditButton @click="isEditing = true"/>
+            <DeleteButton db="sessions" :id="session.id" />
+        </div>
       </li>
       <SessionListItemEdit v-if="isEditing" :session="session" :projects="projects" :categories="categories" @handleSave="isEditing = false"/>
 </template>
@@ -62,3 +65,11 @@ function prefixZero(n) {
 }
 
 </script>
+
+<style scoped>
+li.d-grid {
+    grid-template-columns: minmax(50px, 150px) 1fr 110px 45px 90px;
+    gap: 1rem;
+    align-items: center;
+}
+</style>

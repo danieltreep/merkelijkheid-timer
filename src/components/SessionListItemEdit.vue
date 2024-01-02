@@ -1,9 +1,7 @@
 <template lang="">
-  <li
-      
-      class="list-group-item d-flex justify-content-between align-items-center gap-2 p-3"
-    >
-      <!-- <div>{{ title }}</div> -->
+  <li class="list-group-item d-flex justify-content-between align-items-center gap-2 p-3" >
+
+    <div class="d-flex align-items-center gap-2">
       <input type="text" v-model="title" class="form-control">
       <select class="form-select w-50" v-model="project_id">
         <option
@@ -23,22 +21,22 @@
           {{ category.category_name }}
         </option>
       </select>
-      
-        <div class="d-flex align-items-center gap-1">
-            <input v-model="startedHours" class="form-control time">:
-            <input v-model="startedMinutes" class="form-control time">
-          </div>
-          -
-        <div class="d-flex align-items-center gap-1">
-            <input v-model="stoppedHours" class="form-control time">:
-            <input v-model="stoppedMinutes" class="form-control time">
-          </div>
-      
-     
-    
+    </div>
+
+    <div class="d-flex align-items-center gap-2 ">
+      <div class="d-flex align-items-center gap-1 form-control">
+        <input v-model="startedHours" class="time text-center">:
+        <input v-model="startedMinutes" class="time text-center">
+      </div>
+        -
+      <div class="d-flex align-items-center gap-1 form-control">
+        <input v-model="stoppedHours" class="time text-center">:
+        <input v-model="stoppedMinutes" class="time text-center">
+      </div>
+
       <SaveButton @click="handleSave('sessions', session.id, {title, category_id, project_id} )"/>
-      
-    </li>
+    </div>
+  </li>
 
 </template>
 <script setup>
@@ -61,6 +59,7 @@ const category_id = ref(props.session.category_id);
 
 const stopped_at = new Date(props.session.stopped_at);
 const created_at = new Date(props.session.created_at);
+
 const stoppedHours = ref(prefixZero(new Date(props.session.stopped_at).getUTCHours()));
 const stoppedMinutes = ref(prefixZero(new Date(props.session.stopped_at).getUTCMinutes()));
 const startedHours = ref(prefixZero(new Date(props.session.created_at).getUTCHours()));
@@ -72,7 +71,7 @@ function handleSave(db, id, data) {
   created_at.setUTCHours(startedHours.value, startedMinutes.value);
   const time_elapsed = new Date(stopped_at - created_at);
   
-  emit('handleSave')
+  emit('handleSave');
   patchData(db, id, {...data, stopped_at, created_at, time_elapsed});
 }
 
@@ -86,7 +85,8 @@ return n;
 </script>
 
 <style scoped>
-.time {
-  width: 46px;
+input.time {
+  width: 24px;
+  border: 0;
 }
 </style>

@@ -1,12 +1,13 @@
 <template>
-    <li class="list-group-item" v-if="!isEditing">
+    <li class="list-group-item d-flex justify-content-between align-items-center" v-if="!isEditing">
         {{ client }}
-        
-        <EditButton @click="isEditing = true" />
-        <DeleteButton db="clients" :id="id" />
+        <div class="d-flex gap-2">
+            <EditButton @click="isEditing = true" />
+            <DeleteButton db="clients" :id="id" />
+        </div>
     </li>
-    <li class="list-group-item d-flex" v-if="isEditing">
-        <input v-model="client">
+    <li class="list-group-item d-flex justify-content-between align-items-center gap-3" v-if="isEditing">
+        <input v-model="client" class="form-control">
         <SaveButton @click="handleEdit('clients', id, {client_name: client} )"/>
     </li>
 </template>
