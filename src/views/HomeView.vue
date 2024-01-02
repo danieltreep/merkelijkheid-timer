@@ -2,13 +2,13 @@
   <main class="p-5">
     <TimerBar />
 
-    <SessionsList />
+    <SessionList />
   </main>
 </template>
 
 <script setup>
 import TimerBar from "@/components/TimerBar.vue";
-import SessionsList from "@/components/SessionsList.vue";
+import SessionList from "@/components/SessionList.vue";
 import { onMounted } from "vue";
 import getAllData from "@/composables/getAllData";
 

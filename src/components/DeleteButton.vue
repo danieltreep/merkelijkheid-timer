@@ -19,15 +19,16 @@
 </template>
 
 <script setup>
-import deleteFromDatabase from "@/composables/deleteFromDatabase";
+import deleteData from "@/composables/deleteData";
 
 defineProps({
-  id: Number,
   db: String,
+  id: Number,
 });
 
 function handleDelete(db, id) {
-  deleteFromDatabase(db, id);
+  console.log(db, id)
+  deleteData(db, id);
 }
 </script>
 

@@ -2,18 +2,10 @@
   <div class="col-6">
     <h2>Clients</h2>
     <ul v-if="data" class="list-group">
-      <li
-        v-for="client in data.clients"
-        :key="client.id"
-        class="list-group-item"
-      >
-        {{ client.client_name }}
-        <DeleteButton db="clients" :id="client.id" />
-      </li>
+      <ClientListItem v-for="client in data.clients" :key="client.id" :client="client" :id="client.id"/>
     </ul>
-    <div>
+    <!-- <div>
       <div class="input-group mb-3">
-        <span class="input-group-text" id="basic-addon1">Client name</span>
         <input
           type="text"
           class="form-control"
@@ -22,17 +14,11 @@
           aria-describedby="basic-addon1"
           v-model="clientName"
         />
-        <button
-          class="btn btn-outline-dark"
-          type="button"
-          id="button-addon2"
-          @click="handleAdd"
-          :disabled="!clientName"
-        >
-          Add Client
-        </button>
+       
+        <AddButton :disabled="!clientName" @click="handleAdd" text="Add client"/>
       </div>
-    </div>
+    </div> -->
+    <ClientAddBar />
   </div>
 </template>
 
@@ -40,6 +26,9 @@
 import { useDataStore } from "@/stores/data";
 import { storeToRefs } from "pinia";
 import DeleteButton from "@/components/DeleteButton.vue";
+import AddButton from "@/components/AddButton.vue";
+import ClientListItem from "@/components/ClientListItem.vue";
+import ClientAddBar from "@/components/ClientAddBar.vue";
 
 const { data } = storeToRefs(useDataStore());
 

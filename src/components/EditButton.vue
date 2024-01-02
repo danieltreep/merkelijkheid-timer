@@ -1,5 +1,5 @@
 <template>
-  <button class="btn btn-outline-dark" @click="handleEdit(id)">
+  <button class="btn btn-outline-dark">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="16"
@@ -19,14 +19,3 @@
   </button>
 </template>
 
-<script setup>
-import deleteFromDatabase from "@/composables/deleteFromDatabase";
-
-defineProps({
-  id: Number,
-});
-
-function handleEdit(id) {}
-</script>
-
-<style scoped></style>

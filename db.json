@@ -9,7 +9,7 @@
       "client_name": "Albeton"
     },
     {
-      "client_name": "nieuw",
+      "client_name": "Mercurius",
       "id": 3
     }
   ],
@@ -29,13 +29,13 @@
   ],
   "sessions": [
     {
-      "title": "sdf",
+      "title": "Intern overleg man",
       "user_id": 2,
-      "category_id": 6,
+      "category_id": 5,
       "project_id": 2,
-      "created_at": "2023-12-29T10:05:34.589Z",
-      "stopped_at": "2023-12-29T10:07:06.760Z",
-      "time_elapsed": "1970-01-01T00:01:32.008Z",
+      "created_at": "2023-12-29T09:25:34.589Z",
+      "stopped_at": "2023-12-29T14:26:06.760Z",
+      "time_elapsed": "1970-01-01T05:00:32.171Z",
       "id": 11
     },
     {
@@ -44,31 +44,66 @@
       "category_id": 4,
       "project_id": 1,
       "created_at": "2023-12-29T10:52:49.446Z",
-      "stopped_at": "2023-12-29T10:54:14.807Z",
-      "time_elapsed": "1970-01-01T00:01:25.003Z",
+      "stopped_at": "2023-12-29T11:54:14.807Z",
+      "time_elapsed": "1970-01-01T01:01:25.361Z",
       "id": 12
+    },
+    {
+      "title": "Uitzicht",
+      "user_id": 2,
+      "category_id": 3,
+      "project_id": 1,
+      "created_at": "2024-01-02T08:16:09.971Z",
+      "stopped_at": "2024-01-02T08:16:21.386Z",
+      "time_elapsed": "1970-01-01T00:00:11.000Z",
+      "id": 13
+    },
+    {
+      "title": "Werkt dit nog",
+      "user_id": 2,
+      "category_id": 1,
+      "project_id": 1,
+      "created_at": "2024-01-02T12:39:11.948Z",
+      "stopped_at": "2024-01-02T14:09:24.181Z",
+      "time_elapsed": "1970-01-01T01:30:12.233Z",
+      "id": 14
+    },
+    {
+      "title": "Buskruit",
+      "user_id": 2,
+      "category_id": 11,
+      "project_id": 5,
+      "created_at": "2024-01-02T15:07:24.415Z",
+      "stopped_at": "2024-01-02T16:07:49.583Z",
+      "time_elapsed": "1970-01-01T01:00:25.168Z",
+      "id": 15
     }
   ],
   "projects": [
     {
       "id": 1,
-      "project_name": "merkelijkheid intern",
+      "project_name": "Merkelijkheid intern",
       "client_id": 1
     },
     {
       "id": 2,
-      "project_name": "albeton intern",
+      "project_name": "Albeton intern",
       "client_id": 2
     },
     {
       "id": 3,
-      "project_name": "albeton extern",
+      "project_name": "Albeton extern",
       "client_id": 2
     },
     {
-      "project_name": "Deze man",
-      "client_id": 1,
+      "project_name": "Online marketing",
+      "client_id": 3,
       "id": 4
+    },
+    {
+      "project_name": "Kanonnen schieten",
+      "client_id": 3,
+      "id": 5
     }
   ],
   "categories": [

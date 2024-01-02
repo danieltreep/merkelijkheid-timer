@@ -1,8 +1,13 @@
 import getAllData from "@/composables/getAllData";
 
-const deleteFromDatabase = (db, id) => {
+const patchData = async (db = "sessions", id, data) => {
+
   fetch(`http://localhost:3000/${db}/${id}`, {
-    method: "DELETE",
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
   })
     .then((res) => {
       if (!res.ok) {
@@ -16,4 +21,4 @@ const deleteFromDatabase = (db, id) => {
     });
 };
 
-export default deleteFromDatabase;
+export default patchData;

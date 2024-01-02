@@ -1,22 +1,16 @@
-<template>
-  <div>
-    <ul class="list-group" v-if="data">
-      <li
-        v-for="(session, index) in data.sessions"
-        :key="index"
-        class="list-group-item d-flex justify-content-between align-items-center gap-3 p-3"
-      >
+<template lang="">
+    <li class="list-group-item d-flex justify-content-between align-items-center gap-3 p-3" v-if="!isEditing">
         <div>{{ session.title }}</div>
         <div>
           {{
-            data.projects.filter(
+            projects.find(
               (project) => session.project_id === project.id
-            )[0].project_name
+            ).project_name
           }}:
           {{
-            data.categories.filter(
+            categories.find(
               (category) => session.category_id === category.id
-            )[0].category_name
+            ).category_name
           }}
         </div>
         <div class="time d-flex ms-auto align-items-center gap-2">
@@ -40,19 +34,25 @@
             }}
           </b>
         </div>
-        <EditButton :sessionId="session.id" />
-        <DeleteButton :sessionId="session.id" />
+        <EditButton @click="isEditing = true"/>
+        <DeleteButton db="sessions" :id="session.id" />
       </li>
-    </ul>
-  </div>
+      <SessionListItemEdit v-if="isEditing" :session="session" :projects="projects" :categories="categories" @handleSave="isEditing = false"/>
 </template>
-
 <script setup>
-import { useDataStore } from "@/stores/data";
-import { storeToRefs } from "pinia";
-import DeleteButton from "@/components/DeleteButton.vue";
+
 import EditButton from "@/components/EditButton.vue";
-const { data } = storeToRefs(useDataStore());
+import DeleteButton from "@/components/DeleteButton.vue";
+import SessionListItemEdit from "@/components/SessionListItemEdit.vue";
+import { ref } from "vue";
+
+defineProps({
+    session: Object,
+    projects: Array,
+    categories: Array
+})
+
+const isEditing = ref(false);
 
 function prefixZero(n) {
   if (n < 10) {
@@ -60,6 +60,5 @@ function prefixZero(n) {
   }
   return n;
 }
-</script>
 
-<style scoped></style>
+</script>
