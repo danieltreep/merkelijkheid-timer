@@ -31,7 +31,7 @@ const props = defineProps({
     projectName: String,
     id: Number,
     clients: Array,
-    clientId: Number
+    clientId: String
 })
 
 const project = ref(props.projectName);

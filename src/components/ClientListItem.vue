@@ -27,9 +27,9 @@ const client = ref(props.client.client_name);
 const isEditing = ref(false);
 
 function handleEdit(db, id, data) {
-    console.log(db, id, data)
-  patchData(db, id, data);
-  isEditing.value = false;
+    console.log(db, id, data);
+    patchData(db, id, data);
+    isEditing.value = false;
 }
 </script>
 <style >

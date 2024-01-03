@@ -3,7 +3,7 @@
           class="btn btn-outline-dark"
           type="button"
           :disabled="disabled"
-          @click="handleAdd(db, data)"
+          @click="handleAdd(table, data)"
         >
           {{ text }}
         </button>
@@ -11,20 +11,19 @@
 <script setup>
 import postData from "@/composables/postData";
 
-
 defineProps({
     disabled: Boolean,
     text: String,
-    db: String,
+    table: String,
     data: Object,
 })
 
 const emit = defineEmits(['resetValues']);
 
-function handleAdd(db, data) {
-  postData(db, data);
+function handleAdd(table, data) {
+  postData(table, data);
 
-  emit('resetValues')
+  emit('resetValues');
 }
 </script>
 <style >

@@ -12,7 +12,7 @@
         <AddButton 
             :disabled="!clientName" 
             text="Add client" 
-            db="clients" 
+            table="clients" 
             :data="{
                 client_name: clientName,
                

@@ -2,7 +2,7 @@
   <main class="p-5">
     <div class="container">
       <div class="row">
-        {{ data }}
+        <p v-for="(item, index) in data" :key="index">{{ item.client_name }}</p>
       </div>
     </div>
   </main>
@@ -17,8 +17,8 @@ import ProjectList from "@/components/ProjectList.vue";
 const data = ref([]);
 
 onMounted(() => {
-  fetch('http://localhost/clockify/api.php')
-    .then(res => res.json)
+  fetch('http://localhost/merkelijkheid-timer/api.php')
+    .then(res => res.json())
     .then(d => data.value = d)
     .catch(error => data.value = error)
 });

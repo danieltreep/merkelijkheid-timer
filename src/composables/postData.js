@@ -1,13 +1,15 @@
 import getAllData from "@/composables/getAllData";
 
-const postData = async (db = "sessions", data) => {
+const postData = async (tableName, data) => {
 
-  fetch(`http://localhost:3000/${db}`, {
+  console.log(data, tableName);
+  
+  fetch(`http://localhost/merkelijkheid-timer/api.php`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(data),
+    body: JSON.stringify({data, table: tableName}),
   })
     .then((res) => {
       if (!res.ok) {
@@ -15,9 +17,12 @@ const postData = async (db = "sessions", data) => {
       }
       return res.json();
     })
-    .then(() => getAllData())
+    .then((d) => {
+      console.log(d.message);
+      getAllData();
+    })
     .catch((error) => {
-      console.error("Error:", error);
+      console.error("Error:", error.message);
     });
 };
 
