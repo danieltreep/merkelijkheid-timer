@@ -3,11 +3,12 @@ import { defineStore } from "pinia";
 import getData from '@/composables/getData';
 
 export const useDataStore = defineStore("data", () => {
-  // const data = ref();
-  const sessions = ref();
+  const sessions = ref([]);
   const projects = ref();
   const categories = ref();
   const clients = ref();
+
+  const sessionsDesc = computed(() => sessions.value.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)));
 
   const currentSession = ref({
     title: null,
@@ -17,9 +18,9 @@ export const useDataStore = defineStore("data", () => {
     created_at: null,
     stopped_at: null,
     time_elapsed: null,
+    time_in_minutes: null
   });
 
-  // const time_in_minutes = computed(() => )
   async function updateTable(table) {
     
     switch(table) {
@@ -38,5 +39,15 @@ export const useDataStore = defineStore("data", () => {
     }
   }
 
-  return { currentSession, sessions, projects, categories, clients, updateTable };
+  function resetCurrentSession() {
+    currentSession.value.project_id = null;
+    currentSession.value.category_id = null;
+    currentSession.value.title = null;
+    currentSession.value.stopped_at = null;
+    currentSession.value.created_at = null;
+    currentSession.value.time_elapsed = null;
+    currentSession.value.time_in_minutes = null;
+  }
+
+  return { currentSession, sessions, sessionsDesc, projects, categories, clients, updateTable, resetCurrentSession };
 });

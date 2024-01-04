@@ -31,7 +31,7 @@
         <div class="elapsed">
           <b>{{ session.time_elapsed.slice(0, 5) }}</b>
         </div>
-        
+
         <div class="buttons d-flex gap-2">
             <EditButton @click="isEditing = true"/>
             <DeleteButton table="sessions" :id="session.id" />

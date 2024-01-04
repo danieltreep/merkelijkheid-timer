@@ -2,7 +2,7 @@
   <main class="p-5">
     <TimerBar :projects="projects" :categories="categories" />
 
-    <SessionList :projects="projects" :sessions="sessions" :categories="categories"/>
+    <SessionList :projects="projects" :sessions="sessionsDesc" :categories="categories"/>
   </main>
 </template>
 
@@ -16,7 +16,7 @@ import TimerBar from "@/components/TimerBar.vue";
 
 import SessionList from "@/components/SessionList.vue";
 
-const { sessions, projects, categories } = storeToRefs(useDataStore());
+const { sessions, sessionsDesc, projects, categories } = storeToRefs(useDataStore());
 
 onMounted(async () => {
   projects.value = await getData('projects');

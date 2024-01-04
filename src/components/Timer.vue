@@ -35,6 +35,7 @@ defineProps({
 });
 
 const { currentSession } = storeToRefs(useDataStore());
+const { resetCurrentSession } = useDataStore();
 
 const timerRunning = ref(false);
 
@@ -55,8 +56,9 @@ function stopTimer() {
 
   // Maak Date waarden compatible voor mysql
   currentSession.value.stopped_at = makeDateSqlCompatible(new Date());
+  currentSession.value.time_in_minutes = calculateTimeDifference(currentSession.value.created_at, new Date());
   currentSession.value.created_at = makeDateSqlCompatible(currentSession.value.created_at);
-  currentSession.value.time_elapsed = makeDateSqlCompatible(currentSession.value.time_elapsed)
+  currentSession.value.time_elapsed = makeDateSqlCompatible(currentSession.value.time_elapsed);
 
   // Stop interval en POST de data
   clearInterval(timerInterval);
@@ -68,12 +70,7 @@ function stopTimer() {
   displayMinutes.value = prefixZero(0);
 
   // Reset de waarden van de huidige sessie
-  currentSession.value.project_id = null;
-  currentSession.value.category_id = null;
-  currentSession.value.title = null;
-  currentSession.value.stopped_at = null;
-  currentSession.value.created_at = null;
-  currentSession.value.time_elapsed = null;
+  resetCurrentSession();
 }
 
 function clockRunning() {
@@ -98,12 +95,7 @@ function clearTimer() {
   displayMinutes.value = prefixZero(0);
   displayHours.value = prefixZero(0);
   clearInterval(timerInterval);
-  currentSession.value.project_id = null;
-  currentSession.value.category_id = null;
-  currentSession.value.title = null;
-  currentSession.value.stopped_at = null;
-  currentSession.value.created_at = null;
-  currentSession.value.time_elapsed = null;
+  resetCurrentSession();
 }
 
 function prefixZero(n) {
@@ -119,6 +111,10 @@ function makeDateSqlCompatible(date) {
   return mysqlDatetime;
 }
 
-</script>
+function calculateTimeDifference(startTime, endTime) {
+  const timeDifferenceInMilliseconds = endTime - startTime;
+  const timeDifferenceInMinutes = timeDifferenceInMilliseconds / (1000 * 60);
+  return Math.floor(timeDifferenceInMinutes);
+}
 
-<style scoped></style>
+</script>

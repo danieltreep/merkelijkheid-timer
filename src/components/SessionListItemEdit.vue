@@ -69,17 +69,17 @@ function handleSave(db, id, data) {
   
   stopped_at.setUTCHours(stoppedHours.value, stoppedMinutes.value);
   created_at.setUTCHours(startedHours.value, startedMinutes.value);
+  const time_in_minutes = calculateTimeDifference(created_at, stopped_at);
   const time_elapsed = makeDateSqlCompatible(new Date(stopped_at - created_at));
 
-  // console.log('before stop', stopped_at);
   stopped_at = makeDateSqlCompatible(stopped_at);
-  // console.log('after stop', stopped_at);
   created_at = makeDateSqlCompatible(created_at);
   
   emit('handleSave');
-  patchData(db, id, {...data, stopped_at, created_at, time_elapsed});
+  patchData(db, id, {...data, stopped_at, created_at, time_elapsed, time_in_minutes});
 }
 
+// Voeg een 0 voor enkele getallen
 function prefixZero(n) {
 if (n < 10) {
   return "0" + n;
@@ -87,10 +87,18 @@ if (n < 10) {
 return n;
 }
 
+// Convert Date naar SQL compatible timestamp
 function makeDateSqlCompatible(date) {
   const mysqlDatetime = date.toISOString().replace('T', ' ').slice(0, -5);
 
   return mysqlDatetime;
+}
+
+// Bereken tijdverschil in minuten
+function calculateTimeDifference(startTime, endTime) {
+  const timeDifferenceInMilliseconds = endTime - startTime;
+  const timeDifferenceInMinutes = timeDifferenceInMilliseconds / (1000 * 60);
+  return Math.floor(timeDifferenceInMinutes);
 }
 </script>
 
