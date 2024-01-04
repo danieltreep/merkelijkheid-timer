@@ -29,11 +29,9 @@
         </div>
         
         <div class="elapsed">
-          <b>
-            {{ session.time_elapsed.slice(0, 5) }}
-              
-          </b>
+          <b>{{ session.time_elapsed.slice(0, 5) }}</b>
         </div>
+        
         <div class="buttons d-flex gap-2">
             <EditButton @click="isEditing = true"/>
             <DeleteButton table="sessions" :id="session.id" />
@@ -42,11 +40,11 @@
       <SessionListItemEdit v-if="isEditing" :session="session" :projects="projects" :categories="categories" @handleSave="isEditing = false"/>
 </template>
 <script setup>
+import { ref } from "vue";
 
 import EditButton from "@/components/EditButton.vue";
 import DeleteButton from "@/components/DeleteButton.vue";
 import SessionListItemEdit from "@/components/SessionListItemEdit.vue";
-import { ref } from "vue";
 
 defineProps({
     session: Object,

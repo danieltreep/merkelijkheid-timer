@@ -7,24 +7,12 @@
 </template>
 
 <script setup>
-import { useDataStore } from "@/stores/data";
-import { storeToRefs } from "pinia";
-import SessionListItem from "./SessionListItem.vue";
-import { onMounted, ref } from "vue";
-import getData from "@/composables/getData";
+import SessionListItem from "@/components/SessionListItem.vue";
 
-const { sessions, projects, categories } = storeToRefs(useDataStore());
-
-onMounted(async () => {
-  const projectsRef = await getData('projects');
-  projects.value = projectsRef;
-  const categoriesRef = await getData('categories');
-  categories.value = categoriesRef;
-  const sessionsRef = await getData('sessions');
-  sessions.value = sessionsRef;
+defineProps({
+  sessions: Array,
+  categories: Array,
+  projects: Array,
 })
 
-
 </script>
-
-<style scoped></style>

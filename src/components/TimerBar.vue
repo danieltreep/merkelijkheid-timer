@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="container d-flex border border-primary p-3 gap-3 rounded"
-    v-if="data"
-  >
+  <div class="container d-flex border border-primary p-3 gap-3 rounded">
     <input
       type="text"
       v-model="currentSession.title"
@@ -38,23 +35,16 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
 import { useDataStore } from "@/stores/data";
 import { storeToRefs } from "pinia";
-import getData from "@/composables/getData";
+
 import Timer from "@/components/Timer.vue";
-const { data, currentSession } = storeToRefs(useDataStore());
 
-const projects = ref();
-const categories = ref();
-const sessions = ref();
-
-onMounted(async () => {
-  const projectsRef = await getData('projects');
-  projects.value = projectsRef;
-  const categoriesRef = await getData('categories');
-  categories.value = categoriesRef;
-  const sessionsRef = await getData('categories');
-  sessions.value = sessionsRef;
+defineProps({
+  projects: Array,
+  categories: Array,
 })
+
+const { currentSession } = storeToRefs(useDataStore());
+
 </script>

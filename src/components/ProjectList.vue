@@ -16,21 +16,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import { useDataStore } from "@/stores/data";
-import { storeToRefs } from "pinia";
 import ProjectListItem from "@/components/ProjectListItem.vue";
 import ProjectAddBar from "@/components/ProjectAddBar.vue";
-import getData from "@/composables/getData";
 
-const { projects, clients } = storeToRefs(useDataStore());
-
-onMounted(async () => {
-  const resProjects = await getData('projects');
-  projects.value = resProjects;
-  const resClients = await getData('clients');
-  clients.value = resClients;
-});
+defineProps({
+  clients: Array,
+  projects: Array,
+})
 
 </script>
 

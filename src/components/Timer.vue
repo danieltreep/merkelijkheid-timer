@@ -71,6 +71,9 @@ function stopTimer() {
   currentSession.value.project_id = null;
   currentSession.value.category_id = null;
   currentSession.value.title = null;
+  currentSession.value.stopped_at = null;
+  currentSession.value.created_at = null;
+  currentSession.value.time_elapsed = null;
 }
 
 function clockRunning() {
@@ -98,6 +101,9 @@ function clearTimer() {
   currentSession.value.project_id = null;
   currentSession.value.category_id = null;
   currentSession.value.title = null;
+  currentSession.value.stopped_at = null;
+  currentSession.value.created_at = null;
+  currentSession.value.time_elapsed = null;
 }
 
 function prefixZero(n) {
