@@ -11,6 +11,7 @@ import AsideNav from "./components/AsideNav.vue";
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/admin">Admin</RouterLink>
+        <RouterLink to="/stats">Stats</RouterLink>
       </nav>
     </div>
   </header>
