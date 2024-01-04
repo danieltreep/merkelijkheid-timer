@@ -14,11 +14,6 @@ const router = createRouter({
       name: "admin",
       component: () => import("../views/AdminView.vue"),
     },
-    {
-      path: "/api",
-      name: "api",
-      component: () => import("../views/ApiView.vue"),
-    },
   ],
 });
 

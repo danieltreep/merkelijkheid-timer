@@ -69,6 +69,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Send the JSON response
     echo json_encode($data);
+
+} elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+
+    $requestData = json_decode(file_get_contents("php://input"), true);
+
+    // Extract parameters from the request data
+    $id = $requestData['id']; 
+    $table = $requestData['table']; 
+
+    $sql = "DELETE FROM " . $conn->real_escape_string($table) . " WHERE id = " . $conn->real_escape_string($id);
+
+    if ($conn->query($sql) === TRUE) {
+        $response = array('status' => 'success', 'message' => 'Record deleted successfully');
+    } else {
+        $response = array('status' => 'error', 'message' => 'Error deleting record: ' . $conn->error);
+    }
+
+    // Send the JSON response
+    echo json_encode($response);
+
+} elseif ($_SERVER['REQUEST_METHOD'] === 'PATCH') {
+    // Parse incoming data
+    $requestData = json_decode(file_get_contents("php://input"), true);
+
+    // Extract parameters from the request data
+    $id = $requestData['id']; 
+    $table = $requestData['table']; 
+    $data = $requestData['data']; // Replace with the actual data
+
+    // Initialize the SET part of the SQL query
+    $setClause = '';
+
+    // Construct the SET part of the SQL query
+    foreach ($data as $column => $value) {
+        $setClause .= $conn->real_escape_string($column) . " = '" . $conn->real_escape_string($value) . "', ";
+    }
+
+    // Remove the trailing comma
+    $setClause = rtrim($setClause, ', ');
+
+    // Construct the SQL query for the update operation
+    $sql = "UPDATE " . $conn->real_escape_string($table) . 
+           " SET " . $setClause .
+           " WHERE id = " . $conn->real_escape_string($id);
+
+    // Execute the update query
+    if ($conn->query($sql) === TRUE) {
+        $response = array('status' => 'success', 'message' => 'Record updated successfully');
+    } else {
+        $response = array('status' => 'error', 'message' => 'Error updating record: ' . $conn->error);
+    }
+
+    // Send the JSON response
+    echo json_encode($response);
 }
 ?>
+
 

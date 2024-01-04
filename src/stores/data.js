@@ -1,8 +1,13 @@
 import { ref, computed } from "vue";
 import { defineStore } from "pinia";
+import getData from '@/composables/getData';
 
 export const useDataStore = defineStore("data", () => {
   const data = ref();
+  const sessions = ref();
+  const projects = ref();
+  const categories = ref();
+  const clients = ref();
 
   const currentSession = ref({
     title: null,
@@ -14,5 +19,21 @@ export const useDataStore = defineStore("data", () => {
     time_elapsed: null,
   });
 
-  return { data, currentSession };
+  async function updateTable(table) {
+    
+    switch(table) {
+      case 'sessions':
+        sessions.value = await getData(table);
+        break;
+      case 'projects':
+        projects.value = await getData(table);
+        break;
+      case 'clients':
+        clients.value = await getData(table);
+        break;
+    }
+    
+  }
+
+  return { data, currentSession, sessions, projects, categories, clients, updateTable };
 });

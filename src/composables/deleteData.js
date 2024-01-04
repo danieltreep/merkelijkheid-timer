@@ -1,8 +1,15 @@
-import getAllData from "@/composables/getAllData";
+import { useDataStore } from '@/stores/data'
 
-const deleteData = (db, id) => {
-  fetch(`http://localhost:3000/${db}/${id}`, {
-    method: "DELETE",
+const deleteData = (table, id) => {
+
+  const { updateTable } = useDataStore();
+
+  fetch('http://localhost/merkelijkheid-timer/api.php', {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ id, table })
   })
     .then((res) => {
       if (!res.ok) {
@@ -10,7 +17,10 @@ const deleteData = (db, id) => {
       }
       return res.json();
     })
-    .then(() => getAllData())
+    .then((result) => {
+      console.log(result.message);
+      updateTable(table);
+    })
     .catch((error) => {
       console.error("Error:", error);
     });

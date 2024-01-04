@@ -16,8 +16,9 @@ import { onMounted, ref } from "vue";
 import ClientListItem from "@/components/ClientListItem.vue";
 import ClientAddBar from "@/components/ClientAddBar.vue";
 import getData from "@/composables/getData";
-
-const clients = ref([])
+import { storeToRefs } from "pinia";
+import { useDataStore } from "@/stores/data";
+const { clients } = storeToRefs(useDataStore());
 
 onMounted(async () => {
   const response = await getData('clients');

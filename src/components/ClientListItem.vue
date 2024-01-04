@@ -3,7 +3,7 @@
         {{ client }}
         <div class="d-flex gap-2">
             <EditButton @click="isEditing = true" />
-            <DeleteButton db="clients" :id="id" />
+            <DeleteButton table="clients" :id="id" />
         </div>
     </li>
     <li class="list-group-item d-flex justify-content-between align-items-center gap-3" v-if="isEditing">

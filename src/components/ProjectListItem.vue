@@ -3,7 +3,7 @@
         {{ projectName }}
         <div class="d-flex gap-2">
             <EditButton @click="isEditing = true" />
-            <DeleteButton db="projects" :id="id" />
+            <DeleteButton table="projects" :id="id" />
         </div>
     </li>
     <li class="list-group-item d-flex justify-content-between align-items-center gap-3" v-if="isEditing">
@@ -44,6 +44,3 @@ function handleEdit(db, id, data) {
   isEditing.value = false;
 }
 </script>
-<style >
-    
-</style>

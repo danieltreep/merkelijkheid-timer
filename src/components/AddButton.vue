@@ -20,12 +20,8 @@ defineProps({
 
 const emit = defineEmits(['resetValues']);
 
-function handleAdd(table, data) {
-  postData(table, data);
-
+async function handleAdd(table, data) {
+  await postData(table, data);
   emit('resetValues');
 }
 </script>
-<style >
-    
-</style>

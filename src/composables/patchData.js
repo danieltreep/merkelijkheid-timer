@@ -1,13 +1,15 @@
-import getAllData from "@/composables/getAllData";
+import { useDataStore } from '@/stores/data'
 
-const patchData = async (db = "sessions", id, data) => {
+const patchData = async (table, id, data) => {
 
-  fetch(`http://localhost:3000/${db}/${id}`, {
+  const { updateTable } = useDataStore();
+
+  fetch(`http://localhost/merkelijkheid-timer/api.php`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(data),
+    body: JSON.stringify({data, table, id}),
   })
     .then((res) => {
       if (!res.ok) {
@@ -15,7 +17,10 @@ const patchData = async (db = "sessions", id, data) => {
       }
       return res.json();
     })
-    .then(() => getAllData())
+    .then((result) => {
+      console.log(result.message);
+      updateTable(table);
+    })
     .catch((error) => {
       console.error("Error:", error);
     });

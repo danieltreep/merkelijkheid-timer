@@ -7,6 +7,7 @@ const getData = async (tableName) => {
       }
       return res.json();
     })
+    // .then((d) => console.log(d))
     .catch((error) => {
       console.error("Error:", error);
     });
@@ -18,6 +19,8 @@ const getData = async (tableName) => {
         id: +item.id
       };
     });
+
+    // console.log(modifiedData);
 
   return modifiedData
 };

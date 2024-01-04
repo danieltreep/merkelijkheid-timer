@@ -1,5 +1,5 @@
 <template>
-  <button class="btn btn-outline-dark" @click="handleDelete(db, id)">
+  <button class="btn btn-outline-dark" @click="handleDelete(table, id)">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="16"
@@ -22,13 +22,13 @@
 import deleteData from "@/composables/deleteData";
 
 defineProps({
-  db: String,
+  table: String,
   id: Number,
 });
 
-function handleDelete(db, id) {
-  console.log(db, id)
-  deleteData(db, id);
+function handleDelete(table, id) {
+  // console.log(table, id)
+  deleteData(table, id);
 }
 </script>
 

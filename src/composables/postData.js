@@ -1,15 +1,15 @@
-import getAllData from "@/composables/getAllData";
+import { useDataStore } from '@/stores/data'
 
-const postData = async (tableName, data) => {
+const postData = async (table, data) => {
 
-  console.log(data, tableName);
+  const { updateTable } = useDataStore();
   
   fetch(`http://localhost/merkelijkheid-timer/api.php`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({data, table: tableName}),
+    body: JSON.stringify({data, table}),
   })
     .then((res) => {
       if (!res.ok) {
@@ -17,9 +17,9 @@ const postData = async (tableName, data) => {
       }
       return res.json();
     })
-    .then((d) => {
-      console.log(d.message);
-      getAllData();
+    .then((result) => {
+      console.log(result.message);
+      updateTable(table);
     })
     .catch((error) => {
       console.error("Error:", error.message);

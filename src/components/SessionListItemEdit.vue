@@ -57,19 +57,24 @@ const title = ref(props.session.title);
 const project_id = ref(props.session.project_id);
 const category_id = ref(props.session.category_id);
 
-const stopped_at = new Date(props.session.stopped_at);
-const created_at = new Date(props.session.created_at);
+let stopped_at = new Date(props.session.stopped_at);
+let created_at = new Date(props.session.created_at);
 
-const stoppedHours = ref(prefixZero(new Date(props.session.stopped_at).getUTCHours()));
-const stoppedMinutes = ref(prefixZero(new Date(props.session.stopped_at).getUTCMinutes()));
-const startedHours = ref(prefixZero(new Date(props.session.created_at).getUTCHours()));
-const startedMinutes = ref(prefixZero(new Date(props.session.created_at).getUTCMinutes()));
+const stoppedHours = ref(prefixZero(new Date(props.session.stopped_at).getHours()));
+const stoppedMinutes = ref(prefixZero(new Date(props.session.stopped_at).getMinutes()));
+const startedHours = ref(prefixZero(new Date(props.session.created_at).getHours()));
+const startedMinutes = ref(prefixZero(new Date(props.session.created_at).getMinutes()));
 
 function handleSave(db, id, data) {
   
   stopped_at.setUTCHours(stoppedHours.value, stoppedMinutes.value);
   created_at.setUTCHours(startedHours.value, startedMinutes.value);
-  const time_elapsed = new Date(stopped_at - created_at);
+  const time_elapsed = makeDateSqlCompatible(new Date(stopped_at - created_at));
+
+  // console.log('before stop', stopped_at);
+  stopped_at = makeDateSqlCompatible(stopped_at);
+  // console.log('after stop', stopped_at);
+  created_at = makeDateSqlCompatible(created_at);
   
   emit('handleSave');
   patchData(db, id, {...data, stopped_at, created_at, time_elapsed});
@@ -82,6 +87,11 @@ if (n < 10) {
 return n;
 }
 
+function makeDateSqlCompatible(date) {
+  const mysqlDatetime = date.toISOString().replace('T', ' ').slice(0, -5);
+
+  return mysqlDatetime;
+}
 </script>
 
 <style scoped>

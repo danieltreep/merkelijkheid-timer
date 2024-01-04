@@ -1,43 +1,42 @@
-<template lang="">
+<template>
     <li class="list-group-item d-grid p-3" v-if="!isEditing">
         <div>{{ session.title }}</div>
         <div>
           {{
             projects.find(
-              (project) => session.project_id === project.id
+              (project) => +session.project_id === project.id
             ).project_name
           }}:
           {{
             categories.find(
-              (category) => session.category_id === category.id
+              (category) => +session.category_id === category.id
             ).category_name
           }}
         </div>
         <div class="time d-flex ms-auto align-items-center gap-2">
           <div class="started">
-            {{ prefixZero(new Date(session.created_at).getUTCHours()) }}:{{
-              prefixZero(new Date(session.created_at).getUTCMinutes())
+            {{ prefixZero(new Date(session.created_at).getHours()) }}:{{
+              prefixZero(new Date(session.created_at).getMinutes())
             }}
           </div>
           <div>-</div>
 
           <div class="started">
-            {{ prefixZero(new Date(session.stopped_at).getUTCHours()) }}:{{
-              prefixZero(new Date(session.stopped_at).getUTCMinutes())
+            {{ prefixZero(new Date(session.stopped_at).getHours()) }}:{{
+              prefixZero(new Date(session.stopped_at).getMinutes())
             }}
           </div>
         </div>
         
         <div class="elapsed">
           <b>
-            {{ prefixZero(new Date(session.time_elapsed).getUTCHours()) }}:{{
-              prefixZero(new Date(session.time_elapsed).getUTCMinutes())
-            }}
+            {{ session.time_elapsed.slice(0, 5) }}
+              
           </b>
         </div>
         <div class="buttons d-flex gap-2">
             <EditButton @click="isEditing = true"/>
-            <DeleteButton db="sessions" :id="session.id" />
+            <DeleteButton table="sessions" :id="session.id" />
         </div>
       </li>
       <SessionListItemEdit v-if="isEditing" :session="session" :projects="projects" :categories="categories" @handleSave="isEditing = false"/>

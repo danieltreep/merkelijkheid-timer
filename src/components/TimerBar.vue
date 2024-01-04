@@ -14,7 +14,7 @@
       <option disabled selected>Selecteer project</option>
 
       <option
-        v-for="(project, index) in data.projects"
+        v-for="(project, index) in projects"
         :key="index"
         :value="project.id"
       >
@@ -26,7 +26,7 @@
       <option disabled selected>Selecteer categorie</option>
       <option
         :value="category.id"
-        v-for="(category, index) in data.categories"
+        v-for="(category, index) in categories"
         :key="index"
       >
         {{ category.category_name }}
@@ -38,8 +38,23 @@
 </template>
 
 <script setup>
-import Timer from "@/components/Timer.vue";
+import { ref, onMounted } from "vue";
 import { useDataStore } from "@/stores/data";
 import { storeToRefs } from "pinia";
+import getData from "@/composables/getData";
+import Timer from "@/components/Timer.vue";
 const { data, currentSession } = storeToRefs(useDataStore());
+
+const projects = ref();
+const categories = ref();
+const sessions = ref();
+
+onMounted(async () => {
+  const projectsRef = await getData('projects');
+  projects.value = projectsRef;
+  const categoriesRef = await getData('categories');
+  categories.value = categoriesRef;
+  const sessionsRef = await getData('categories');
+  sessions.value = sessionsRef;
+})
 </script>
