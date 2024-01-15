@@ -31,6 +31,7 @@ CREATE TABLE sessions (
   created_at TIMESTAMP,
   stopped_at TIMESTAMP,
   time_elapsed TIME,
+  time_in_minutes INT,
   FOREIGN KEY (user_id) REFERENCES users(id),
   FOREIGN KEY (category_id) REFERENCES categories(id),
   FOREIGN KEY (project_id) REFERENCES projects(id)
