@@ -27,6 +27,9 @@
 import { ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useDataStore } from "@/stores/data";
+import { useUserStore } from '@/stores/user'
+const { user } = storeToRefs(useUserStore());
+
 import postData from "@/composables/postData";
 import ClearButton from '@/components/ClearButton.vue'
 
@@ -62,7 +65,7 @@ function stopTimer() {
 
   // Stop interval en POST de data
   clearInterval(timerInterval);
-  postData("sessions", currentSession.value);
+  postData("sessions", {...currentSession.value, user_id: user.value.id}); // Voeg user id toe aan sessie
 
   // Reset display timer
   displaySeconds.value = prefixZero(0);
@@ -118,3 +121,18 @@ function calculateTimeDifference(startTime, endTime) {
 }
 
 </script>
+
+<style scoped>
+.btn {
+  border-radius: var(--br);
+  background-color: var(--paars);
+  border: none;
+  padding-inline: 1.5rem;
+  height: 100%;
+  font-size: 14px;
+}
+.time {
+  font-size: 20px;
+  font-weight: 500;
+}
+</style>

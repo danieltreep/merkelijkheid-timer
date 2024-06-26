@@ -55,20 +55,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $table = $_GET['table'];
 
-    // Perform a SELECT query
-    $result = $conn->query('SELECT * FROM ' . $table);
+    if ($table === 'users' && isset($_GET['email'])) {
 
-    // Fetch the data and encode it as JSON
-    $data = [];
-    while ($row = $result->fetch_assoc()) {
-        $data[] = $row;
+        $email = $_GET['email'];
+        
+        // Prepare a SELECT query to check if the email exists and fetch the user ID
+        $stmt = $conn->prepare('SELECT id FROM users WHERE email = ?');
+        $stmt->bind_param('s', $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        // Fetch the user ID if any row is returned
+        $userId = null;
+        if ($row = $result->fetch_assoc()) {
+            $userId = $row['id'];
+        }
+
+        // Close the statement
+        $stmt->close();
+        
+        // Close the database connection
+        $conn->close();
+
+        // Send the JSON response. Send user ID if exists, otherwise false
+        echo json_encode($userId !== null ? $userId : false);
+
+    } else {
+
+        // Perform a SELECT query
+        $result = $conn->query('SELECT * FROM ' . $table);
+    
+        // Fetch the data and encode it as JSON
+        $data = [];
+        while ($row = $result->fetch_assoc()) {
+            $data[] = $row;
+        }
+        
+        // Close the database connection
+        $conn->close();
+    
+        // Send the JSON response
+        echo json_encode($data);
     }
 
-    // Close the database connection
-    $conn->close();
-
-    // Send the JSON response
-    echo json_encode($data);
 
 } elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
 

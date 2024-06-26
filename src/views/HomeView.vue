@@ -1,5 +1,5 @@
 <template>
-  <main class="p-5">
+  <main>
     <TimerBar :projects="projects" :categories="categories" />
 
     <SessionList :projects="projects" :sessions="sessionsDesc" :categories="categories"/>

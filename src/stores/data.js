@@ -1,8 +1,12 @@
 import { ref, computed } from "vue";
-import { defineStore } from "pinia";
+import { defineStore, storeToRefs } from "pinia";
 import getData from '@/composables/getData';
+import { useUserStore } from '@/stores/user.js'
+
 
 export const useDataStore = defineStore("data", () => {
+  // const { user } = storeToRefs(useUserStore());
+
   const sessions = ref([]);
   const projects = ref();
   const categories = ref();
@@ -12,7 +16,6 @@ export const useDataStore = defineStore("data", () => {
 
   const currentSession = ref({
     title: null,
-    user_id: 2,
     category_id: null,
     project_id: null,
     created_at: null,

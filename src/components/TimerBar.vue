@@ -1,5 +1,5 @@
 <template>
-  <div class="container d-flex border border-primary p-3 gap-3 rounded">
+  <div class="timerbar d-flex p-2 px-3 my-4 mb-5 gap-3">
     <input
       type="text"
       v-model="currentSession.title"
@@ -48,3 +48,18 @@ defineProps({
 const { currentSession } = storeToRefs(useDataStore());
 
 </script>
+
+<style scoped>
+.timerbar {
+  background-color: white;
+  box-shadow: var(--bs);
+  border-radius: var(--br);
+  font-size: 14px;
+}
+
+input {
+  border: none;
+  outline: none;
+  font-size: 14px;
+}
+</style>
