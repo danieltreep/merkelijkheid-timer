@@ -12,15 +12,6 @@
           {{ project.project_name }}
         </option>
       </select>
-      <select class="form-select w-50" v-model="category_id">
-        <option
-          v-for="category in categories"
-          :key="category.id"
-          :value="category.id"
-        >
-          {{ category.category_name }}
-        </option>
-      </select>
     </div>
 
     <div class="d-flex align-items-center gap-2 ">
@@ -34,7 +25,7 @@
         <input v-model="stoppedMinutes" class="time text-center">
       </div>
 
-      <SaveButton @click="handleSave('sessions', session.id, {title, category_id, project_id} )"/>
+      <SaveButton @click="handleSave('sessions', session.id, {title, project_id} )"/>
     </div>
   </li>
 
@@ -47,15 +38,13 @@ import { ref } from "vue";
 
 const props = defineProps({
   session: Object,
-  projects: Array,
-  categories: Array
+  projects: Array
 })
 
 const emit = defineEmits(['handleSave']);
 
 const title = ref(props.session.title);
 const project_id = ref(props.session.project_id);
-const category_id = ref(props.session.category_id);
 
 let stopped_at = new Date(props.session.stopped_at);
 let created_at = new Date(props.session.created_at);

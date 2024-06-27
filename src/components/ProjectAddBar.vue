@@ -26,7 +26,7 @@
           table="projects" 
           :data="{
             project_name: projectName,
-            client_id: clientId,
+            client_id: clientId
           }" 
           @reset-values="resetValues"/>
       </div>

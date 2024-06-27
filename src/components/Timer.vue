@@ -3,19 +3,20 @@
     <div class="time">
       {{ displayHours }}:{{ displayMinutes }}:{{ displaySeconds }}
     </div>
-    <button v-if="!timerRunning" class="btn btn-primary" @click="startTimer">
+    <button v-if="!timerRunning" class="btn btn-primary d-flex align-items-center gap-2" @click="startTimer">
+      <img src="@/assets/play-icon-white.svg" alt="">
       Start
     </button>
     <button
       v-if="timerRunning"
-      class="btn btn-danger"
+      class="btn btn-danger stop d-flex align-items-center gap-2"
       @click="stopTimer"
       :disabled="
         !currentSession.title ||
-        !currentSession.category_id ||
         !currentSession.project_id
       "
     >
+    <img src="@/assets/stop-icon-white.svg" alt="">
       Stop
     </button>
    
@@ -125,11 +126,14 @@ function calculateTimeDifference(startTime, endTime) {
 <style scoped>
 .btn {
   border-radius: var(--br);
-  background-color: var(--paars);
+  background-color: var(--groen);
   border: none;
   padding-inline: 1.5rem;
-  height: 100%;
+  height: 38px;
   font-size: 14px;
+}
+.stop {
+  background-color: var(--rood);
 }
 .time {
   font-size: 20px;

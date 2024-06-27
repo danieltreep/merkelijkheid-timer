@@ -1,13 +1,20 @@
 :root {
   --bg: #F7F7F7;
+  --hover: rgb(238, 238, 238);
   --grijs: #D0D0D0;
+  --tag: #F1F1F1;
+  --paars: #A53EF4;
+  --groen: #5EC04E;
+  --rood: #EE7170;
+  --border: #CED4DA;
   --br: 12px;
   --bs: 1px 1px 5px rgba(0, 0, 0, .1);
-  --paars: #A53EF4;
 }
 
 #app {
   background-color: var(--bg);
+  padding-bottom: 4rem;
+  min-height: 100svh;
 }
 
 .container {

@@ -55,6 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $table = $_GET['table'];
 
+    // Check if a user already exists
     if ($table === 'users' && isset($_GET['email'])) {
 
         $email = $_GET['email'];
@@ -79,6 +80,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Send the JSON response. Send user ID if exists, otherwise false
         echo json_encode($userId !== null ? $userId : false);
+
+    } elseif ($table === 'sessions' && isset($_GET['userid'])) {
+
+        $userid = $_GET['userid'];
+        
+        // Query that merges the tables: sessions, projects and clients
+        $result = $conn->query("SELECT * FROM $table INNER JOIN projects ON sessions.project_id = projects.id INNER JOIN clients ON projects.client_id = clients.id WHERE user_id = $userid");
+    
+        // Fetch the data and encode it as JSON
+        $data = [];
+        while ($row = $result->fetch_assoc()) {
+            $data[] = $row;
+        }
+        
+        // Close the database connection
+        $conn->close();
+    
+        // Send the JSON response
+        echo json_encode($data);
+
+    } elseif ($table === 'projects') {
+        
+        // Query that merges the tables: sessions, projects and clients
+        $result = $conn->query("SELECT * FROM $table INNER JOIN clients ON projects.client_id = clients.id");
+    
+        // Fetch the data and encode it as JSON
+        $data = [];
+        while ($row = $result->fetch_assoc()) {
+            $data[] = $row;
+        }
+        
+        // Close the database connection
+        $conn->close();
+    
+        // Send the JSON response
+        echo json_encode($data);
 
     } else {
 

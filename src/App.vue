@@ -19,7 +19,7 @@ const loginUser = async (response) => {
     await postData('users', {username: user.value.name, working: true, is_admin: 0, email: user.value.email})
   } 
 
-  // Voeg waarde 
+  // Voeg id toe aan gebruiker zodat die aan een sessie kan worden toegevoegd
   user.value.id = await getUser(user.value.email);
   
 }
@@ -34,7 +34,8 @@ const loginUser = async (response) => {
       <img src="@/assets/logo.svg" alt="">
         <nav class="ms-auto">
           <RouterLink to="/">Home</RouterLink>
-          <RouterLink to="/admin">Admin</RouterLink>
+          <RouterLink to="/admin">Clients</RouterLink>
+          <!-- <RouterLink to="/reports">Reports</RouterLink> -->
         </nav>
   
         <GoogleLogin :callback="loginUser" prompt auto-login v-if="!userAuthorized"/>
@@ -56,7 +57,6 @@ const loginUser = async (response) => {
   border: 2px solid #AEDCE4;
 }
 nav {
-  border-right: 1px solid rgb(188, 188, 188);
   margin-right: 1rem;
 }
 nav a {
@@ -64,12 +64,12 @@ nav a {
   text-decoration: none;
   /* margin-inline: 1rem; */
   padding: .8rem 1.5rem;
-  margin-inline: .5rem;
+  margin-left: .5rem;
   border-radius: var(--br);
 
 }
 nav a:not(.router-link-active):hover {
-  background-color: rgb(233, 233, 233);
+  background-color: var(--hover);
 }
 .router-link-active {
   background-color: white;

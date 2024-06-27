@@ -15,7 +15,7 @@
             table="clients" 
             :data="{
                 client_name: clientName,
-               
+                color: '#C2B5ED'
             }" 
             @reset-values="resetValues"/>
       </div>

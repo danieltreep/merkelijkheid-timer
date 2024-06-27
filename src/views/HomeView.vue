@@ -1,8 +1,8 @@
 <template>
   <main>
-    <TimerBar :projects="projects" :categories="categories" />
+    <TimerBar :projects="projects" />
 
-    <SessionList :projects="projects" :sessions="sessionsDesc" :categories="categories"/>
+    <SessionList :projects="projects" :sessions="sessionsDesc"/>
   </main>
 </template>
 
@@ -15,12 +15,13 @@ import getData from "@/composables/getData";
 import TimerBar from "@/components/TimerBar.vue";
 
 import SessionList from "@/components/SessionList.vue";
+import getSessions from "@/composables/getSessions";
 
-const { sessions, sessionsDesc, projects, categories } = storeToRefs(useDataStore());
+const { sessions, sessionsDesc, projects, clients } = storeToRefs(useDataStore());
 
 onMounted(async () => {
   projects.value = await getData('projects');
-  categories.value = await getData('categories');
-  sessions.value = await getData('sessions');
+  sessions.value = await getSessions(30);
+  clients.value = await getData('clients');
 });
 </script>
