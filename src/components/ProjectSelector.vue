@@ -1,25 +1,24 @@
 <template>
-    <div class="project-selector position-absolute p-3">
-
-        <input type="text" class="w-100 search mb-3" placeholder="Search client" v-model="searchterm">
-        <p>{{ searchterm }}</p>
-        <div v-for="client in clients" :key="client.id" class="py-3 list-item d-flex justify-content-between">
-            <div class="d-flex align-items-center  gap-3">
-                <div class="bolletje" :style="{ backgroundColor: client.color }"></div>
-                <p class="mb-0 bedrijf">{{ client.client_name }}</p>
+    <div class="project-selector position-absolute">
+        <div class="searchwrapper p-3 pb-0 bg-white sticky-top">
+            <input type="text" class="w-100 search mb-3 " placeholder="Search client" v-model="searchterm">
+        </div>
+        <div class="listwrapper p-3 px-4 pt-0">
+            <div v-for="client in filteredClients" :key="client.id" class="py-3  list-item d-flex justify-content-between">
+                <div class="d-flex align-items-center  gap-3">
+                    <div class="bolletje" :style="{ backgroundColor: client.color }"></div>
+                    <p class="mb-0 bedrijf">{{ client.client_name }}</p>
+                </div>
+                    
+                <div>
+                    <button 
+                        v-for="(project, index) in filterProjectsByClient(client.client_name)" 
+                        :key="index"
+                        @click="() => handleCLick(project)"
+                        class="ms-2"
+                    >{{ project.project_name }}</button>
+                </div>
             </div>
-                
-            <div>
-                <button 
-                    v-for="(project, index) in filterProjectsByClient(client.client_name)" 
-                    :key="index"
-                    @click="console.log(project.project_name)"
-                    class="ms-2"
-                >{{ project.project_name }}</button>
-            </div>
-
-           
-            
         </div>
         
     </div>
@@ -27,18 +26,20 @@
 <script setup>
 import { useDataStore } from "@/stores/data";
 import { storeToRefs } from "pinia";
-import { ref, computed } from "vue";
 
-const { clients, projects } = storeToRefs(useDataStore());
+const { projects, searchterm, filteredClients } = storeToRefs(useDataStore());
+
+const emit = defineEmits(['handleClick']);
 
 function filterProjectsByClient(client) {
     return projects.value.filter(project => project.client_name === client);
 }
 
-const searchterm = ref('')
-// const filteredClients = computed(() => {
-//     return clients.value.filter(client => client.client_name.toLowerCase().includes(searchterm.value.toLowerCase()))
-// })
+function handleCLick(project) {
+    emit('handleClick', project);
+    searchterm.value = '';
+}
+
 </script>
 <style scoped>
 
@@ -47,7 +48,6 @@ const searchterm = ref('')
     border-radius: 0 0 var(--br) var(--br);
     width: 380px;
     top: calc(100% + 10px);
-    /* padding: 1rem; */
     box-shadow: var(--bs);
     z-index: 1;
     max-height: 350px;

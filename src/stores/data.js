@@ -1,14 +1,17 @@
 import { ref, computed } from "vue";
 import { defineStore, storeToRefs } from "pinia";
 import getData from '@/composables/getData';
-import { useUserStore } from '@/stores/user.js'
-
 
 export const useDataStore = defineStore("data", () => {
 
   const sessions = ref([]);
   const projects = ref();
-  const clients = ref();
+  const clients = ref([]);
+  const searchterm = ref('');
+
+  const filteredClients = computed(() => {
+    return clients.value.filter(client => client.client_name.toLowerCase().includes(searchterm.value.toLowerCase()))
+  })
 
   const sessionsDesc = computed(() => sessions.value.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)));
 
@@ -45,5 +48,5 @@ export const useDataStore = defineStore("data", () => {
     currentSession.value.time_in_minutes = null;
   }
 
-  return { currentSession, sessions, sessionsDesc, projects, clients, updateTable, resetCurrentSession };
+  return { currentSession, sessions, sessionsDesc, projects, clients, filteredClients, searchterm, updateTable, resetCurrentSession };
 });

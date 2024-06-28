@@ -12,17 +12,9 @@ const getSessions = async (userid) => {
         console.error("Error:", error);
       });
   
-      // Parse id to number
-      const modifiedData = data.map(item => {
-        return {
-          ...item,
-          id: +item.id
-        };
-      });
+      console.log(data);
   
-      // console.log(modifiedData);
-  
-    return modifiedData
+    return data
   };
   
   export default getSessions;

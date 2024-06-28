@@ -116,9 +116,5 @@ li.d-grid {
 .more-button:hover {
   background-color: var(--hover);
 }
-.bolletje {
-  height: 10px;
-  width: 10px;
-  border-radius: 50%;
-}
+
 </style>

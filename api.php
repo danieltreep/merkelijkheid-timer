@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $email = $_GET['email'];
         
         // Prepare a SELECT query to check if the email exists and fetch the user ID
-        $stmt = $conn->prepare('SELECT id FROM users WHERE email = ?');
+        $stmt = $conn->prepare('SELECT user_id FROM users WHERE email = ?');
         $stmt->bind_param('s', $email);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $userid = $_GET['userid'];
         
         // Query that merges the tables: sessions, projects and clients
-        $result = $conn->query("SELECT * FROM $table INNER JOIN projects ON sessions.project_id = projects.id INNER JOIN clients ON projects.client_id = clients.id WHERE user_id = $userid");
+        $result = $conn->query("SELECT * FROM $table INNER JOIN projects ON sessions.project_id = projects.project_id INNER JOIN clients ON projects.client_id = clients.client_id WHERE user_id = $userid");
     
         // Fetch the data and encode it as JSON
         $data = [];
@@ -103,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($table === 'projects') {
         
         // Query that merges the tables: sessions, projects and clients
-        $result = $conn->query("SELECT * FROM $table INNER JOIN clients ON projects.client_id = clients.id");
+        $result = $conn->query("SELECT * FROM $table INNER JOIN clients ON projects.client_id = clients.client_id");
     
         // Fetch the data and encode it as JSON
         $data = [];

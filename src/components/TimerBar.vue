@@ -7,13 +7,15 @@
       class="ps-0"
     />
 
-    <div class="position-relative">
+    <div class="position-relative d-flex align-items-center gap-3">
+      <div class="bolletje" v-if="currentSession.project_id" :style="{ backgroundColor: bolletjeColor }"></div>
+      <p class="mb-0" v-if="currentSession.client_id">{{ client }}</p>
       <button class="add-project-button" @click="openProjectSelector = !openProjectSelector">
-        Project
-        <img src="@/assets/add-icon.svg">
+        {{ buttonText }}
+        <img src="@/assets/add-icon.svg" v-if="!currentSession.project_id">
       </button>
 
-      <ProjectSelector v-show="openProjectSelector"/>
+      <ProjectSelector v-show="openProjectSelector" @handleClick="addProject"/>
 
     </div>
 
@@ -44,6 +46,18 @@ const { currentSession } = storeToRefs(useDataStore());
 
 const clock = ref(true);
 const openProjectSelector = ref(false);
+const buttonText = ref('Project');
+const client = ref('');
+const bolletjeColor = ref('var(--tag)')
+
+function addProject(project) {
+  buttonText.value = project.project_name;
+  client.value = project.client_name;
+  bolletjeColor.value = project.color;
+  currentSession.value.project_id = project.project_id
+  currentSession.value.client_id = project.client_id
+  openProjectSelector.value = false
+}
 
 </script>
 
