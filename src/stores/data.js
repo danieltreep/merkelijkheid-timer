@@ -1,6 +1,7 @@
 import { ref, computed } from "vue";
 import { defineStore, storeToRefs } from "pinia";
 import getData from '@/composables/getData';
+import getSessions from '@/composables/getSessions';
 
 export const useDataStore = defineStore("data", () => {
 
@@ -28,7 +29,7 @@ export const useDataStore = defineStore("data", () => {
     
     switch(table) {
       case 'sessions':
-        sessions.value = await getData(table);
+        sessions.value = await getSessions(30);
         break;
       case 'projects':
         projects.value = await getData(table);

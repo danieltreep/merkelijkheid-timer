@@ -78,15 +78,6 @@ li.d-grid {
   grid-template-columns: minmax(max-content, 35%) 5fr 4fr 1.1fr 40px 40px;
   align-items: center;
 }
-
-.list-group-item {
-  border: none;
-  padding-left: 2rem;
-  font-size: 14px;
-}
-.list-group-item:not(:last-child) {
-  border-bottom: 1px solid #EDEEF1;
-}
 .time {
   display: grid;
   grid-template-columns: 20px 45px 15px 50px;
@@ -102,19 +93,6 @@ li.d-grid {
   width: fit-content;
   font-size: 12px;
   font-weight: 500;
-}
-.play-button, .more-button {
-  border: none;
-  background-color: transparent;
-  padding: .6rem;
-  border-radius: var(--br);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.play-button:hover, 
-.more-button:hover {
-  background-color: var(--hover);
 }
 
 </style>

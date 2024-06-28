@@ -12,7 +12,7 @@ const getData = async (tableName) => {
       console.error("Error:", error);
     });
 
-    console.log(data);
+    // console.log(data);
 
   return data
 };

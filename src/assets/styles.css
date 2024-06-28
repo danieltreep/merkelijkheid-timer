@@ -25,3 +25,34 @@
   width: 10px;
   border-radius: 50%;
 }
+
+.list-group {
+  box-shadow: var(--bs);
+  border-radius: var(--br);
+}
+.list-group-item-secondary {
+  font-size: 12px;
+  font-weight: 500;
+  color: #8F8F8F;
+}
+.list-group-item {
+  border: none;
+  padding-left: 2rem;
+  font-size: 14px;
+}
+.list-group-item:not(:last-child) {
+  border-bottom: 1px solid #EDEEF1;
+}
+.play-button, .more-button {
+  border: none;
+  background-color: transparent;
+  padding: .6rem;
+  border-radius: var(--br);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.play-button:hover, 
+.more-button:hover {
+  background-color: var(--hover);
+}

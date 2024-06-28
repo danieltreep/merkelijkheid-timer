@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Fetch the user ID if any row is returned
         $userId = null;
         if ($row = $result->fetch_assoc()) {
-            $userId = $row['id'];
+            $userId = $row['user_id'];
         }
 
         // Close the statement

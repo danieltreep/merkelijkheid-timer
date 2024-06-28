@@ -29,7 +29,6 @@ import { ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useDataStore } from "@/stores/data";
 import { useUserStore } from '@/stores/user'
-const { user } = storeToRefs(useUserStore());
 
 import postData from "@/composables/postData";
 import ClearButton from '@/components/ClearButton.vue'
@@ -38,6 +37,9 @@ defineProps({
   disabled: Boolean,
 });
 
+const emit = defineEmits(['reset']);
+
+const { user } = storeToRefs(useUserStore());
 const { currentSession } = storeToRefs(useDataStore());
 const { resetCurrentSession } = useDataStore();
 
@@ -66,7 +68,7 @@ function stopTimer() {
 
   // Stop interval en POST de data
   clearInterval(timerInterval);
-  postData("sessions", {...currentSession.value, user_id: user.value.id}); // Voeg user id toe aan sessie
+  postData("sessions", {...currentSession.value, user_id: user.value.user_id}); // Voeg user id toe aan sessie
 
   // Reset display timer
   displaySeconds.value = prefixZero(0);
@@ -75,6 +77,7 @@ function stopTimer() {
 
   // Reset de waarden van de huidige sessie
   resetCurrentSession();
+  emit('reset');
 }
 
 function clockRunning() {
@@ -100,6 +103,7 @@ function clearTimer() {
   displayHours.value = prefixZero(0);
   clearInterval(timerInterval);
   resetCurrentSession();
+  emit('reset');
 }
 
 function prefixZero(n) {
@@ -120,6 +124,7 @@ function calculateTimeDifference(startTime, endTime) {
   const timeDifferenceInMinutes = timeDifferenceInMilliseconds / (1000 * 60);
   return Math.floor(timeDifferenceInMinutes);
 }
+
 
 </script>
 

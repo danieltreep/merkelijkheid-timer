@@ -1,9 +1,12 @@
 <template>
-  <div class="col-6">
-    <h2>Clients</h2>
-
+  <div class="mt-4">
     <ul v-if="clients" class="list-group">
-      <ClientListItem v-for="client in clients" :key="client.id" :client="client" :id="client.id"/>
+      <li class="list-group-item list-group-item-secondary d-grid align-items-center header">
+        <span>Client</span>
+        <span>Tag color</span>
+        <span>Projects</span>
+      </li>
+      <ClientListItem v-for="client in clients" :key="client.client_id" :client="client"/>
     </ul>
    
     <ClientAddBar />
@@ -20,4 +23,8 @@ defineProps({
 
 </script>
 
-<style lang="css" scoped></style>
+<style scoped>
+.header {
+  font-size: 12px;
+}
+</style>

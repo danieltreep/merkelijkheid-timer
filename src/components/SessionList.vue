@@ -17,21 +17,6 @@ defineProps({
 </script>
 
 <style scoped>
-
-.list-group-item {
-  border: none;
-  padding-left: 2rem;
-  font-size: 14px;
-}
-.list-group {
-  box-shadow: var(--bs);
-  border-radius: var(--br);
-}
-.list-group-item-secondary {
-  font-size: 12px;
-  font-weight: 500;
-  color: #8F8F8F;
-}
 .time {
   font-size: 16px;
   color: #3A3A3A;

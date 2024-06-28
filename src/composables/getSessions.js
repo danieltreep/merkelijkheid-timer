@@ -12,7 +12,7 @@ const getSessions = async (userid) => {
         console.error("Error:", error);
       });
   
-      console.log(data);
+      // console.log(data);
   
     return data
   };

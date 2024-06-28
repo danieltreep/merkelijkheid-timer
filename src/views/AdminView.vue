@@ -1,11 +1,21 @@
 <template>
-  <main class="p-5">
-    <div class="container">
-      <div class="row">
-        <ClientList :clients="clients"/>
-        <ProjectList :clients="clients" :projects="projects"/>
+  <main class="py-5">
+      <div class="d-flex">
+        <div class="search d-flex align-items-center">
+          <img src="@/assets/search-icon.svg">
+          <input type="text" v-model="searchterm" placeholder="Search client">
+        </div>
+      <button class="ms-auto me-3">
+        <img class="me-2" src="@/assets/archive-icon.svg">
+        Archive
+      </button>
+      <button class="add-client-button">
+        <img class="me-2"  src="@/assets/plus-icon-white.svg">
+        Add client
+      </button>
       </div>
-    </div>
+      <ClientList :clients="filteredClients"/>      
+    
   </main>
 </template>
 
@@ -17,9 +27,8 @@ import { useDataStore } from "@/stores/data";
 import getData from "@/composables/getData";
 
 import ClientList from "@/components/ClientList.vue";
-import ProjectList from "@/components/ProjectList.vue";
 
-const { projects, clients } = storeToRefs(useDataStore());
+const { projects, clients, searchterm, filteredClients } = storeToRefs(useDataStore());
 
 onMounted(async () => {
   projects.value = await getData('projects');
@@ -27,4 +36,40 @@ onMounted(async () => {
 });
 </script>
 
-<style></style>
+<style scoped>
+
+.search {
+  border: 1px solid var(--border);
+  border-radius: var(--br);
+  padding: 0 1rem;
+  outline: none;
+  background-color: transparent;
+  width: 270px;
+}
+.search input {
+  padding: .5rem 1rem;
+  outline: none;
+  border: none;
+  background-color: transparent;
+  font-size: 15px;
+  color: #6C757D;
+}
+button {
+  background-color: transparent;
+  border: 1px solid var(--border);
+  padding: .5rem 1.5rem;
+  border-radius: var(--br);
+  font-size: 14px;
+  font-weight: 500;
+  color: #3A3A3A;
+  display: flex;
+  align-items: center;
+  gap: .3rem;
+}
+.add-client-button {
+  background-color: var(--paars);
+  border: 1px solid var(--paars);
+  color: white;
+}
+
+</style>

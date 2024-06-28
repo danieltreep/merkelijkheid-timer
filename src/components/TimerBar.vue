@@ -7,9 +7,9 @@
       class="ps-0"
     />
 
-    <div class="position-relative d-flex align-items-center gap-3">
-      <div class="bolletje" v-if="currentSession.project_id" :style="{ backgroundColor: bolletjeColor }"></div>
-      <p class="mb-0" v-if="currentSession.client_id">{{ client }}</p>
+    <div class="position-relative d-flex align-items-center">
+      <div class="bolletje me-2" v-if="currentSession.project_id" :style="{ backgroundColor: bolletjeColor }"></div>
+      <p class="mb-0 me-3" v-if="currentSession.project_id">{{ client }}</p>
       <button class="add-project-button" @click="openProjectSelector = !openProjectSelector">
         {{ buttonText }}
         <img src="@/assets/add-icon.svg" v-if="!currentSession.project_id">
@@ -19,7 +19,7 @@
 
     </div>
 
-    <Timer />
+    <Timer @reset="handleReset"/>
 
     <div class="options d-flex flex-column justify-content-around align-items-center ms-2 h-100">
       <button class="clock">
@@ -48,15 +48,19 @@ const clock = ref(true);
 const openProjectSelector = ref(false);
 const buttonText = ref('Project');
 const client = ref('');
-const bolletjeColor = ref('var(--tag)')
+const bolletjeColor = ref('')
 
 function addProject(project) {
   buttonText.value = project.project_name;
   client.value = project.client_name;
   bolletjeColor.value = project.color;
   currentSession.value.project_id = project.project_id
-  currentSession.value.client_id = project.client_id
   openProjectSelector.value = false
+}
+
+function handleReset() {
+  buttonText.value = 'Project';
+  client.value = '';
 }
 
 </script>

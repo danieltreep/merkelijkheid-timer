@@ -3,6 +3,8 @@ import { useDataStore } from '@/stores/data'
 const postData = async (table, data) => {
 
   const { updateTable } = useDataStore();
+
+  console.log(data)
   
   fetch(`http://localhost/merkelijkheid-timer/api.php`, {
     method: "POST",

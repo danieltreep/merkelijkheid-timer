@@ -1,6 +1,6 @@
 const getUser = async (email) => {
 
-  let id;
+  let user_id;
 
   const data = await fetch(`http://localhost/merkelijkheid-timer/api.php?table=users&email=${encodeURI(email)}`)
     .then((res) => {
@@ -10,13 +10,13 @@ const getUser = async (email) => {
       return res.json();
     })
     .then(data => {
-      id = data;
+      user_id = data;
     })
     .catch((error) => {
       console.error("Error:", error);
     });
 
-    return id;
+    return user_id;
   
 };
 

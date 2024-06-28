@@ -20,7 +20,7 @@ const loginUser = async (response) => {
   } 
 
   // Voeg id toe aan gebruiker zodat die aan een sessie kan worden toegevoegd
-  user.value.id = await getUser(user.value.email);
+  user.value.user_id = await getUser(user.value.email);
   
 }
 
