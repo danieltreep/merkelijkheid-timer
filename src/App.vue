@@ -28,13 +28,12 @@ const loginUser = async (response) => {
 
 <template>
   <div class="container">
-
     <header class="py-4 d-flex justify-content-between align-items-center">
   
       <img src="@/assets/logo.svg" alt="">
         <nav class="ms-auto">
-          <RouterLink to="/">Home</RouterLink>
-          <RouterLink to="/admin">Clients</RouterLink>
+          <RouterLink to="/">Time tracker</RouterLink>
+          <RouterLink to="/clients">Clients</RouterLink>
           <!-- <RouterLink to="/reports">Reports</RouterLink> -->
         </nav>
   
@@ -62,19 +61,14 @@ nav {
 nav a {
   color: black;
   text-decoration: none;
-  /* margin-inline: 1rem; */
   padding: .8rem 1.5rem;
   margin-left: .5rem;
   border-radius: var(--br);
-
 }
-nav a:not(.router-link-active):hover {
+nav a:hover {
   background-color: var(--hover);
 }
 .router-link-active {
-  background-color: white;
-  /* color: white; */
-  font-weight: 500;
-  box-shadow: var(--bs);
+  font-weight: 600;
 }
 </style>

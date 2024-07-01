@@ -4,9 +4,9 @@ const postData = async (table, data) => {
 
   const { updateTable } = useDataStore();
 
-  console.log(data)
+  let id;
   
-  fetch(`http://localhost/merkelijkheid-timer/api.php`, {
+  await fetch(`http://localhost/merkelijkheid-timer/api.php`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -20,12 +20,15 @@ const postData = async (table, data) => {
       return res.json();
     })
     .then((result) => {
-      console.log(result.message);
+      console.log(result.id);
       updateTable(table);
+      id = result.id
     })
     .catch((error) => {
       console.error("Error:", error.message);
     });
+
+    return id;
 };
 
 export default postData;

@@ -9,12 +9,9 @@
         <img class="me-2" src="@/assets/archive-icon.svg">
         Archive
       </button>
-      <button class="add-client-button">
-        <img class="me-2"  src="@/assets/plus-icon-white.svg">
-        Add client
-      </button>
+      <AddClientButton />
       </div>
-      <ClientList :clients="filteredClients"/>      
+      <ClientList :clients="clientsThatMatchSearch"/>      
     
   </main>
 </template>
@@ -27,8 +24,9 @@ import { useDataStore } from "@/stores/data";
 import getData from "@/composables/getData";
 
 import ClientList from "@/components/ClientList.vue";
+import AddClientButton from "@/components/AddClientButton.vue";
 
-const { projects, clients, searchterm, filteredClients } = storeToRefs(useDataStore());
+const { projects, clients, searchterm, clientsThatMatchSearch } = storeToRefs(useDataStore());
 
 onMounted(async () => {
   projects.value = await getData('projects');
@@ -65,11 +63,6 @@ button {
   display: flex;
   align-items: center;
   gap: .3rem;
-}
-.add-client-button {
-  background-color: var(--paars);
-  border: 1px solid var(--paars);
-  color: white;
 }
 
 </style>

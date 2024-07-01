@@ -8,14 +8,11 @@
       </li>
       <ClientListItem v-for="client in clients" :key="client.client_id" :client="client"/>
     </ul>
-   
-    <ClientAddBar />
   </div>
 </template>
 
 <script setup>
 import ClientListItem from "@/components/ClientListItem.vue";
-import ClientAddBar from "@/components/ClientAddBar.vue";
 
 defineProps({
   clients: Array
@@ -26,5 +23,8 @@ defineProps({
 <style scoped>
 .header {
   font-size: 12px;
+}
+.list-group-item {
+    grid-template-columns: 20% 20% 1fr 180px 40px;
 }
 </style>

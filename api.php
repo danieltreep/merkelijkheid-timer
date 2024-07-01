@@ -43,14 +43,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $sql = "INSERT INTO $table ($columns) VALUES ($values)";
 
     if ($conn->query($sql) === TRUE) {
-        $response = array('status' => 'success', 'message' => 'Data added successfully');
+        // Get the ID of the newly added row
+        $newId = $conn->insert_id;
+        $response = array('status' => 'success', 'message' => 'Data added successfully', 'id' => $newId);
     } else {
         $response = array('status' => 'error', 'message' => 'Error adding data: ' . $conn->error);
     }
 
     // Send the JSON response
     echo json_encode($response);
-
 } elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     $table = $_GET['table'];
@@ -144,25 +145,78 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = $requestData['id']; 
     $table = $requestData['table']; 
 
-    $sql = "DELETE FROM " . $conn->real_escape_string($table) . " WHERE id = " . $conn->real_escape_string($id);
+    if ($table == 'clients') {
+        // Find all project_ids related to the client
+        $sqlProjectIds = "SELECT project_id FROM projects WHERE client_id = " . $conn->real_escape_string($id);
+        $result = $conn->query($sqlProjectIds);
 
-    if ($conn->query($sql) === TRUE) {
-        $response = array('status' => 'success', 'message' => 'Record deleted successfully');
+        $projectIds = [];
+        if ($result->num_rows > 0) {
+            while($row = $result->fetch_assoc()) {
+                $projectIds[] = $row['project_id'];
+            }
+        }
+
+        // Convert project_ids array to comma-separated string
+        $projectIdsStr = implode(',', $projectIds);
+
+        // Start transaction
+        $conn->begin_transaction();
+
+        $errorMessages = [];
+
+        // Delete from sessions table
+        if (!empty($projectIdsStr)) {
+            $sqlSessions = "DELETE FROM sessions WHERE project_id IN (" . $conn->real_escape_string($projectIdsStr) . ")";
+            if ($conn->query($sqlSessions) !== TRUE) {
+                $errorMessages[] = "Error deleting sessions: " . $conn->error;
+            }
+        }
+
+        // Delete from projects table
+        $sqlProjects = "DELETE FROM projects WHERE client_id = " . $conn->real_escape_string($id);
+        if ($conn->query($sqlProjects) !== TRUE) {
+            $errorMessages[] = "Error deleting projects: " . $conn->error;
+        }
+
+        // Delete from clients table
+        $sqlClients = "DELETE FROM clients WHERE client_id = " . $conn->real_escape_string($id);
+        if ($conn->query($sqlClients) !== TRUE) {
+            $errorMessages[] = "Error deleting client: " . $conn->error;
+        }
+
+        if (empty($errorMessages)) {
+            // Commit transaction if no errors
+            $conn->commit();
+            $response = array('status' => 'success', 'message' => 'Client and related data deleted successfully');
+        } else {
+            // Rollback transaction if there were errors
+            $conn->rollback();
+            $response = array('status' => 'error', 'message' => implode(' ', $errorMessages));
+        }
     } else {
-        $response = array('status' => 'error', 'message' => 'Error deleting record: ' . $conn->error);
+        $idprefix = substr_replace($table, '', -1) . '_';
+        $sql = "DELETE FROM " . $conn->real_escape_string($table) . " WHERE $idprefix" . "id = " . $conn->real_escape_string($id);
+
+        if ($conn->query($sql) === TRUE) {
+            $response = array('status' => 'success', 'message' => 'Record deleted successfully');
+        } else {
+            $response = array('status' => 'error', 'message' => 'Error deleting record: ' . $conn->error);
+        }
     }
 
     // Send the JSON response
     echo json_encode($response);
+}
 
-} elseif ($_SERVER['REQUEST_METHOD'] === 'PATCH') {
-    // Parse incoming data
+if ($_SERVER['REQUEST_METHOD'] === 'PATCH') {
+  
     $requestData = json_decode(file_get_contents("php://input"), true);
-
-    // Extract parameters from the request data
+    
     $id = $requestData['id']; 
     $table = $requestData['table']; 
-    $data = $requestData['data']; // Replace with the actual data
+    $data = $requestData['data']; 
+    $idprefix = substr_replace($table, '', -1) . '_';
 
     // Initialize the SET part of the SQL query
     $setClause = '';
@@ -178,7 +232,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Construct the SQL query for the update operation
     $sql = "UPDATE " . $conn->real_escape_string($table) . 
            " SET " . $setClause .
-           " WHERE id = " . $conn->real_escape_string($id);
+           " WHERE $idprefix" . "id = " . $conn->real_escape_string($id);
 
     // Execute the update query
     if ($conn->query($sql) === TRUE) {

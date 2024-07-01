@@ -5,10 +5,9 @@
           <div class="bedrijf d-flex align-items-center gap-2">
             <div class="bolletje" :style="{ backgroundColor: session.color }"></div>
             {{ session.client_name }}
-            </div>
-            <div class="project">
-            {{ session.project_name }}
-
+          </div>
+          <div class="project" :class="session.project_name === 'General' ? 'pinguin' : '' ">
+            {{ session.project_name === 'General' ? '🐧' : session.project_name }}
           </div>
         </div>
         <div class="time align-items-center gap-2">
@@ -39,18 +38,17 @@
           <img src="@/assets/more-icon.svg" >
         </button>
 
-        <div class="buttons d-flex gap-2 d-none">
+        <!-- <div class="buttons d-flex gap-2 d-none">
             <EditButton @click="isEditing = true"/>
             <DeleteButton table="sessions" :id="session.id" />
-        </div>
+        </div> -->
       </li>
       <SessionListItemEdit v-if="isEditing" :session="session" :projects="projects" @handleSave="isEditing = false"/>
 </template>
 <script setup>
 import { ref } from "vue";
 
-import EditButton from "@/components/EditButton.vue";
-import DeleteButton from "@/components/DeleteButton.vue";
+
 import SessionListItemEdit from "@/components/SessionListItemEdit.vue";
 
 defineProps({
@@ -86,13 +84,12 @@ li.d-grid {
   font-size: 18px;
   font-weight: 500;
 }
-.project {
+/* .project {
   background-color: var(--tag);
   padding: .4rem 1.5rem;
   border-radius: 30px;
   width: fit-content;
   font-size: 12px;
   font-weight: 500;
-}
-
+} */
 </style>

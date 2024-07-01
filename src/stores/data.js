@@ -10,7 +10,7 @@ export const useDataStore = defineStore("data", () => {
   const clients = ref([]);
   const searchterm = ref('');
 
-  const filteredClients = computed(() => {
+  const clientsThatMatchSearch = computed(() => {
     return clients.value.filter(client => client.client_name.toLowerCase().includes(searchterm.value.toLowerCase()))
   })
 
@@ -26,16 +26,16 @@ export const useDataStore = defineStore("data", () => {
   });
 
   async function updateTable(table) {
-    
+  
     switch(table) {
       case 'sessions':
         sessions.value = await getSessions(30);
         break;
       case 'projects':
-        projects.value = await getData(table);
+        projects.value = await getData('projects');
         break;
       case 'clients':
-        clients.value = await getData(table);
+        clients.value = await getData('clients');
         break;
     }
   }
@@ -49,5 +49,15 @@ export const useDataStore = defineStore("data", () => {
     currentSession.value.time_in_minutes = null;
   }
 
-  return { currentSession, sessions, sessionsDesc, projects, clients, filteredClients, searchterm, updateTable, resetCurrentSession };
+  return { 
+    currentSession, 
+    sessions,
+    sessionsDesc, 
+    projects, 
+    clients, 
+    clientsThatMatchSearch, 
+    searchterm, 
+    updateTable, 
+    resetCurrentSession
+  };
 });

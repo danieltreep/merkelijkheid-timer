@@ -1,9 +1,9 @@
 <template>
-  <div class="d-flex align-items-center gap-3">
-    <div class="time">
+  <div class="d-flex align-items-center ms-auto">
+    <div class="time me-3">
       {{ displayHours }}:{{ displayMinutes }}:{{ displaySeconds }}
     </div>
-    <button v-if="!timerRunning" class="btn btn-primary d-flex align-items-center gap-2" @click="startTimer">
+    <button v-if="!timerRunning" class="btn start d-flex align-items-center gap-2" @click="startTimer">
       <img src="@/assets/play-icon-white.svg" alt="">
       Start
     </button>
@@ -131,14 +131,18 @@ function calculateTimeDifference(startTime, endTime) {
 <style scoped>
 .btn {
   border-radius: var(--br);
-  background-color: var(--groen);
-  border: none;
   padding-inline: 1.5rem;
   height: 38px;
   font-size: 14px;
+  }
+.start {
+  border: none;
+  background-color: var(--groen);
+  color: white
 }
 .stop {
   background-color: var(--rood);
+  border: none;
 }
 .time {
   font-size: 20px;

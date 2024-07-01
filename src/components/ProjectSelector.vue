@@ -4,7 +4,7 @@
             <input type="text" class="w-100 search mb-3 " placeholder="Search client" v-model="searchterm">
         </div>
         <div class="listwrapper p-3 px-4 pt-0">
-            <div v-for="client in filteredClients" :key="client.id" class="py-3  list-item d-flex justify-content-between">
+            <div v-for="client in clientsThatMatchSearch" :key="client.id" class="py-3  list-item d-flex justify-content-between">
                 <div class="d-flex align-items-center  gap-3">
                     <div class="bolletje" :style="{ backgroundColor: client.color }"></div>
                     <p class="mb-0 bedrijf">{{ client.client_name }}</p>
@@ -16,7 +16,10 @@
                         :key="index"
                         @click="() => handleCLick(project)"
                         class="ms-2"
-                    >{{ project.project_name }}</button>
+                        :class="project.project_name === 'General' ? 'pinguin' : '' "
+                    >
+                        {{ project.project_name === 'General' ? '🐧' : project.project_name }}
+                    </button>
                 </div>
             </div>
         </div>
@@ -27,7 +30,7 @@
 import { useDataStore } from "@/stores/data";
 import { storeToRefs } from "pinia";
 
-const { projects, searchterm, filteredClients } = storeToRefs(useDataStore());
+const { projects, searchterm, clientsThatMatchSearch } = storeToRefs(useDataStore());
 
 const emit = defineEmits(['handleClick']);
 
@@ -62,11 +65,6 @@ function handleCLick(project) {
     padding: .5rem 1rem;
     outline: none;
 }
-.bolletje {
-    height: 10px;
-    width: 10px;
-    border-radius: 50%;
-}
 .list-item:not(:last-child) {
     border-bottom: 1px solid #EDEEF1;
 }
@@ -82,6 +80,6 @@ button {
 }
 button:hover {
   background-color: #D8D8D8;
-
 }
+
 </style>

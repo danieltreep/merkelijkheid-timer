@@ -10,7 +10,7 @@
     <div class="position-relative d-flex align-items-center">
       <div class="bolletje me-2" v-if="currentSession.project_id" :style="{ backgroundColor: bolletjeColor }"></div>
       <p class="mb-0 me-3" v-if="currentSession.project_id">{{ client }}</p>
-      <button class="add-project-button" @click="openProjectSelector = !openProjectSelector">
+      <button class="add-project-button" :class="buttonText === '🐧' ? 'pinguin' : '' " @click="openProjectSelector = !openProjectSelector">
         {{ buttonText }}
         <img src="@/assets/add-icon.svg" v-if="!currentSession.project_id">
       </button>
@@ -51,7 +51,7 @@ const client = ref('');
 const bolletjeColor = ref('')
 
 function addProject(project) {
-  buttonText.value = project.project_name;
+  buttonText.value = project.project_name === 'General' ? '🐧' : project.project_name;
   client.value = project.client_name;
   bolletjeColor.value = project.color;
   currentSession.value.project_id = project.project_id
@@ -71,7 +71,7 @@ function handleReset() {
   box-shadow: var(--bs);
   border-radius: var(--br);
   font-size: 14px;
-  grid-template-columns: minmax(max-content, 35%) 1fr 200px 30px;
+  grid-template-columns: minmax(max-content, 35%) 1fr 1fr 30px;
   padding-left: 2rem;
   height: 50px;
 }
