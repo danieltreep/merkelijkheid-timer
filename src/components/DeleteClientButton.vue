@@ -31,7 +31,7 @@ function handleDelete() {
 .delete-icon {
     cursor: pointer;
     background-color: transparent;
-    padding: .8rem;
+    padding: .8rem 1rem;
     border-radius: var(--br);
     display: flex;
     align-items: center;

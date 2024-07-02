@@ -7,44 +7,43 @@
     <div class="modal fade" id="addClientModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addClientModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content p-4">
-            <div class="modal-header">
-                <h4 class="modal-title" id="addClientModalLabel">Add client</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <input type="text" placeholder="Client name" class="client-input w-100" v-model="clientName">
-                <div class="d-flex mt-4">
-                    <div 
-                        v-for="(project, index) in projects" 
-                            :key="index"
-                            class="me-2 project"
-                            :class="project === 'General' ? 'pinguin' : '' "
+                <div class="modal-header">
+                    <h4 class="modal-title" id="addClientModalLabel">Add client</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" placeholder="Client name" class="client-input w-100" v-model="clientName">
+                    <div class="d-flex mt-4">
+                        <div 
+                            v-for="(project, index) in projects" 
+                                :key="index"
+                                class="me-2 project"
+                                :class="project === 'General' ? 'pinguin' : '' "
+                            >
+                            {{ project === 'General' ? '🐧' : project }}
+                            <img src="@/assets/cross-icon.svg" class="delete-project ms-1" v-if="project !== 'General'" @click="() => handleDeleteProject(project)">
+                        </div>
+                        <div class="add-project-button d-flex align-items-center p-1 px-2">
+                            <input type="text" placeholder="Add project" v-model="projectName" @keyup.enter="handleAddProject()">
+                            <img class="ms-3" src="@/assets/add-icon.svg" @click="handleAddProject()" >
+                        </div>
+                    </div>
+                    <div class="colors d-flex align-items-center">
+                        <p class="mb-0 me-3">Tag color</p>
+                        <div 
+                        v-for="color in colors" 
+                        :key="color" 
+                        class="bolletje me-2" 
+                        :style="{backgroundColor: color}" 
+                        @click="handleColorChange(color)"
                         >
-                        {{ project === 'General' ? '🐧' : project }}
-                        <img src="@/assets/cross-icon.svg" class="delete-project ms-1" v-if="project !== 'General'" @click="() => handleDeleteProject(project)">
-                    </div>
-                    <div class="add-project-button d-flex align-items-center p-1 px-2">
-                        <input type="text" placeholder="Add project" v-model="projectName" @keyup.enter="handleAddProject()">
-                        <img class="ms-3" src="@/assets/add-icon.svg" @click="handleAddProject()" >
+                            <img class="check" v-if="color === colorRef" src="@/assets/check-icon.svg">
+                        </div>
                     </div>
                 </div>
-                <div class="colors d-flex align-items-center">
-                    <p class="mb-0 me-3">Tag color</p>
-                    <div 
-                    v-for="color in colors" 
-                    :key="color" 
-                    class="bolletje me-2" 
-                    :style="{backgroundColor: color}" 
-                    @click="handleColorChange(color)"
-                >
-                <img class="check" v-if="color === colorRef" src="@/assets/check-icon.svg">
-            
+                <div class="modal-footer">
+                    <button type="button" :disabled="!clientName" @click="handleConfirm()" data-bs-dismiss="modal" class="btn btn-dark border-0">Confirm</button>
                 </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" :disabled="!clientName" @click="handleConfirm()" data-bs-dismiss="modal" class="btn btn-dark border-0">Confirm</button>
-            </div>
             </div>
         </div>
     </div>
@@ -71,11 +70,10 @@ function handleDeleteProject(project) {
 }
 
 async function handleConfirm() {
-    const clientId = await postData('clients', {client_name: clientName.value, color: colorRef.value});
+    const clientId = await postData('clients', {client_name: clientName.value, color: colorRef.value, is_archived: 0});
     
     for (const project of projects.value) {
         await postData('projects', {project_name: project, client_id: clientId});
-        console.log(project);
     }
     clientName.value = '';
 }

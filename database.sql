@@ -1,6 +1,8 @@
 CREATE TABLE clients (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  client_name VARCHAR(255)
+  client_name VARCHAR(255),
+  color VARCHAR(10)
+  is_archived BOOLEAN
 );
 
 CREATE TABLE categories (
@@ -20,7 +22,6 @@ CREATE TABLE projects (
   id INT AUTO_INCREMENT PRIMARY KEY,
   project_name VARCHAR(255),
   client_id INT,
-  color VARCHAR(6),
   FOREIGN KEY (client_id) REFERENCES clients(id)
 );
 

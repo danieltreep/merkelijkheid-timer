@@ -5,28 +5,33 @@
           <img src="@/assets/search-icon.svg">
           <input type="text" v-model="searchterm" placeholder="Search client">
         </div>
-      <button class="ms-auto me-3">
-        <img class="me-2" src="@/assets/archive-icon.svg">
+      <button class="ms-auto me-3" @click="showArchive = !showArchive" :class="showArchive ? 'active' : ''">
+        <img class="me-2" v-if="!showArchive" src="@/assets/archive-icon.svg">
+        <img class="me-2" v-if="showArchive" src="@/assets/archive-icon-paars.svg">
         Archive
       </button>
       <AddClientButton />
       </div>
-      <ClientList :clients="clientsThatMatchSearch"/>      
-    
+      <ClientList :clients="clientsNotArchived" v-show="!showArchive" :archived="false" />      
+      <ClientList :clients="clientsArchive" v-show="showArchive" :archived="true" />      
+      <AddProjectModal />
   </main>
 </template>
 
 <script setup>
 import { storeToRefs } from "pinia";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import { useDataStore } from "@/stores/data";
 
 import getData from "@/composables/getData";
 
 import ClientList from "@/components/ClientList.vue";
 import AddClientButton from "@/components/AddClientButton.vue";
+import AddProjectModal from "@/components/AddProjectModal.vue";
 
-const { projects, clients, searchterm, clientsThatMatchSearch } = storeToRefs(useDataStore());
+const showArchive = ref(false);
+
+const { projects, clients, searchterm, clientsArchive, clientsNotArchived } = storeToRefs(useDataStore());
 
 onMounted(async () => {
   projects.value = await getData('projects');
@@ -63,6 +68,11 @@ button {
   display: flex;
   align-items: center;
   gap: .3rem;
+}
+.active {
+  border: 1px solid var(--paars);
+  background-color: #a340ef1c;
+  color: var(--paars)
 }
 
 </style>
