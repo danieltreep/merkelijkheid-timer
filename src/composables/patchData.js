@@ -2,6 +2,8 @@ import { useDataStore } from '@/stores/data'
 
 const patchData = async (table, id, data) => {
 
+  console.log(table, id, data)
+
   const { updateTable } = useDataStore();
 
   fetch(`http://localhost/merkelijkheid-timer/api.php`, {

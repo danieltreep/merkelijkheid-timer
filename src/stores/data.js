@@ -23,7 +23,15 @@ export const useDataStore = defineStore("data", () => {
     return clientsThatMatchSearch.value.filter(client => client.is_archived === '1')
   })
 
-  const sessionsDesc = computed(() => sessions.value.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)));
+  const finishedSessions = computed(() => {
+    return sessions.value.filter(session => session.is_running === '0')
+  })
+
+  const runningSession = computed(() => {
+    return sessions.value.filter(session => session.is_running === '1');
+  })
+
+  const sessionsDesc = computed(() => finishedSessions.value.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)));
 
   const currentSession = ref({
     title: null,
@@ -61,6 +69,8 @@ export const useDataStore = defineStore("data", () => {
   return { 
     currentSession, 
     sessions,
+    runningSession,
+    finishedSessions,
     sessionsDesc, 
     projects, 
     clients, 

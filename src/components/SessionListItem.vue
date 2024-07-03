@@ -73,7 +73,7 @@ function prefixZero(n) {
 
 <style scoped>
 li.d-grid {
-  grid-template-columns: minmax(max-content, 35%) 5fr 4fr 1.1fr 40px 40px;
+  grid-template-columns: minmax(max-content, 30%) 30% 4fr 1.1fr 40px 40px;
   align-items: center;
 }
 .time {

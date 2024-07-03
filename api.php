@@ -22,9 +22,10 @@ if ($conn->connect_error) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
+    // Get JSON data from request body
     $postData = json_decode(file_get_contents("php://input"), true);
 
+    // Sanitize table name
     $table = $conn->real_escape_string($postData['table']);
 
     $columns = '';
@@ -32,14 +33,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Retrieve columns and their values from the data
     foreach ($postData['data'] as $column => $value) {
-        $columns .= $conn->real_escape_string($column) . ', ';
-        $values .= "'" . $conn->real_escape_string($value) . "', ";
+        $escapedColumn = $conn->real_escape_string($column);
+
+        // Check if the value is null
+        if ($value === null) {
+            $escapedValue = "NULL";
+        } else {
+            // Escape and quote the value if it's not null
+            $escapedValue = "'" . $conn->real_escape_string($value) . "'";
+        }
+
+        $columns .= $escapedColumn . ', ';
+        $values .= $escapedValue . ', ';
     }
 
     // Remove the trailing commas
     $columns = rtrim($columns, ', ');
     $values = rtrim($values, ', ');
 
+    // Construct the SQL INSERT statement
     $sql = "INSERT INTO $table ($columns) VALUES ($values)";
 
     if ($conn->query($sql) === TRUE) {
@@ -87,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $userid = $_GET['userid'];
         
         // Query that merges the tables: sessions, projects and clients
-        $result = $conn->query("SELECT * FROM $table INNER JOIN projects ON sessions.project_id = projects.project_id INNER JOIN clients ON projects.client_id = clients.client_id WHERE user_id = $userid");
+        $result = $conn->query("SELECT * FROM $table LEFT JOIN projects ON sessions.project_id = projects.project_id LEFT JOIN clients ON projects.client_id = clients.client_id WHERE user_id = $userid");
     
         // Fetch the data and encode it as JSON
         $data = [];

@@ -25,7 +25,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useDataStore } from "@/stores/data";
 import { useUserStore } from '@/stores/user'
@@ -33,15 +33,12 @@ import { useUserStore } from '@/stores/user'
 import postData from "@/composables/postData";
 import ClearButton from '@/components/ClearButton.vue'
 import patchData from "@/composables/patchData";
-
-defineProps({
-  disabled: Boolean,
-});
+import deleteData from "@/composables/deleteData";
 
 const emit = defineEmits(['reset']);
 
 const { user } = storeToRefs(useUserStore());
-const { currentSession } = storeToRefs(useDataStore());
+const { currentSession, runningSession } = storeToRefs(useDataStore());
 const { resetCurrentSession } = useDataStore();
 const currentSessionId = ref(null)
 
@@ -50,13 +47,17 @@ const timerRunning = ref(false);
 let timerInterval = null;
 
 async function startTimer() {
-  timerRunning.value = true;
-  currentSession.value.created_at = new Date();
-  currentSessionId.value = await postData('sessions', {created_at: makeDateSqlCompatible(new Date()), user_id: user.value.user_id, is_running: 1})
+  console.log('timer wordt aangeroepen door start timer')
+  if (!timerRunning.value) {
+    timerRunning.value = true;
+    currentSession.value.created_at = new Date();
+    currentSessionId.value = await postData('sessions', {...currentSession.value, created_at: makeDateSqlCompatible(new Date()), user_id: user.value.user_id, is_running: 1})
+  }
   timerInterval = setInterval(clockRunning, 1000);
 }
 
 function stopTimer() {
+  clearInterval(timerInterval);
   timerRunning.value = false;
   
   currentSession.value.stopped_at = new Date();
@@ -67,8 +68,7 @@ function stopTimer() {
   currentSession.value.stopped_at = makeDateSqlCompatible(currentSession.value.stopped_at);
   
   // Stop interval en POST de data
-  clearInterval(timerInterval);
-  patchData("sessions", currentSessionId.value, {...currentSession.value, is_running: 0}); // Voeg user id toe aan sessie
+  patchData("sessions", currentSessionId.value, {...currentSession.value, is_running: 0});
 
   // Reset de waarden van de huidige sessie
   resetCurrentSession();
@@ -76,29 +76,22 @@ function stopTimer() {
 }
 
 function clockRunning() {
-  const currentTime = new Date(); // Get the current time in UTC
-
-  // Calculate the time difference in milliseconds
+  const currentTime = new Date();
   const timeElapsedMs = currentTime.getTime() - currentSession.value.created_at.getTime();
 
-  // Create a new Date object representing the elapsed time since Unix epoch
   currentSession.value.time_elapsed = new Date(timeElapsedMs);
 
-  // Extract hours, minutes, and seconds from the elapsed time
   const seconds = prefixZero(currentSession.value.time_elapsed.getUTCSeconds());
   const minutes = prefixZero(currentSession.value.time_elapsed.getUTCMinutes());
   const hours = prefixZero(currentSession.value.time_elapsed.getUTCHours());
 
-  // Display the passed time as a string
   currentSession.value.time_elapsed = `${hours}:${minutes}:${seconds}`;
 }
 
 function clearTimer() {
-  timerRunning.value = false;
-  displaySeconds.value = prefixZero(0);
-  displayMinutes.value = prefixZero(0);
-  displayHours.value = prefixZero(0);
   clearInterval(timerInterval);
+  timerRunning.value = false;
+  deleteData('sessions', currentSessionId.value)
   resetCurrentSession();
   emit('reset');
 }
@@ -129,6 +122,25 @@ function calculateTimeDifference(startTime, endTime) {
   const timeDifferenceInMinutes = timeDifferenceInMilliseconds / (1000 * 60);
   return Math.floor(timeDifferenceInMinutes);
 }
+
+// Watch runningSession for changes and update currentSession accordingly
+onMounted(() => {
+  watch(runningSession, (newVal) => {
+    if (newVal.length) {
+      currentSession.value = { 
+        title: newVal[0].title,
+        project_id: newVal[0].project_id,
+        created_at: new Date(newVal[0].created_at),
+        stopped_at: null,
+        time_elapsed: `00:00:00`,
+        time_in_minutes: null 
+      };
+      currentSessionId.value = newVal[0].session_id;
+      timerRunning.value = true;
+      timerInterval = setInterval(clockRunning, 1000);
+    }
+  }, { once: true });
+});
 
 </script>
 

@@ -19,16 +19,17 @@
 
     </div>
 
-    <Timer @reset="handleReset"/>
+    <Timer @reset="handleReset" v-if="!editing"/>
+    <TimerEditable v-if="editing"/>
 
     <div class="options d-flex flex-column justify-content-around align-items-center ms-2 h-100">
       <button class="clock">
-        <img v-if="!clock" @click="clock = true" src="@/assets/clock-icon.svg" >
-        <img v-if="clock" @click="clock = true" src="@/assets/clock-icon-paars.svg" >
+        <img v-if="editing" @click="editing = false" src="@/assets/clock-icon.svg" >
+        <img v-if="!editing" @click="editing = false" src="@/assets/clock-icon-paars.svg" >
       </button>
       <button class="list">
-        <img v-if="clock" @click="clock = false" src="@/assets/list-icon.svg" >
-        <img v-if="!clock" @click="clock = false" src="@/assets/list-icon-paars.svg" >
+        <img v-if="!editing" @click="editing = true" src="@/assets/list-icon.svg" >
+        <img v-if="editing" @click="editing = true" src="@/assets/list-icon-paars.svg" >
       </button>
     </div>
   </div>
@@ -40,11 +41,12 @@ import { storeToRefs } from "pinia";
 import { ref } from "vue";
 
 import Timer from "@/components/Timer.vue";
+import TimerEditable from "@/components/TimerEditable.vue";
 import ProjectSelector from "@/components/ProjectSelector.vue";
 
 const { currentSession } = storeToRefs(useDataStore());
 
-const clock = ref(true);
+const editing = ref(false);
 const openProjectSelector = ref(false);
 const buttonText = ref('Project');
 const client = ref('');
@@ -71,7 +73,7 @@ function handleReset() {
   box-shadow: var(--bs);
   border-radius: var(--br);
   font-size: 14px;
-  grid-template-columns: minmax(max-content, 35%) 1fr 1fr 30px;
+  grid-template-columns: minmax(max-content, 30%) 1fr 1fr 30px;
   padding-left: 2rem;
   height: 50px;
 }
