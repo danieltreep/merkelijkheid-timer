@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex align-items-center ms-auto">
     <div class="time me-3">
-      {{ displayHours }}:{{ displayMinutes }}:{{ displaySeconds }}
+      {{ currentSession.time_elapsed }}
     </div>
     <button v-if="!timerRunning" class="btn start d-flex align-items-center gap-2" @click="startTimer">
       <img src="@/assets/play-icon-white.svg" alt="">
@@ -47,16 +47,12 @@ const currentSessionId = ref(null)
 
 const timerRunning = ref(false);
 
-const displaySeconds = ref(prefixZero(0));
-const displayMinutes = ref(prefixZero(0));
-const displayHours = ref(prefixZero(0));
-
 let timerInterval = null;
 
 async function startTimer() {
   timerRunning.value = true;
   currentSession.value.created_at = new Date();
-  currentSessionId.value = await postData('sessions', {created_at: makeDateSqlCompatible(new Date()), user_id: user.value.user_id})
+  currentSessionId.value = await postData('sessions', {created_at: makeDateSqlCompatible(new Date()), user_id: user.value.user_id, is_running: 1})
   timerInterval = setInterval(clockRunning, 1000);
 }
 
@@ -64,22 +60,15 @@ function stopTimer() {
   timerRunning.value = false;
   
   currentSession.value.stopped_at = new Date();
-  currentSession.value.time_in_minutes =  calculateTimeDifference(currentSession.value.created_at, currentSession.value.stopped_at);
+  currentSession.value.time_in_minutes = calculateTimeDifference(currentSession.value.created_at, currentSession.value.stopped_at);
 
   // Zet Date waarden om zodat ze in de database kunnen
   currentSession.value.created_at = makeDateSqlCompatible(currentSession.value.created_at);
-  currentSession.value.time_elapsed = makeDateSqlCompatible(currentSession.value.time_elapsed);
   currentSession.value.stopped_at = makeDateSqlCompatible(currentSession.value.stopped_at);
   
-  // console.log(currentSession.value.time_in_minutes)
   // Stop interval en POST de data
   clearInterval(timerInterval);
-  patchData("sessions", currentSessionId.value, {...currentSession.value}); // Voeg user id toe aan sessie
-
-  // Reset display timer
-  displaySeconds.value = prefixZero(0);
-  displayHours.value = prefixZero(0);
-  displayMinutes.value = prefixZero(0);
+  patchData("sessions", currentSessionId.value, {...currentSession.value, is_running: 0}); // Voeg user id toe aan sessie
 
   // Reset de waarden van de huidige sessie
   resetCurrentSession();
@@ -87,15 +76,21 @@ function stopTimer() {
 }
 
 function clockRunning() {
-  const currentTime = new Date();
-  
-  currentSession.value.time_elapsed = new Date(
-    currentTime - currentSession.value.created_at
-  );
+  const currentTime = new Date(); // Get the current time in UTC
 
-  displaySeconds.value = prefixZero(currentSession.value.time_elapsed.getSeconds());
-  displayHours.value = prefixZero(currentSession.value.time_elapsed.getUTCHours());
-  displayMinutes.value = prefixZero(currentSession.value.time_elapsed.getMinutes());
+  // Calculate the time difference in milliseconds
+  const timeElapsedMs = currentTime.getTime() - currentSession.value.created_at.getTime();
+
+  // Create a new Date object representing the elapsed time since Unix epoch
+  currentSession.value.time_elapsed = new Date(timeElapsedMs);
+
+  // Extract hours, minutes, and seconds from the elapsed time
+  const seconds = prefixZero(currentSession.value.time_elapsed.getUTCSeconds());
+  const minutes = prefixZero(currentSession.value.time_elapsed.getUTCMinutes());
+  const hours = prefixZero(currentSession.value.time_elapsed.getUTCHours());
+
+  // Display the passed time as a string
+  currentSession.value.time_elapsed = `${hours}:${minutes}:${seconds}`;
 }
 
 function clearTimer() {
@@ -134,7 +129,6 @@ function calculateTimeDifference(startTime, endTime) {
   const timeDifferenceInMinutes = timeDifferenceInMilliseconds / (1000 * 60);
   return Math.floor(timeDifferenceInMinutes);
 }
-
 
 </script>
 
