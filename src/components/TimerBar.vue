@@ -19,17 +19,17 @@
 
     </div>
 
-    <Timer @reset="handleReset" v-if="!editing"/>
-    <TimerEditable v-if="editing"/>
+    <Timer @reset="handleReset" v-if="!editing" @initialized="initialized = true" :initialized="initialized"/>
+    <TimerEditable v-else="editing" @reset="handleReset"/>
 
     <div class="options d-flex flex-column justify-content-around align-items-center ms-2 h-100">
-      <button class="clock">
-        <img v-if="editing" @click="editing = false" src="@/assets/clock-icon.svg" >
-        <img v-if="!editing" @click="editing = false" src="@/assets/clock-icon-paars.svg" >
+      <button class="clock" @click="handleSwitch(false)" :disabled="currentSession.time_elapsed !== '00:00:00'">
+        <img v-if="editing" src="@/assets/clock-icon.svg" >
+        <img v-else src="@/assets/clock-icon-paars.svg" >
       </button>
-      <button class="list">
-        <img v-if="!editing" @click="editing = true" src="@/assets/list-icon.svg" >
-        <img v-if="editing" @click="editing = true" src="@/assets/list-icon-paars.svg" >
+      <button class="list" @click="handleSwitch(true)" :disabled="currentSession.time_elapsed !== '00:00:00'">
+        <img v-if="!editing" src="@/assets/list-icon.svg" >
+        <img v-else src="@/assets/list-icon-paars.svg" >
       </button>
     </div>
   </div>
@@ -46,6 +46,7 @@ import ProjectSelector from "@/components/ProjectSelector.vue";
 
 const { currentSession } = storeToRefs(useDataStore());
 
+const initialized = ref(false) // Houdt bij of de timer al geinitieerd is
 const editing = ref(false);
 const openProjectSelector = ref(false);
 const buttonText = ref('Project');
@@ -63,6 +64,14 @@ function addProject(project) {
 function handleReset() {
   buttonText.value = 'Project';
   client.value = '';
+}
+
+function handleSwitch(boolean) {
+  editing.value = boolean;
+  
+  if (!boolean) {
+    currentSession.value.stopped_at = null
+  }
 }
 
 </script>

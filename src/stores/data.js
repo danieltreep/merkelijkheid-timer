@@ -66,6 +66,23 @@ export const useDataStore = defineStore("data", () => {
     currentSession.value.time_in_minutes = null;
   }
 
+  const groupSessionsByDay = computed(() => {
+    return sessionsDesc.value.reduce((groups, session) => {
+      // Extract the date part from the created_at field
+      const date = new Date(session.created_at).toISOString().split('T')[0];
+  
+      // If the date is not yet a key in the groups object, add it with an empty array
+      if (!groups[date]) {
+        groups[date] = [];
+      }
+  
+      // Add the session to the corresponding date group
+      groups[date].push(session);
+  
+      return groups;
+    }, {});
+  })
+
   return { 
     currentSession, 
     sessions,
@@ -79,6 +96,7 @@ export const useDataStore = defineStore("data", () => {
     currentClientId,
     clientsArchive,
     clientsNotArchived,
+    groupSessionsByDay,
     updateTable, 
     resetCurrentSession
   };

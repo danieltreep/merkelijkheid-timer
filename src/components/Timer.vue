@@ -1,8 +1,6 @@
 <template>
   <div class="d-flex align-items-center ms-auto">
-    <div class="time me-3">
-      {{ currentSession.time_elapsed }}
-    </div>
+    <div class="time me-3">{{ currentSession.time_elapsed }}</div>
     <button v-if="!timerRunning" class="btn start d-flex align-items-center gap-2" @click="startTimer">
       <img src="@/assets/play-icon-white.svg" alt="">
       Start
@@ -16,7 +14,7 @@
         !currentSession.project_id
       "
     >
-    <img src="@/assets/stop-icon-white.svg" alt="">
+      <img src="@/assets/stop-icon-white.svg" alt="">
       Stop
     </button>
    
@@ -35,7 +33,11 @@ import ClearButton from '@/components/ClearButton.vue'
 import patchData from "@/composables/patchData";
 import deleteData from "@/composables/deleteData";
 
-const emit = defineEmits(['reset']);
+const emit = defineEmits(['reset', 'initialized']);
+
+const props = defineProps({
+  initialized: Boolean
+})
 
 const { user } = storeToRefs(useUserStore());
 const { currentSession, runningSession } = storeToRefs(useDataStore());
@@ -47,7 +49,6 @@ const timerRunning = ref(false);
 let timerInterval = null;
 
 async function startTimer() {
-  console.log('timer wordt aangeroepen door start timer')
   if (!timerRunning.value) {
     timerRunning.value = true;
     currentSession.value.created_at = new Date();
@@ -117,29 +118,38 @@ function makeDateSqlCompatible(date) {
 }
 
 function calculateTimeDifference(startTime, endTime) {
-  console.log(startTime, endTime)
+ 
   const timeDifferenceInMilliseconds = endTime - startTime;
   const timeDifferenceInMinutes = timeDifferenceInMilliseconds / (1000 * 60);
   return Math.floor(timeDifferenceInMinutes);
 }
 
-// Watch runningSession for changes and update currentSession accordingly
+// Bekijk alleen bij de eerste render of de timer loopt
 onMounted(() => {
-  watch(runningSession, (newVal) => {
-    if (newVal.length) {
-      currentSession.value = { 
-        title: newVal[0].title,
-        project_id: newVal[0].project_id,
-        created_at: new Date(newVal[0].created_at),
-        stopped_at: null,
-        time_elapsed: `00:00:00`,
-        time_in_minutes: null 
-      };
-      currentSessionId.value = newVal[0].session_id;
-      timerRunning.value = true;
-      timerInterval = setInterval(clockRunning, 1000);
-    }
-  }, { once: true });
+
+  // Watch functie werkt alleen als het de eerste render is
+  if (!props.initialized) {
+    watch(runningSession, (newVal) => {
+
+      // Als runningSession in data store een waarde heeft update de sessie met info van de lopende sessie
+      if (newVal.length) {
+        currentSession.value = { 
+          title: newVal[0].title,
+          project_id: newVal[0].project_id,
+          created_at: new Date(newVal[0].created_at),
+          stopped_at: null,
+          time_elapsed: `00:00:00`,
+          time_in_minutes: null 
+        };
+        currentSessionId.value = newVal[0].session_id;
+        timerRunning.value = true;
+        timerInterval = setInterval(clockRunning, 1000);
+      } else {
+        clearInterval(timerInterval)
+      }
+    }, { once: true });
+    emit('initialized') // Bij de eerste keer zet initialized ref -> true
+  }
 });
 
 </script>

@@ -7,7 +7,11 @@
       <input type="text" v-model="ended" @blur="handleChange(ended, 'stopped_at')">
     </div>
     <input type="text" class="time" v-model="time" @blur="handleTimeChange(time)">
-    <button class="btn add d-flex align-items-center gap-2" @click="startTimer">Add</button>
+    <button 
+      class="btn add d-flex align-items-center gap-2" 
+      @click="handleSubmit"
+      :disabled="!started || !ended || !time || !currentSession.project_id || !currentSession.title"
+      >Add</button>
   </div>
 </template>
 
@@ -18,13 +22,12 @@ import { useDataStore } from "@/stores/data";
 import { useUserStore } from '@/stores/user'
 
 import postData from "@/composables/postData";
-import ClearButton from '@/components/ClearButton.vue'
-import patchData from "@/composables/patchData";
-import deleteData from "@/composables/deleteData";
 
 const { user } = storeToRefs(useUserStore());
 const { currentSession } = storeToRefs(useDataStore());
 const { resetCurrentSession } = useDataStore();
+
+const emit = defineEmits(['reset']);
 
 const started = ref()
 const ended = ref()
@@ -59,7 +62,7 @@ function handleChange(value, key) {
     ended.value = prefixZero(currentSession.value[key].getHours()) + ':' + prefixZero(currentSession.value[key].getMinutes())
   }
   currentSession.value.time_elapsed = calculateTimeDifference(currentSession.value.created_at, currentSession.value.stopped_at);
-  time.value = currentSession.value.time_elapsed;
+  time.value = currentSession.value.time_elapsed.slice(1, -3);
   currentSession.value.time_in_minutes = calculateTimeDifferenceMinutes(currentSession.value.created_at, currentSession.value.stopped_at);
 }
 
@@ -130,6 +133,20 @@ function handleTimeChange(value) {
   currentSession.value.time_elapsed = `${prefixZero(hours)}:${prefixZero(minutes)}:00`
   started.value = prefixZero(currentSession.value.created_at.getHours()) + ':' + prefixZero(currentSession.value.created_at.getMinutes())
   currentSession.value.time_in_minutes = calculateTimeDifferenceMinutes(currentSession.value.created_at, currentSession.value.stopped_at);
+}
+
+function handleSubmit() {
+  currentSession.value.created_at = makeDateSqlCompatible(currentSession.value.created_at);
+  currentSession.value.stopped_at = makeDateSqlCompatible(currentSession.value.stopped_at);
+  
+  postData("sessions", {...currentSession.value, user_id: user.value.user_id, is_running: 0});
+
+  // Reset de waarden van de huidige sessie
+  resetCurrentSession();
+  emit('reset');
+  time.value = currentSession.value.time_elapsed.slice(1, -3);
+  started.value = prefixZero(new Date().getHours()) + ':' + prefixZero(new Date().getMinutes())
+  ended.value = prefixZero(new Date().getHours()) + ':' + prefixZero(new Date().getMinutes())
 }
 
 function prefixZero(n) {
