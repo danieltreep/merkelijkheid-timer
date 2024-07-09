@@ -63,6 +63,7 @@
   width: fit-content;
   font-size: 12px;
   font-weight: 500;
+  border: none;
 }
 .pinguin {
   padding: .2rem 1rem !important;

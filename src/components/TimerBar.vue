@@ -8,10 +8,10 @@
     />
 
     <div class="position-relative d-flex align-items-center">
-      <div class="bolletje me-2" v-if="currentSession.project_id" :style="{ backgroundColor: bolletjeColor }"></div>
-      <p class="mb-0 me-3" v-if="currentSession.project_id">{{ client }}</p>
-      <button class="add-project-button" :class="buttonText === '🐧' ? 'pinguin' : '' " @click="openProjectSelector = !openProjectSelector">
-        {{ buttonText }}
+      <div class="bolletje me-2" v-if="currentSession.project_id" :style="{ backgroundColor: currentProject?.color ? currentProject.color : '' }"></div>
+      <p class="mb-0 me-3" v-if="currentSession.project_id">{{ currentProject?.client_name ? currentProject.client_name : '' }}</p>
+      <button class="add-project-button" :class="currentProject?.project_name === 'General' ? 'pinguin' : '' " @click="openProjectSelector = !openProjectSelector">
+        {{ currentProject?.project_name ? (currentProject.project_name === 'General' ? '🐧' : currentProject.project_name) : 'Project' }}
         <img src="@/assets/add-icon.svg" v-if="!currentSession.project_id">
       </button>
 
@@ -19,8 +19,8 @@
 
     </div>
 
-    <Timer @reset="handleReset" v-if="!editing" @initialized="initialized = true" :initialized="initialized"/>
-    <TimerEditable v-else="editing" @reset="handleReset"/>
+    <Timer v-if="!editing || timerRunning" @initialized="initialized = true" :initialized="initialized"/>
+    <TimerEditable v-else="editing" />
 
     <div class="options d-flex flex-column justify-content-around align-items-center ms-2 h-100">
       <button class="clock" @click="handleSwitch(false)" :disabled="currentSession.time_elapsed !== '00:00:00'">
@@ -36,7 +36,8 @@
 </template>
 
 <script setup>
-import { useDataStore } from "@/stores/data";
+import { useSessionStore } from "@/stores/session";
+import { useTimerStore } from "@/stores/timer";
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 
@@ -44,28 +45,19 @@ import Timer from "@/components/Timer.vue";
 import TimerEditable from "@/components/TimerEditable.vue";
 import ProjectSelector from "@/components/ProjectSelector.vue";
 
-const { currentSession } = storeToRefs(useDataStore());
+const { currentSession, currentProject } = storeToRefs(useSessionStore());
+const { timerRunning } = storeToRefs(useTimerStore());
 
 const initialized = ref(false) // Houdt bij of de timer al geinitieerd is
 const editing = ref(false);
 const openProjectSelector = ref(false);
-const buttonText = ref('Project');
-const client = ref('');
-const bolletjeColor = ref('')
 
 function addProject(project) {
-  buttonText.value = project.project_name === 'General' ? '🐧' : project.project_name;
-  client.value = project.client_name;
-  bolletjeColor.value = project.color;
   currentSession.value.project_id = project.project_id
   openProjectSelector.value = false
 }
 
-function handleReset() {
-  buttonText.value = 'Project';
-  client.value = '';
-}
-
+// Haal stopped at waarde weg als er weer terug naar de timer wordt geswitched. Anders wordt einddatum al verzonden bij het starten.
 function handleSwitch(boolean) {
   editing.value = boolean;
   

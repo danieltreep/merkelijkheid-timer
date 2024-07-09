@@ -1,74 +1,64 @@
 <template>
-    <li class="list-group-item d-grid py-2 pe-2 position-relative" v-if="!isEditing">
-        <div>{{ session.title }}</div>
-        <div class="d-flex align-items-center gap-3">
-          <div class="bedrijf d-flex align-items-center gap-2">
-            <div class="bolletje" :style="{ backgroundColor: session.color }"></div>
-            {{ session.client_name }}
-          </div>
-          <div class="project" :class="session.project_name === 'General' ? 'pinguin' : '' ">
-            {{ session.project_name === 'General' ? '🐧' : session.project_name }}
-          </div>
-        </div>
-        <div class="time align-items-center gap-2">
-          <img src="@/assets/clock-icon.svg" alt="">
-          <div class="started">
-            {{ prefixZero(new Date(session.created_at).getHours()) }}:{{
-              prefixZero(new Date(session.created_at).getMinutes())
-            }}
-          </div>
-          <div>-</div>
+  <li class="list-group-item d-grid py-2 pe-2 position-relative">
+    <input type="text" v-model="title" @blur="handleBlur">
+    
+    <div class="position-relative d-flex align-items-center">
+      <div class="bolletje me-2" v-if="session.project_id" :style="{ backgroundColor: session?.color ? session.color : '' }"></div>
+      <p class="mb-0 me-3" v-if="session.project_id">{{ session?.client_name ? session.client_name : '' }}</p>
+      <button class="project" :class="session?.project_name === 'General' ? 'pinguin' : '' " @click="openProjectSelector = !openProjectSelector">
+        {{ session?.project_name ? (session.project_name === 'General' ? '🐧' : session.project_name) : 'Project' }}
+      </button>
 
-          <div class="started">
-            {{ prefixZero(new Date(session.stopped_at).getHours()) }}:{{
-              prefixZero(new Date(session.stopped_at).getMinutes())
-            }}
-          </div>
-        </div>
-        
-        <div class="elapsed">
-          <p class="mb-0">{{ session.time_elapsed.slice(0, 5) }}</p>
-        </div>
+      <ProjectSelector v-show="openProjectSelector" @handleClick="addProject"/>
 
-        <button class="play-button">
-          <img src="@/assets/play-icon.svg" alt="Start deze taak">
-        </button>
+    </div>
+    <SessionListItemTime :session="session" />
 
-        <button class="more-button">
-          <img src="@/assets/more-icon.svg" >
-        </button>
+    <button class="play-button" @click="startTimer" :disabled="timerRunning">
+      <img src="@/assets/play-icon.svg" alt="Start deze taak">
+    </button>
 
-        <!-- <div class="buttons d-flex gap-2 d-none">
-            <EditButton @click="isEditing = true"/>
-            <DeleteButton table="sessions" :id="session.id" />
-        </div> -->
-      </li>
-      <SessionListItemEdit v-if="isEditing" :session="session" :projects="projects" @handleSave="isEditing = false"/>
+    <SessionOptions :id="session.session_id" />
+
+  </li>
 </template>
 <script setup>
 import { ref } from "vue";
+import {  storeToRefs } from "pinia";
+import { useSessionStore } from "@/stores/session";
+import { useTimerStore } from "@/stores/timer"
+import SessionListItemTime from '@/components/SessionListItemTime.vue'
+import SessionOptions from '@/components/SessionOptions.vue'
+import ProjectSelector from "@/components/ProjectSelector.vue";
+import patchData from '@/composables/patchData'
 
-
-import SessionListItemEdit from "@/components/SessionListItemEdit.vue";
-
-defineProps({
-    session: Object,
+const props = defineProps({
+  session: Object,
 })
 
-import { useDataStore } from '@/stores/data'
-import { storeToRefs } from "pinia";
+const { startTimerStore } = useTimerStore();
+const { timerRunning } = storeToRefs(useTimerStore());
+const { currentSession } = storeToRefs(useSessionStore());
+const openProjectSelector = ref(false);
 
-const { projects } = storeToRefs(useDataStore());
+const title = ref(props.session.title)
 
-const isEditing = ref(false);
-
-function prefixZero(n) {
-  if (n < 10) {
-    return "0" + n;
-  }
-  return n;
+function startTimer() {
+  currentSession.value.project_id = props.session.project_id;
+  currentSession.value.title = props.session.title;
+  startTimerStore()
 }
 
+function handleBlur() {
+  patchData('sessions', props.session.session_id, {title: title.value})
+}
+
+function addProject(project) {
+  patchData('sessions', props.session.session_id, {project_id: project.project_id})
+
+  // currentSession.value.project_id = project.project_id
+  openProjectSelector.value = false
+}
 </script>
 
 <style scoped>
@@ -76,20 +66,16 @@ li.d-grid {
   grid-template-columns: minmax(max-content, 30%) 30% 4fr 1.1fr 40px 40px;
   align-items: center;
 }
-.time {
-  display: grid;
-  grid-template-columns: 20px 45px 15px 50px;
+
+
+input {
+  border: 1px solid transparent;
+  padding: .4rem 1rem;
+  margin-left: -1rem;
+  margin-right: 1rem;
+  border-radius: var(--br);
 }
-.elapsed {
-  font-size: 18px;
-  font-weight: 500;
+input:hover {
+  border: 1px solid var(--border);
 }
-/* .project {
-  background-color: var(--tag);
-  padding: .4rem 1.5rem;
-  border-radius: 30px;
-  width: fit-content;
-  font-size: 12px;
-  font-weight: 500;
-} */
 </style>

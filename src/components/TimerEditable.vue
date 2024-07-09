@@ -1,6 +1,7 @@
 <template>
   <div class="d-flex align-items-center ms-auto">
-    <div class="times align-items-center gap-1">
+    <DatePicker @changedate="(newDate) => changeDate(newDate)"/>
+    <div class="times align-items-center gap-1 me-4">
       <img src="@/assets/clock-icon.svg">
       <input type="text" v-model="started" @blur="handleChange(started, 'created_at')">
       <div>-</div>
@@ -18,14 +19,17 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { storeToRefs } from "pinia";
-import { useDataStore } from "@/stores/data";
-import { useUserStore } from '@/stores/user'
+import { useSessionStore } from "@/stores/session";
+import { useUserStore } from '@/stores/user';
+import { prefixZero, makeDateSqlCompatible, calculateTimeDifference, calculateTimeElapsed } from '@/composables/functions'
 
 import postData from "@/composables/postData";
 
+import DatePicker from '@/components/DatePicker.vue'
+
 const { user } = storeToRefs(useUserStore());
-const { currentSession } = storeToRefs(useDataStore());
-const { resetCurrentSession } = useDataStore();
+const { currentSession } = storeToRefs(useSessionStore());
+const { resetCurrentSession } = useSessionStore();
 
 const emit = defineEmits(['reset']);
 
@@ -61,9 +65,9 @@ function handleChange(value, key) {
   } else {
     ended.value = prefixZero(currentSession.value[key].getHours()) + ':' + prefixZero(currentSession.value[key].getMinutes())
   }
-  currentSession.value.time_elapsed = calculateTimeDifference(currentSession.value.created_at, currentSession.value.stopped_at);
+  currentSession.value.time_elapsed = calculateTimeElapsed(currentSession.value.created_at, currentSession.value.stopped_at);
   time.value = currentSession.value.time_elapsed.slice(1, -3);
-  currentSession.value.time_in_minutes = calculateTimeDifferenceMinutes(currentSession.value.created_at, currentSession.value.stopped_at);
+  currentSession.value.time_in_minutes = calculateTimeDifference(currentSession.value.created_at, currentSession.value.stopped_at);
 }
 
 function validateInput(value) {
@@ -132,7 +136,7 @@ function handleTimeChange(value) {
   time.value = `${hours}:${minutes}`;
   currentSession.value.time_elapsed = `${prefixZero(hours)}:${prefixZero(minutes)}:00`
   started.value = prefixZero(currentSession.value.created_at.getHours()) + ':' + prefixZero(currentSession.value.created_at.getMinutes())
-  currentSession.value.time_in_minutes = calculateTimeDifferenceMinutes(currentSession.value.created_at, currentSession.value.stopped_at);
+  currentSession.value.time_in_minutes = calculateTimeDifference(currentSession.value.created_at, currentSession.value.stopped_at);
 }
 
 function handleSubmit() {
@@ -143,60 +147,25 @@ function handleSubmit() {
 
   // Reset de waarden van de huidige sessie
   resetCurrentSession();
+  currentSession.value.created_at = new Date() // zet created_at en stopped_at weer op een datum zodat er daarna weer mee gerekend kan worden
+  currentSession.value.stopped_at = new Date()
   emit('reset');
   time.value = currentSession.value.time_elapsed.slice(1, -3);
   started.value = prefixZero(new Date().getHours()) + ':' + prefixZero(new Date().getMinutes())
   ended.value = prefixZero(new Date().getHours()) + ':' + prefixZero(new Date().getMinutes())
 }
 
-function prefixZero(n) {
-  if (n < 10) {
-    return "0" + n;
-  }
-  return n;
+function changeDate(newDate) {
+  console.log(newDate)
 }
 
-function makeDateSqlCompatible(date) {
-  // Get the timezone offset in minutes and convert to milliseconds
-  const timezoneOffset = date.getTimezoneOffset() * 60000;
-  
-  // Create a new Date object adjusted to the local time
-  const localTime = new Date(date.getTime() - timezoneOffset);
-  
-  // Format the adjusted date to MySQL-compatible format
-  const mysqlDatetime = localTime.toISOString().replace('T', ' ').slice(0, -5);
-
-  return mysqlDatetime;
-}
-
-function calculateTimeDifferenceMinutes(startTime, endTime) {
-
-  const timeDifferenceInMilliseconds = endTime - startTime;
-  const timeDifferenceInMinutes = timeDifferenceInMilliseconds / (1000 * 60);
-  return Math.floor(timeDifferenceInMinutes);
-}
-
-function calculateTimeDifference(startTime, endTime) {
-  // Calculate the difference in milliseconds
-  const timeDifferenceMs = endTime.getTime() - startTime.getTime();
-
-  // Calculate hours, minutes, and seconds
-  const totalSeconds = Math.floor(timeDifferenceMs / 1000);
-  const hours = Math.floor(totalSeconds / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  const seconds = totalSeconds % 60;
-
-  // Format the result as "HH:MM:SS"
-  const formattedTime = `${prefixZero(hours)}:${prefixZero(minutes)}:${prefixZero(seconds)}`;
-
-  return formattedTime;
-}
 onMounted(() => {
   currentSession.value.created_at = new Date();
   currentSession.value.stopped_at = new Date();
   // time.value = currentSession.value.time_elapsed.slice(0, -3);
   started.value = prefixZero(currentSession.value.created_at.getHours()) + ':' + prefixZero(currentSession.value.created_at.getMinutes())
   ended.value = prefixZero(currentSession.value.stopped_at.getHours()) + ':' + prefixZero(currentSession.value.stopped_at.getMinutes())
+
 })
 </script>
 
