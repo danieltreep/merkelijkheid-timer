@@ -5,6 +5,7 @@ import { useDataStore } from "@/stores/data";
 export const useSessionStore = defineStore("session", () => {
 
   const { sessions, projects } = storeToRefs(useDataStore());
+  const sessionDateChange = ref({})
   
   const finishedSessions = computed(() => {
     return sessions.value.filter(session => session.is_running === '0');
@@ -57,6 +58,7 @@ export const useSessionStore = defineStore("session", () => {
     runningSession,
     finishedSessions,
     groupSessionsByDay,
+    sessionDateChange,
     resetCurrentSession
   };
 });

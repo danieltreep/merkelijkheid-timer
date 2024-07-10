@@ -34,7 +34,7 @@ const loginUser = async (response) => {
         <nav class="ms-auto">
           <RouterLink to="/">Time tracker</RouterLink>
           <RouterLink to="/clients">Clients</RouterLink>
-          <!-- <RouterLink to="/reports">Reports</RouterLink> -->
+          <RouterLink to="/reports">Reports</RouterLink>
         </nav>
   
         <GoogleLogin :callback="loginUser" prompt auto-login v-if="!userAuthorized"/>

@@ -38,4 +38,10 @@ function calculateTimeElapsed(startTime, endTime) {
     return `${elapsedHours}:${elapsedMinutes}:${elapsedSeconds}`;
 }
 
-export { prefixZero, makeDateSqlCompatible, calculateTimeDifference, calculateTimeElapsed };
+function parseDateString(dateString) {
+    const [day, month, year] = dateString.split('-').map(Number);
+  
+    return [day, month - 1, year]; // month is 0-based in JavaScript Date object
+  }
+
+export { prefixZero, makeDateSqlCompatible, calculateTimeDifference, calculateTimeElapsed, parseDateString };

@@ -18,7 +18,7 @@
       <img src="@/assets/play-icon.svg" alt="Start deze taak">
     </button>
 
-    <SessionOptions :id="session.session_id" />
+    <SessionOptions :session="session" />
 
   </li>
 </template>
@@ -63,7 +63,7 @@ function addProject(project) {
 
 <style scoped>
 li.d-grid {
-  grid-template-columns: minmax(max-content, 30%) 30% 4fr 1.1fr 40px 40px;
+  grid-template-columns: minmax(max-content, 30%) 35% 4fr 1.1fr 40px 40px;
   align-items: center;
 }
 

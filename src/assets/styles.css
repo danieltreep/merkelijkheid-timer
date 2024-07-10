@@ -40,7 +40,7 @@
   padding-left: 2rem;
   font-size: 14px;
 }
-.list-group-item:not(:last-child) {
+.list-group-item:not(:last-child):not(.header) {
   border-bottom: 1px solid #EDEEF1;
 }
 .play-button, .more-button {

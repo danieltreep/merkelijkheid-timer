@@ -3,6 +3,8 @@
     <TimerBar :projects="projects" />
 
     <SessionList :projects="projects" :sessions="sessions" :date="key" v-for="(sessions, key) in groupSessionsByDay" :key="key"/>
+
+    <ChangeDateModal :today="false"/>
   </main>
 </template>
 
@@ -14,6 +16,7 @@ import { useSessionStore } from "@/stores/session";
 
 import getData from "@/composables/getData";
 import TimerBar from "@/components/TimerBar.vue";
+import ChangeDateModal from "@/components/ChangeDateModal.vue";
 
 import SessionList from "@/components/SessionList.vue";
 import getSessions from "@/composables/getSessions";

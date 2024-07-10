@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex align-items-center ms-auto">
-    <DatePicker @changedate="(newDate) => changeDate(newDate)"/>
-    <div class="times align-items-center gap-1 me-4">
+    <DatePicker @changedate="(newDate) => changeDate(newDate)" :today="true"/>
+    <div class="times align-items-center gap-1 me-4 ms-5">
       <img src="@/assets/clock-icon.svg">
       <input type="text" v-model="started" @blur="handleChange(started, 'created_at')">
       <div>-</div>
@@ -21,11 +21,11 @@ import { onMounted, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useSessionStore } from "@/stores/session";
 import { useUserStore } from '@/stores/user';
-import { prefixZero, makeDateSqlCompatible, calculateTimeDifference, calculateTimeElapsed } from '@/composables/functions'
+import { prefixZero, makeDateSqlCompatible, calculateTimeDifference, calculateTimeElapsed, parseDateString } from '@/composables/functions'
 
 import postData from "@/composables/postData";
 
-import DatePicker from '@/components/DatePicker.vue'
+import DatePicker from '@/components/DatePicker.vue';
 
 const { user } = storeToRefs(useUserStore());
 const { currentSession } = storeToRefs(useSessionStore());
@@ -38,7 +38,7 @@ const ended = ref()
 const time = ref('0:00')
 
 function handleChange(value, key) {
-  console.log('changed')
+  
   let hours, minutes;
 
   if (validateInput(value)) {
@@ -156,13 +156,27 @@ function handleSubmit() {
 }
 
 function changeDate(newDate) {
-  console.log(newDate)
+  const [day, month, year] = parseDateString(newDate);
+ 
+  const newCreatedAt = new Date(currentSession.value.created_at)
+  newCreatedAt.setDate(day)
+  newCreatedAt.setMonth(month)
+  newCreatedAt.setFullYear(year)
+  currentSession.value.created_at = newCreatedAt;
+
+  const newStoppedAt = new Date(currentSession.value.stopped_at)
+  newStoppedAt.setDate(day)
+  newStoppedAt.setMonth(month)
+  newStoppedAt.setFullYear(year)
+
+  currentSession.value.stopped_at = newStoppedAt;
+ 
 }
 
 onMounted(() => {
   currentSession.value.created_at = new Date();
   currentSession.value.stopped_at = new Date();
-  // time.value = currentSession.value.time_elapsed.slice(0, -3);
+  
   started.value = prefixZero(currentSession.value.created_at.getHours()) + ':' + prefixZero(currentSession.value.created_at.getMinutes())
   ended.value = prefixZero(currentSession.value.stopped_at.getHours()) + ':' + prefixZero(currentSession.value.stopped_at.getMinutes())
 
@@ -200,5 +214,8 @@ input {
 }
 input:hover {
   border: 1px solid var(--hover);
+}
+.dateinput {
+  max-width: 125px;
 }
 </style>
