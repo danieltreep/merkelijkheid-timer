@@ -1,6 +1,6 @@
-const getSessions = async (userid) => {
+const getSessions = async (userid, days) => {
 
-  const data = await fetch(`http://localhost/merkelijkheid-timer/api.php?table=sessions&userid=${encodeURI(userid)}`)
+  const data = await fetch(`http://localhost/merkelijkheid-timer/api.php?table=sessions&userid=${encodeURI(userid)}&days=${days}`)
     .then((res) => {
       if (!res.ok) {
         throw new Error(`HTTP error! Status: ${res.status}`);

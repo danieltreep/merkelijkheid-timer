@@ -42,6 +42,13 @@ function parseDateString(dateString) {
     const [day, month, year] = dateString.split('-').map(Number);
   
     return [day, month - 1, year]; // month is 0-based in JavaScript Date object
-  }
+}
 
-export { prefixZero, makeDateSqlCompatible, calculateTimeDifference, calculateTimeElapsed, parseDateString };
+function formatDate(date) {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+}
+
+export { prefixZero, makeDateSqlCompatible, calculateTimeDifference, calculateTimeElapsed, parseDateString, formatDate };

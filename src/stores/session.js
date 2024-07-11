@@ -6,6 +6,7 @@ export const useSessionStore = defineStore("session", () => {
 
   const { sessions, projects } = storeToRefs(useDataStore());
   const sessionDateChange = ref({})
+  const sessionsOfAmountDays = ref(7) // Show sessions of last 7 days
   
   const finishedSessions = computed(() => {
     return sessions.value.filter(session => session.is_running === '0');
@@ -59,6 +60,7 @@ export const useSessionStore = defineStore("session", () => {
     finishedSessions,
     groupSessionsByDay,
     sessionDateChange,
+    sessionsOfAmountDays,
     resetCurrentSession
   };
 });

@@ -97,9 +97,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($table === 'sessions' && isset($_GET['userid'])) {
 
         $userid = $_GET['userid'];
+        $days = $_GET['days'];
         
         // Query that merges the tables: sessions, projects and clients
-        $result = $conn->query("SELECT * FROM $table LEFT JOIN projects ON sessions.project_id = projects.project_id LEFT JOIN clients ON projects.client_id = clients.client_id WHERE user_id = $userid ORDER BY sessions.created_at DESC");
+        $result = $conn->query("SELECT * FROM $table LEFT JOIN projects ON sessions.project_id = projects.project_id LEFT JOIN clients ON projects.client_id = clients.client_id WHERE user_id = $userid AND sessions.created_at >= DATE_SUB(NOW(), INTERVAL $days DAY) ORDER BY sessions.created_at DESC");
     
         // Fetch the data and encode it as JSON
         $data = [];

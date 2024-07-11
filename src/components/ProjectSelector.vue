@@ -4,7 +4,7 @@
             <input type="text" class="w-100 search mb-3 " placeholder="Search client" v-model="searchterm">
         </div>
         <div class="listwrapper p-3 px-4 pt-0">
-            <div v-for="client in clientsThatMatchSearch" :key="client.id" class="py-3  list-item d-flex justify-content-between">
+            <div v-for="client in clientsNotArchived" :key="client.id" class="py-3  list-item d-flex justify-content-between">
                 <div class="d-flex align-items-center  gap-3">
                     <div class="bolletje" :style="{ backgroundColor: client.color }"></div>
                     <p class="mb-0 bedrijf">{{ client.client_name }}</p>
@@ -30,7 +30,7 @@
 import { useDataStore } from "@/stores/data";
 import { storeToRefs } from "pinia";
 
-const { projects, searchterm, clientsThatMatchSearch } = storeToRefs(useDataStore());
+const { projects, searchterm, clientsNotArchived } = storeToRefs(useDataStore());
 
 const emit = defineEmits(['handleClick']);
 

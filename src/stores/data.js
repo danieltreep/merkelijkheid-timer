@@ -23,6 +23,14 @@ export const useDataStore = defineStore("data", () => {
     return clientsThatMatchSearch.value.filter(client => client.is_archived === '1')
   })
 
+  const projectsNotArchived = computed(() => {
+    const filteredProjects = projects.value.filter(project => 
+      clientsNotArchived.value.some(client => client.client_id === project.client_id)
+    );
+
+    return filteredProjects;
+  })
+
   async function updateTable(table) {
   
     switch(table) {
@@ -47,6 +55,7 @@ export const useDataStore = defineStore("data", () => {
     currentClientId,
     clientsArchive,
     clientsNotArchived,
+    projectsNotArchived,
     updateTable, 
   };
 });

@@ -1,25 +1,22 @@
 <template>
   <div class="mt-4">
-    <ul v-if="clients" class="list-group">
+    <ul v-if="projects" class="list-group">
       <li class="list-group-item list-group-item-secondary d-flex justify-content-between align-items-center header">
         <span>Client</span>
         <span>Duration</span>
       </li>
-      <ReportsListItem />
+      <div class="accordion" id="accordionExample">
+        <ReportsListItem v-for="project in projects" :key="project.project_id" :project="project"/>
+      </div>
     </ul>
   </div>
 </template>
 
 <script setup>
 import ReportsListItem from "@/components/ReportsListItem.vue";
-import { storeToRefs } from "pinia";
-import { useDataStore } from "@/stores/data";
-
-const { projects, clientsArchive } = storeToRefs(useDataStore());
 
 defineProps({
-  clients: Array,
-  archived: Boolean
+  projects: Array
 })
 
 </script>
@@ -29,5 +26,7 @@ defineProps({
   font-size: 12px;
   padding-inline: 2rem;
 }
-
+.list-group {
+  overflow: hidden;
+}
 </style>

@@ -7,9 +7,10 @@
 <script setup>
 import { onMounted, watch } from 'vue';
 import { storeToRefs } from 'pinia'
-
 import { Datepicker } from 'vanillajs-datepicker';
+
 import { useSessionStore } from '@/stores/session'
+import { formatDate } from '@/composables/functions'
 
 const { sessionDateChange } = storeToRefs(useSessionStore())
 
@@ -46,12 +47,7 @@ function handleChange() {
     emit('changedate', elem.value)
 }
 
-function formatDate(date) {
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
-    const year = date.getFullYear();
-    return `${day}-${month}-${year}`;
-  }
+
 </script>
 <style scoped>
 .dateinput {

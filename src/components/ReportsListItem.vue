@@ -1,41 +1,71 @@
 <template>
-    <div class="accordion" id="accordionExample">
-        <div class="accordion-item">
-            <div class="accordion-header py-2 gap-3">
-                <button class="btn show-content-button d-flex align-items-center gap-2 justify-content-center collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
-                    5 
+    
+    <div class="accordion-item">
+        <div class="accordion-header gap-3">
+            <div class="position-relative d-flex align-items-center">
+                <button v-if="filterSessionsByProject.length" class="btn show-content-button d-flex align-items-center me-4 gap-2 justify-content-center collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="`#accordion-${project.project_id}`" aria-expanded="true" :aria-controls="`accordion-${project.project_id}`">
+                    {{ filterSessionsByProject.length }} 
                     <img src="@/assets/chevron-icon.svg" alt="">
                 </button>
-                <div class="position-relative d-flex align-items-center">
-                    <div class="bolletje me-2"></div>
-                    <p class="mb-0 me-3">Albeton</p>
-                    <div class="project">Project</div>
-                </div>
-                <div class="duur">03:00</div>
+                <div class="bolletje me-3" :style="{backgroundColor: project.color}"></div>
+                <p class="mb-0 me-3">{{ project.client_name }}</p>
+                <div class="project" :class="project.project_name === 'General' ? 'pinguin' : '' ">{{ project.project_name === 'General' ? '🐧' : project.project_name }}</div>
             </div>
-            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                <div class="accordion-body p-0">
-                    <ul class="ps-0">
-                        <li class="list-group-item list-item-accordion py-2 d-grid align-items-center justify-content-between">
-                            Dit is de bescrhrijving van een taak
-                            <div class="collega d-flex align-items-center gap-2">
-                                <img src="@/assets/avatar.png" alt="">
-                                Sam Verloop
-                            </div>
-                            <div class="d-flex align-items-center gap-2">
-                                <img src="@/assets/date-icon.svg" alt="">
-                                04-05-2024
-                            </div>
-                            <div class="duur">03:00</div>
-                        </li>
-                    </ul>
-                </div>
+            <div class="duur">{{reduceTimeElapsed(filterSessionsByProject)}}</div>
+        </div>
+        <div :id="`accordion-${project.project_id}`" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+            <div class="accordion-body p-0">
+                
+                <li class="list-group-item list-item-accordion py-2 d-grid align-items-center" v-for="session in filterSessionsByProject" :key="session.session_id">
+                    {{ session.title }}
+                    <div class="collega d-flex align-items-center gap-2">
+                        <img src="@/assets/avatar.png" alt="">
+                        Sam Verloop
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <img src="@/assets/date-icon.svg" alt="">
+                        {{ formatDate(new Date(session.created_at)) }}
+                    </div>
+                    <div class="duur">{{ session.time_elapsed.slice(0, -3)}}</div>
+                </li>
+             
             </div>
         </div>
     </div>
+   
 
 </template>
 <script setup>
+import { useDataStore } from '@/stores/data'
+import { storeToRefs } from 'pinia'
+import { computed } from 'vue'
+import { formatDate } from '@/composables/functions'
+
+const { sessions } = storeToRefs(useDataStore())
+
+const props = defineProps({
+    project: Object
+})
+
+const filterSessionsByProject = computed(() => {
+    return sessions.value.filter(session => session.project_id === props.project.project_id)
+}) 
+
+function reduceTimeElapsed(sessions) {
+    let totalSeconds = 0;
+
+    sessions.forEach(session => {
+        const [hours, minutes, seconds] = session.time_elapsed.split(':').map(Number);
+        totalSeconds += (hours * 3600) + (minutes * 60);
+    });
+
+    const totalHours = Math.floor(totalSeconds / 3600);
+    totalSeconds %= 3600;
+    const totalMinutes = Math.floor(totalSeconds / 60);
+
+    const formattedTime = `${String(totalHours).padStart(2, '0')}:${String(totalMinutes).padStart(2, '0')}`;
+    return formattedTime;
+}
 
 </script>
 <style scoped>
@@ -49,14 +79,15 @@
     border: none;
     border-bottom: 1px solid #EDEEF1;
 }
-.accordion-item:last-child {
+.accordion:last-of-type{
     border-radius: 0 0 var(--br) var(--br);
-    border: none;
+    /* border: none; */
 }
 .accordion-header {
-    grid-template-columns: 50px 1fr 67px;
+    grid-template-columns: 1fr 67px;
     display: grid;
     font-size: 14px;
+    padding-block: .7rem;
 }
 .accordion-header {
     padding-inline: 2rem 1rem;

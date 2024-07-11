@@ -1,10 +1,7 @@
 <template>
   <main class="py-5">
       <div class="d-flex">
-        <div class="search d-flex align-items-center">
-          <img src="@/assets/search-icon.svg">
-          <input type="text" v-model="searchterm" placeholder="Search client">
-        </div>
+        <ClientSearchbar />
       <button class="ms-auto me-3" @click="showArchive = !showArchive" :class="showArchive ? 'active' : ''">
         <img class="me-2" v-if="!showArchive" src="@/assets/archive-icon.svg">
         <img class="me-2" v-if="showArchive" src="@/assets/archive-icon-paars.svg">
@@ -25,13 +22,14 @@ import { useDataStore } from "@/stores/data";
 
 import getData from "@/composables/getData";
 
+import ClientSearchbar from "@/components/ClientSearchbar.vue";
 import ClientList from "@/components/ClientList.vue";
 import AddClientButton from "@/components/AddClientButton.vue";
 import AddProjectModal from "@/components/AddProjectModal.vue";
 
 const showArchive = ref(false);
 
-const { projects, clients, searchterm, clientsArchive, clientsNotArchived } = storeToRefs(useDataStore());
+const { projects, clients, clientsArchive, clientsNotArchived } = storeToRefs(useDataStore());
 
 onMounted(async () => {
   projects.value = await getData('projects');
@@ -40,23 +38,6 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-
-.search {
-  border: 1px solid var(--border);
-  border-radius: var(--br);
-  padding: 0 1rem;
-  outline: none;
-  background-color: transparent;
-  width: 270px;
-}
-.search input {
-  padding: .5rem 1rem;
-  outline: none;
-  border: none;
-  background-color: transparent;
-  font-size: 15px;
-  color: #6C757D;
-}
 button {
   background-color: transparent;
   border: 1px solid var(--border);
