@@ -19,7 +19,21 @@ const router = createRouter({
       name: "reports",
       component: () => import("../views/ReportsView.vue"),
     },
+    {
+      path: "/login",
+      name: "login",
+      component: () => import("../views/LoginView.vue"),
+    },
   ],
 });
+
+router.beforeEach(async (to, from) => {
+  const { useUserStore } = await import('@/stores/user')
+  const { userAuthenticated } = useUserStore()
+
+  if (!userAuthenticated && to.name !== 'login') {
+    return { name: 'login' }
+  }
+})
 
 export default router;

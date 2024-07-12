@@ -6,6 +6,7 @@ import getSessions from '@/composables/getSessions';
 export const useDataStore = defineStore("data", () => {
 
   const sessions = ref([]);
+  const sessionsOfAmountDays = ref(7) // Show sessions of last 7 days
   const projects = ref([]);
   const clients = ref([]);
   const searchterm = ref('');
@@ -35,7 +36,7 @@ export const useDataStore = defineStore("data", () => {
   
     switch(table) {
       case 'sessions':
-        sessions.value = await getSessions(30);
+        sessions.value = await getSessions(30, sessionsOfAmountDays.value);
         break;
       case 'projects':
         projects.value = await getData('projects');
@@ -48,6 +49,7 @@ export const useDataStore = defineStore("data", () => {
 
   return { 
     sessions,
+    sessionsOfAmountDays,
     projects, 
     clients, 
     clientsThatMatchSearch, 

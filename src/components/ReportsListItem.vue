@@ -19,8 +19,8 @@
                 <li class="list-group-item list-item-accordion py-2 d-grid align-items-center" v-for="session in filterSessionsByProject" :key="session.session_id">
                     {{ session.title }}
                     <div class="collega d-flex align-items-center gap-2">
-                        <img src="@/assets/avatar.png" alt="">
-                        Sam Verloop
+                        <img class="avatar" :src="userOfProject(session.user_id).photo" alt="">
+                        {{ userOfProject(session.user_id).username }}
                     </div>
                     <div class="d-flex align-items-center gap-2">
                         <img src="@/assets/date-icon.svg" alt="">
@@ -36,16 +36,23 @@
 
 </template>
 <script setup>
-import { useDataStore } from '@/stores/data'
 import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
 import { formatDate } from '@/composables/functions'
 
+import { useDataStore } from '@/stores/data'
+import { useUserStore } from '@/stores/user'
+
 const { sessions } = storeToRefs(useDataStore())
+const { users } = storeToRefs(useUserStore());
 
 const props = defineProps({
     project: Object
 })
+
+const userOfProject = (userId) => {
+    return users.value.find(user => user.user_id === userId);
+}
 
 const filterSessionsByProject = computed(() => {
     return sessions.value.filter(session => session.project_id === props.project.project_id)
@@ -118,5 +125,10 @@ function reduceTimeElapsed(sessions) {
 }
 .btn.collapsed img {
     transform: rotate(0);
+}
+.avatar {
+    height: 22px;
+    width: 22px;
+    border-radius: 50%;
 }
 </style>

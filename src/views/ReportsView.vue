@@ -12,9 +12,9 @@
 
 <script setup>
 import { storeToRefs } from "pinia";
-import { onMounted, ref } from "vue";
+import { onBeforeMount, ref } from "vue";
 import { useDataStore } from "@/stores/data";
-import { useSessionStore } from "@/stores/session";
+import { useUserStore } from "@/stores/user";
 
 import getData from "@/composables/getData";
 import getSessions from "@/composables/getSessions";
@@ -23,14 +23,14 @@ import ReportsList from "@/components/ReportsList.vue";
 import ReportsFilter from "@/components/ReportsFilter.vue";
 import ClientSearchbar from "@/components/ClientSearchbar.vue";
 
-const { sessionsOfAmountDays } = storeToRefs(useSessionStore());
+const { projects, sessions, clients, projectsNotArchived, sessionsOfAmountDays } = storeToRefs(useDataStore());
+const { users } = storeToRefs(useUserStore());
 
-const { projects, sessions, clients, projectsNotArchived } = storeToRefs(useDataStore());
-
-onMounted(async () => {
+onBeforeMount(async () => {
+  users.value = await getData('users');
   projects.value = await getData('projects');
   clients.value = await getData('clients');
-  sessions.value = await getSessions(30, sessionsOfAmountDays.value);
+  sessions.value = await getSessions(null, sessionsOfAmountDays.value);
 });
 </script>
 

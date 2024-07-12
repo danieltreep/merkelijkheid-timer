@@ -1,45 +1,24 @@
 <script setup>
 import { RouterLink, RouterView } from "vue-router";
 
-import { decodeCredential } from 'vue3-google-login'
-
-import { useUserStore } from '@/stores/user.js'
+import { useUserStore } from '@/stores/user'
 import { storeToRefs } from "pinia";
-import postData from "./composables/postData";
-import getUser from "./composables/getUser";
 
-const { user, userAuthorized } = storeToRefs(useUserStore());
-
-const loginUser = async (response) => {
-  const userData = decodeCredential(response.credential)
-  user.value = userData; // Sla userdata op in de user store
-
-  // Als gebruiker eindigt op merkelijkheid.com bekijk of dit de eerste login is. Zo ja, voeg toe aan users tabel.
-  if (userAuthorized && !await getUser(user.value.email)) {
-    await postData('users', {username: user.value.name, working: true, is_admin: 0, email: user.value.email})
-  } 
-
-  // Voeg id toe aan gebruiker zodat die aan een sessie kan worden toegevoegd
-  user.value.user_id = await getUser(user.value.email);
-  
-}
-
+const { user, userAuthenticated } = storeToRefs(useUserStore());
 </script>
 
 <template>
   <div class="container">
-    <header class="py-4 d-flex justify-content-between align-items-center">
+    <header class="py-4 d-flex justify-content-between align-items-center" v-if="userAuthenticated">
   
       <img src="@/assets/logo.svg" alt="">
-        <nav class="ms-auto">
-          <RouterLink to="/">Time tracker</RouterLink>
-          <RouterLink to="/clients">Clients</RouterLink>
-          <RouterLink to="/reports">Reports</RouterLink>
-        </nav>
-  
-        <GoogleLogin :callback="loginUser" prompt auto-login v-if="!userAuthorized"/>
-  
-        <div v-if="userAuthorized" class="d-flex align-items-center">
+      <nav class="ms-auto" >
+        <RouterLink :to="{name: 'home'}">Time tracker</RouterLink>
+        <RouterLink :to="{name: 'clients'}">Clients</RouterLink>
+        <RouterLink :to="{name: 'reports'}">Reports</RouterLink>
+      </nav>
+    
+        <div  class="d-flex align-items-center" >
           <img class="avatar" v-if="user.picture" :src="user.picture" >
         </div>
     </header>

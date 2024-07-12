@@ -114,6 +114,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Send the JSON response
         echo json_encode($data);
 
+    } elseif ($table === 'sessions') {
+
+        $days = $_GET['days'];
+        
+        // Query that merges the tables: sessions, projects and clients
+        $result = $conn->query("SELECT * FROM $table LEFT JOIN projects ON sessions.project_id = projects.project_id LEFT JOIN clients ON projects.client_id = clients.client_id WHERE sessions.created_at >= DATE_SUB(NOW(), INTERVAL $days DAY) ORDER BY sessions.created_at DESC");
+    
+        // Fetch the data and encode it as JSON
+        $data = [];
+        while ($row = $result->fetch_assoc()) {
+            $data[] = $row;
+        }
+        
+        // Close the database connection
+        $conn->close();
+    
+        // Send the JSON response
+        echo json_encode($data);
+
     } elseif ($table === 'projects') {
         
         // Query that merges the tables: sessions, projects and clients

@@ -8,20 +8,20 @@
         <div class="filter-tooltip" v-if="showOptions">
             <p class="mb-2"><small>Show reports for</small></p>
             <div class="tabs d-flex justify-content-between">
-                <input type="radio" name="daterange" id="7days" value="7 days" v-model="daterange" checked>
+                <input type="radio" name="daterange" id="7days" value="7" v-model="sessionsOfAmountDays" checked>
                 <label for="7days">7 days</label>
 
-                <input type="radio" name="daterange" id="30days" value="30 days" v-model="daterange" >
+                <input type="radio" name="daterange" id="30days" value="30" v-model="sessionsOfAmountDays" >
                 <label for="30days">30 days</label>
 
-                <input type="radio" name="daterange" id="90days" value="90 days" v-model="daterange" >
+                <input type="radio" name="daterange" id="90days" value="90" v-model="sessionsOfAmountDays" >
                 <label for="90days">90 days</label>
 
-                <input type="radio" name="daterange" id="customrange" value="Custom" v-model="daterange" >
-                <label for="customrange">Custom</label>
+                <!-- <input type="radio" name="daterange" id="customrange" value="Custom" >
+                <label for="customrange">Custom</label> -->
             </div>
 
-            <div class="customrangeoptions mt-4" v-show="daterange === 'Custom'">
+            <!-- <div class="customrangeoptions mt-4" v-show="dateRangeDays === 'Custom'">
                 <p class="mb-2"><small>Select your date range</small></p>
 
                 <div class="d-flex gap-2">
@@ -38,20 +38,26 @@
                 </div>
 
                 
-            </div>
-
-            <button class="btn select-button mt-4">Select</button>
+            </div> -->
+            <button class="btn select-button mt-4" @click="handleSubmit">Select</button>
         </div>
     </div>
 </template>
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-import { Datepicker } from 'vanillajs-datepicker';
+// import { Datepicker } from 'vanillajs-datepicker';
+import { storeToRefs } from "pinia";
+import { useDataStore } from "@/stores/data";
+import getSessions from '@/composables/getSessions'
 
-const showOptions = ref(true)
-const daterange = ref('7 days')
+const { sessionsOfAmountDays, sessions } = storeToRefs(useDataStore());
 
-const startDateRef = ref(new Date())
+const showOptions = ref(false)
+
+const lastWeek = new Date()
+lastWeek.setDate(lastWeek.getDate() - sessionsOfAmountDays.value)
+
+const startDateRef = ref(lastWeek)
 const endDateRef = ref(new Date())
 
 const startDateString = computed(() => {
@@ -61,41 +67,49 @@ const endDateString = computed(() => {
     return formatDate(endDateRef.value)
 })
 
-onMounted(() => {
-    const startDateInput = document.getElementById('start-date');
-    const endDateInput = document.getElementById('end-date');
+async function handleSubmit() {
+    showOptions.value = false;
+    const startDate = new Date(endDateRef.value);
+    startDate.setDate(endDateRef.value.getDate() - sessionsOfAmountDays.value)
+    startDateRef.value = startDate
+    sessions.value = await getSessions(null, sessionsOfAmountDays.value);
+}
 
-    const startDatePicker = new Datepicker(startDateInput, {
-        autohide: true,
-        format: 'dd-mm-yyyy'
-    });
+// onMounted(() => {
+//     const startDateInput = document.getElementById('start-date');
+//     const endDateInput = document.getElementById('end-date');
 
-    const endDatePicker = new Datepicker(endDateInput, {
-        autohide: true,
-        format: 'dd-mm-yyyy'
-    });
+//     const startDatePicker = new Datepicker(startDateInput, {
+//         autohide: true,
+//         format: 'dd-mm-yyyy'
+//     });
 
-    startDateInput.addEventListener('changeDate', (e) => {
-        const startDate = startDatePicker.getDate();
-        endDatePicker.setOptions({
-            minDate: startDate
-        });
+//     const endDatePicker = new Datepicker(endDateInput, {
+//         autohide: true,
+//         format: 'dd-mm-yyyy'
+//     });
 
-        if (endDatePicker.getDate() < startDate) {
-            endDatePicker.setDate(startDate);
-        }
-        startDateRef.value = startDate
-    });
+//     startDateInput.addEventListener('changeDate', (e) => {
+//         const startDate = startDatePicker.getDate();
+//         endDatePicker.setOptions({
+//             minDate: startDate
+//         });
 
-    endDateInput.addEventListener('changeDate', (e) => {
-        const endDate = endDatePicker.getDate();
-        startDatePicker.setOptions({
-            maxDate: endDate
-        });
-        endDateRef.value = endDate
+//         if (endDatePicker.getDate() < startDate) {
+//             endDatePicker.setDate(startDate);
+//         }
+//         startDateRef.value = startDate
+//     });
 
-    });
-})
+//     endDateInput.addEventListener('changeDate', (e) => {
+//         const endDate = endDatePicker.getDate();
+//         startDatePicker.setOptions({
+//             maxDate: endDate
+//         });
+//         endDateRef.value = endDate
+
+//     });
+// })
 
 function formatDate(date) {
     const monthNames = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];

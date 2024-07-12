@@ -1,6 +1,14 @@
 const getSessions = async (userid, days) => {
 
-  const data = await fetch(`http://localhost/merkelijkheid-timer/api.php?table=sessions&userid=${encodeURI(userid)}&days=${days}`)
+  let url = `http://localhost/merkelijkheid-timer/api.php?table=sessions&days=${days}`
+
+  if (userid) {
+    url += `&userid=${encodeURI(userid)}`;
+  }
+
+  console.log(url);
+
+  const data = await fetch(url)
     .then((res) => {
       if (!res.ok) {
         throw new Error(`HTTP error! Status: ${res.status}`);
@@ -18,4 +26,3 @@ const getSessions = async (userid, days) => {
   };
   
   export default getSessions;
-  

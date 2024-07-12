@@ -3,10 +3,11 @@ import { defineStore } from "pinia";
 
 export const useUserStore = defineStore("user", () => {
   const user = ref([]);
+  const users = ref([])
 
-  const userAuthorized = computed(() => {
+  const userAuthenticated = computed(() => {
     return user.value.hd === 'merkelijkheid.com'
   })
   
-  return { user, userAuthorized };
-});
+  return { user, users, userAuthenticated };
+}); 
