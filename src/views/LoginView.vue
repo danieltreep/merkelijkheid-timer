@@ -1,6 +1,6 @@
 <template>
     <div class="d-flex flex-column align-items-center justify-content-center gap-4 login-screen">
-        <img src="@/assets/merkelijkheid-today.svg" alt="">
+        <img src="@/assets/merkelijkheid-today.svg" class="mb-4" alt="">
         <GoogleLogin :callback="loginUser" prompt auto-login v-if="!userAuthenticated"/>
     </div>
 </template>
@@ -24,7 +24,7 @@ const loginUser = async (response) => {
 
   // Als gebruiker eindigt op merkelijkheid.com bekijk of dit de eerste login is. Zo ja, voeg toe aan users tabel.
   if (userAuthenticated && !await getUser(user.value.email)) {
-    await postData('users', {username: user.value.name, working: true, is_admin: 0, email: user.value.email, photo: user.value.picture})
+    await postData('users', {username: user.value.name, is_clocking: true, is_admin: 0, email: user.value.email, photo: user.value.picture})
   } 
 
   // Voeg id toe aan gebruiker zodat die aan een sessie kan worden toegevoegd

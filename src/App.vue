@@ -8,7 +8,7 @@ const { user, userAuthenticated } = storeToRefs(useUserStore());
 </script>
 
 <template>
-  <div class="container">
+  <div class="container pb-2">
     <header class="py-4 d-flex justify-content-between align-items-center" v-if="userAuthenticated">
   
       <img src="@/assets/logo.svg" alt="">

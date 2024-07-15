@@ -6,7 +6,7 @@ import { useUserStore } from "@/stores/user";
 import postData from "@/composables/postData";
 import patchData from "@/composables/patchData";
 import deleteData from "@/composables/deleteData";
-import { prefixZero, makeDateSqlCompatible, calculateTimeDifference, calculateTimeElapsed } from "@/composables/functions"
+import { makeDateSqlCompatible, calculateTimeElapsed } from "@/composables/functions"
 
 export const useTimerStore = defineStore("timer", () => {
 
@@ -35,8 +35,7 @@ export const useTimerStore = defineStore("timer", () => {
             project_id: session.project_id,
             created_at: new Date(session.created_at),
             stopped_at: null,
-            time_elapsed: `00:00:00`,
-            time_in_minutes: null 
+            time_elapsed: `00:00:00`
         };
         currentSessionId.value = session.session_id;
         timerRunning.value = true;
@@ -48,7 +47,6 @@ export const useTimerStore = defineStore("timer", () => {
         timerRunning.value = false;
         
         currentSession.value.stopped_at = new Date();
-        currentSession.value.time_in_minutes = calculateTimeDifference(currentSession.value.created_at, currentSession.value.stopped_at);
 
         // Zet Date waarden om zodat ze in de database kunnen
         currentSession.value.created_at = makeDateSqlCompatible(currentSession.value.created_at);

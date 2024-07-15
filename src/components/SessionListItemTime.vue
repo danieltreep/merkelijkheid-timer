@@ -9,7 +9,7 @@
 </template>
 <script setup>
 import { onMounted, ref } from "vue";
-import { prefixZero, makeDateSqlCompatible, calculateTimeElapsed, calculateTimeDifference } from '@/composables/functions'
+import { prefixZero, makeDateSqlCompatible, calculateTimeElapsed } from '@/composables/functions'
 import patchData from '@/composables/patchData'
 
 const props = defineProps({
@@ -59,6 +59,7 @@ async function handleChange(value, key) {
   }
 
   const timeElapsed = calculateTimeElapsed(newStarted, newEnded)
+  time.value = timeElapsed.slice(1, -3);
 
   await patchData('sessions', props.session.session_id, {
     created_at: makeDateSqlCompatible(newStarted), 
@@ -135,7 +136,6 @@ function handleTimeChange(value) {
 
   const timeElapsed = calculateTimeElapsed(started.value, new Date(props.session.stopped_at));
 
-  const timeInMinutes = calculateTimeDifference(started.value, props.session.stopped_at);
   patchData('sessions', props.session.session_id, {time_elapsed: timeElapsed, created_at: makeDateSqlCompatible(started.value)});
   started.value = prefixZero(started.value.getHours()) + ':' + prefixZero(started.value.getMinutes())
 }

@@ -13,8 +13,11 @@ header('Access-Control-Allow-Methods: GET, POST, PATCH, DELETE, OPTIONS');
 
 header('Content-Type: application/json');
 
-// Establish a database connection (use your actual database credentials)
+// DATABASE CONNECTIE VOOR LOKAAL, kies 1 van de 2
 $conn = new mysqli('localhost', 'root', 'mysql', 'timer');
+
+// DATABASE CONNECTIE VOOR SERVER, kies 1 van de 2
+// $conn = new mysqli('localhost', 'merktoday_timer', 'F9gtrL3xDU2nfMgwMrJF', 'merktoday_timer');
 
 // Check the connection
 if ($conn->connect_error) {

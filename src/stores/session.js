@@ -20,8 +20,7 @@ export const useSessionStore = defineStore("session", () => {
     project_id: null,
     created_at: null,
     stopped_at: null,
-    time_elapsed: `00:00:00`,
-    time_in_minutes: null
+    time_elapsed: `00:00:00`
   });
 
   function resetCurrentSession() {
@@ -30,7 +29,6 @@ export const useSessionStore = defineStore("session", () => {
     currentSession.value.stopped_at = null;
     currentSession.value.created_at = null;
     currentSession.value.time_elapsed = `00:00:00`;
-    currentSession.value.time_in_minutes = null;
   }
 
   const groupSessionsByDay = computed(() => {

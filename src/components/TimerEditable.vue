@@ -21,7 +21,7 @@ import { onMounted, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useSessionStore } from "@/stores/session";
 import { useUserStore } from '@/stores/user';
-import { prefixZero, makeDateSqlCompatible, calculateTimeDifference, calculateTimeElapsed, parseDateString } from '@/composables/functions'
+import { prefixZero, makeDateSqlCompatible, calculateTimeElapsed, parseDateString } from '@/composables/functions'
 
 import postData from "@/composables/postData";
 
@@ -67,7 +67,6 @@ function handleChange(value, key) {
   }
   currentSession.value.time_elapsed = calculateTimeElapsed(currentSession.value.created_at, currentSession.value.stopped_at);
   time.value = currentSession.value.time_elapsed.slice(1, -3);
-  currentSession.value.time_in_minutes = calculateTimeDifference(currentSession.value.created_at, currentSession.value.stopped_at);
 }
 
 function validateInput(value) {
@@ -136,7 +135,6 @@ function handleTimeChange(value) {
   time.value = `${hours}:${minutes}`;
   currentSession.value.time_elapsed = `${prefixZero(hours)}:${prefixZero(minutes)}:00`
   started.value = prefixZero(currentSession.value.created_at.getHours()) + ':' + prefixZero(currentSession.value.created_at.getMinutes())
-  currentSession.value.time_in_minutes = calculateTimeDifference(currentSession.value.created_at, currentSession.value.stopped_at);
 }
 
 function handleSubmit() {

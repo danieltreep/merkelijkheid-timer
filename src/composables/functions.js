@@ -19,12 +19,12 @@ function makeDateSqlCompatible(date) {
     return mysqlDatetime;
 }
 
-function calculateTimeDifference(startTime, endTime) {
+// function calculateTimeDifference(startTime, endTime) {
     
-    const timeDifferenceInMilliseconds = endTime - startTime;
-    const timeDifferenceInMinutes = timeDifferenceInMilliseconds / (1000 * 60);
-    return Math.floor(timeDifferenceInMinutes);
-}
+//     const timeDifferenceInMilliseconds = endTime - startTime;
+//     const timeDifferenceInMinutes = timeDifferenceInMilliseconds / (1000 * 60);
+//     return Math.floor(timeDifferenceInMinutes);
+// }
 
 function calculateTimeElapsed(startTime, endTime) {
   
@@ -51,4 +51,4 @@ function formatDate(date) {
     return `${day}-${month}-${year}`;
 }
 
-export { prefixZero, makeDateSqlCompatible, calculateTimeDifference, calculateTimeElapsed, parseDateString, formatDate };
+export { prefixZero, makeDateSqlCompatible,  calculateTimeElapsed, parseDateString, formatDate };

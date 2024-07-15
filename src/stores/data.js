@@ -2,6 +2,7 @@ import { ref, computed } from "vue";
 import { defineStore, storeToRefs } from "pinia";
 import getData from '@/composables/getData';
 import getSessions from '@/composables/getSessions';
+import { useUserStore } from "./user";
 
 export const useDataStore = defineStore("data", () => {
 
@@ -11,6 +12,8 @@ export const useDataStore = defineStore("data", () => {
   const clients = ref([]);
   const searchterm = ref('');
   const currentClientId = ref('')
+
+  const { user } = storeToRefs(useUserStore())
 
   const clientsThatMatchSearch = computed(() => {
     return clients.value.filter(client => client.client_name.toLowerCase().includes(searchterm.value.toLowerCase()))
@@ -36,7 +39,7 @@ export const useDataStore = defineStore("data", () => {
   
     switch(table) {
       case 'sessions':
-        sessions.value = await getSessions(30, sessionsOfAmountDays.value);
+        sessions.value = await getSessions(user.value.user_id, sessionsOfAmountDays.value);
         break;
       case 'projects':
         projects.value = await getData('projects');

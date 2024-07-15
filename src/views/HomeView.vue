@@ -24,12 +24,13 @@ import getSessions from "@/composables/getSessions";
 
 const { projects, clients, sessions, sessionsOfAmountDays } = storeToRefs(useDataStore());
 const { groupSessionsByDay } = storeToRefs(useSessionStore());
-const { users } = storeToRefs(useUserStore());
+const { users, user } = storeToRefs(useUserStore());
 
 onMounted(async () => {
   sessionsOfAmountDays.value = 7;
+
   projects.value = await getData('projects');
-  sessions.value = await getSessions(30, sessionsOfAmountDays.value);
+  sessions.value = await getSessions(user.value.user_id, sessionsOfAmountDays.value);
   clients.value = await getData('clients');
   users.value = await getData('users');
 });
