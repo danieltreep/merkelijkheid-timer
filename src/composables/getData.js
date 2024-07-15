@@ -1,6 +1,10 @@
+import { getBaseUrl } from './functions';
+
 const getData = async (tableName) => {
 
-  const data = await fetch(`http://localhost/merkelijkheid-timer/api.php?table=${encodeURI(tableName)}`)
+  const serverUrl = `${getBaseUrl()}?table=${encodeURI(tableName)}`;
+
+  const data = await fetch(serverUrl)
     .then((res) => {
       if (!res.ok) {
         throw new Error(`HTTP error! Status: ${res.status}`);

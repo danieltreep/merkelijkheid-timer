@@ -19,16 +19,24 @@ const router = useRouter()
 const { user, userAuthenticated } = storeToRefs(useUserStore());
 
 const loginUser = async (response) => {
-  const userData = decodeCredential(response.credential)
-  user.value = userData; // Sla userdata op in de user store
 
-  // Als gebruiker eindigt op merkelijkheid.com bekijk of dit de eerste login is. Zo ja, voeg toe aan users tabel.
-  if (userAuthenticated && !await getUser(user.value.email)) {
-    await postData('users', {username: user.value.name, is_clocking: true, is_admin: 0, email: user.value.email, photo: user.value.picture})
-  } 
+  if (localStorage.getItem('user')) {
+    user.value = JSON.parse(localStorage.getItem('user'))
+  } else {
 
-  // Voeg id toe aan gebruiker zodat die aan een sessie kan worden toegevoegd
-  user.value.user_id = await getUser(user.value.email);
+    const userData = decodeCredential(response.credential)
+    user.value = userData; // Sla userdata op in de user store
+    // Als gebruiker eindigt op merkelijkheid.com bekijk of dit de eerste login is. Zo ja, voeg toe aan users tabel.
+    if (userAuthenticated && !await getUser(user.value.email)) {
+      await postData('users', {username: user.value.name, is_clocking: 0, is_admin: 0, email: user.value.email, photo: user.value.picture})
+    } 
+  
+    // Voeg id toe aan gebruiker zodat die aan een sessie kan worden toegevoegd
+    user.value.user_id = await getUser(user.value.email);
+    localStorage.setItem("user", JSON.stringify({...userData, user_id: user.value.user_id}));
+
+  }
+
   await router.push({name: 'home'})
 }
 </script>

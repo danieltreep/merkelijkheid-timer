@@ -1,10 +1,11 @@
 import { useDataStore } from '@/stores/data'
+import { getBaseUrl } from './functions';
 
 const deleteData = (table, id) => {
 
   const { updateTable } = useDataStore();
 
-  fetch('http://localhost/merkelijkheid-timer/api.php', {
+  fetch(getBaseUrl(), {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',

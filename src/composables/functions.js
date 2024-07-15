@@ -19,13 +19,6 @@ function makeDateSqlCompatible(date) {
     return mysqlDatetime;
 }
 
-// function calculateTimeDifference(startTime, endTime) {
-    
-//     const timeDifferenceInMilliseconds = endTime - startTime;
-//     const timeDifferenceInMinutes = timeDifferenceInMilliseconds / (1000 * 60);
-//     return Math.floor(timeDifferenceInMinutes);
-// }
-
 function calculateTimeElapsed(startTime, endTime) {
   
     const timeElapsedMs = endTime.getTime() - startTime.getTime();
@@ -51,4 +44,12 @@ function formatDate(date) {
     return `${day}-${month}-${year}`;
 }
 
-export { prefixZero, makeDateSqlCompatible,  calculateTimeElapsed, parseDateString, formatDate };
+function getBaseUrl() {
+    if (window.location.href.includes('localhost')) {
+        return 'http://localhost/merkelijkheid-timer/api.php'
+    } else {
+        return 'https://merkelijkheid.today/api.php'
+    }
+}
+
+export { prefixZero, makeDateSqlCompatible,  calculateTimeElapsed, parseDateString, formatDate, getBaseUrl };

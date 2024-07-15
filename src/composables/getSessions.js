@@ -1,7 +1,9 @@
+import { getBaseUrl } from './functions';
+
 const getSessions = async (userid, days) => {
 
-  let url = `http://localhost/merkelijkheid-timer/api.php?table=sessions&days=${days}`
-
+  let url = `${getBaseUrl()}?table=sessions&days=${days}`;
+  
   if (userid) {
     url += `&userid=${encodeURI(userid)}`;
   }

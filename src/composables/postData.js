@@ -1,13 +1,14 @@
 import { useDataStore } from '@/stores/data'
+import { getBaseUrl } from './functions';
 
 const postData = async (table, data) => {
 
   const { updateTable } = useDataStore();
-
+  
   // console.log(data)
   let id;
   
-  await fetch(`http://localhost/merkelijkheid-timer/api.php`, {
+  await fetch(getBaseUrl(), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

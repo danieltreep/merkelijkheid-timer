@@ -1,4 +1,5 @@
 import { useDataStore } from '@/stores/data'
+import { getBaseUrl } from './functions';
 
 const patchData = async (table, id, data) => {
 
@@ -6,7 +7,10 @@ const patchData = async (table, id, data) => {
 
   const { updateTable } = useDataStore();
 
-  fetch(`http://localhost/merkelijkheid-timer/api.php`, {
+  const serverUrl = 'https://merkelijkheid.today/api.php';
+  const localUrl = 'http://localhost/merkelijkheid-timer/api.php';
+
+  fetch(getBaseUrl(), {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",

@@ -3,7 +3,7 @@
     <input
       type="text"
       v-model="currentSession.title"
-      placeholder="Waar werk je aan?"
+      placeholder="What are you working on?"
       class="ps-0"
     />
 

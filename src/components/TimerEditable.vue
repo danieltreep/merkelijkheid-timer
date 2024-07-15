@@ -132,8 +132,8 @@ function handleTimeChange(value) {
 
   // Update currentSession.value with the new date object
   currentSession.value.created_at = date;
-  time.value = `${hours}:${minutes}`;
   currentSession.value.time_elapsed = `${prefixZero(hours)}:${prefixZero(minutes)}:00`
+  time.value = currentSession.value.time_elapsed.slice(1, -3);
   started.value = prefixZero(currentSession.value.created_at.getHours()) + ':' + prefixZero(currentSession.value.created_at.getMinutes())
 }
 
