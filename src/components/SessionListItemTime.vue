@@ -5,7 +5,7 @@
     <div>-</div>
     <input type="text" v-model="ended" @blur="handleChange(ended, 'stopped_at')">
   </div>
-  <input type="text" class=" ms-auto elapsed" v-model="time" @blur="handleTimeChange(time)">
+  <input type="text" class="duur elapsed" v-model="time" @blur="handleTimeChange(time)">
 </template>
 <script setup>
 import { onMounted, ref } from "vue";
@@ -148,17 +148,18 @@ input {
   border-radius: var(--br);
 }
 input:hover {
-  border: 1px solid var(--hover);   
+  border: 1px solid #d1d1d1;   
 }
 .time {
   display: grid;
+  /* grid-template-columns: 25px 45px 15px 50px; */
   grid-template-columns: 20px 50px 10px 50px;
 }
 .elapsed {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 500;
-  width: 50px;
-  margin-right: 1rem;
-  padding: .3rem;
+  width: 55px;
+  margin-left: -6px;
+  padding: .3rem .3rem;
 }
 </style>

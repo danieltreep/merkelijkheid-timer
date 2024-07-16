@@ -16,7 +16,12 @@
   /* padding-bottom: 4rem; */
   min-height: 100svh;
 }
-
+input {
+  background-color: transparent;
+}
+input:hover {
+  border: 1px solid #2b2f32;
+}
 .container {
   max-width: 1380px;
 }
@@ -29,6 +34,8 @@
 .list-group {
   box-shadow: var(--bs);
   border-radius: var(--br);
+  /* overflow: hidden; */
+  /* --bs-list-group-border-color: #EDEEF1 !important; */
 }
 .list-group-item-secondary {
   font-size: 12px;
@@ -39,9 +46,12 @@
   border: none;
   padding-left: 2rem;
   font-size: 14px;
+  /* border-bottom: 1px solid #EDEEF1; */
 }
-.list-group-item:not(:last-child):not(.header) {
-  border-bottom: 1px solid #EDEEF1;
+
+/* .accord */
+.accordion-body .list-group-item:not(:last-child) {
+  border-bottom: 1px solid #dee2e6;
 }
 .play-button, .more-button {
   border: none;

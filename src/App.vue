@@ -32,10 +32,10 @@ onMounted(() => {
         <RouterLink :to="{name: 'reports'}">Reports</RouterLink>
       </nav>
     
-        <div  class="d-flex align-items-center" >
-          <img class="avatar" v-if="user.picture" :src="user.picture" >
-          <div class="empty-avatar" v-if="!user.picture">{{ getUserCredentials() }} </div>
-        </div>
+      <div  class="d-flex align-items-center" >
+        <img class="avatar" v-if="user.picture" :src="user.picture" >
+        <div class="empty-avatar" v-if="!user.picture">{{ getUserCredentials() }} </div>
+      </div>
     </header>
   
     <RouterView />

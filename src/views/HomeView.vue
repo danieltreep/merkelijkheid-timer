@@ -23,7 +23,7 @@ import SessionList from "@/components/SessionList.vue";
 import getSessions from "@/composables/getSessions";
 
 const { projects, clients, sessions, sessionsOfAmountDays } = storeToRefs(useDataStore());
-const { groupSessionsByDay } = storeToRefs(useSessionStore());
+const { groupSessionsByDay, stackedSessions } = storeToRefs(useSessionStore());
 const { users, user } = storeToRefs(useUserStore());
 
 onMounted(async () => {

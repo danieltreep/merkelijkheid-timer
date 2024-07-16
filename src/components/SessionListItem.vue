@@ -1,5 +1,5 @@
 <template>
-  <li class="list-group-item d-grid py-2 pe-2 position-relative">
+  <li class="list-group-item d-grid py-0 pe-2 position-relative" :style="{backgroundColor: bg}">
     <input type="text" v-model="title" @blur="handleBlur">
     
     <div class="position-relative d-flex align-items-center">
@@ -23,7 +23,7 @@
   </li>
 </template>
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import {  storeToRefs } from "pinia";
 import { useSessionStore } from "@/stores/session";
 import { useTimerStore } from "@/stores/timer"
@@ -34,6 +34,7 @@ import patchData from '@/composables/patchData'
 
 const props = defineProps({
   session: Object,
+  bg: String
 })
 
 const { startTimerStore } = useTimerStore();
@@ -59,12 +60,14 @@ function addProject(project) {
   // currentSession.value.project_id = project.project_id
   openProjectSelector.value = false
 }
+
 </script>
 
 <style scoped>
 li.d-grid {
   grid-template-columns: minmax(max-content, 30%) 35% 4fr 1.1fr 40px 40px;
   align-items: center;
+  height: 57px;
 }
 
 
@@ -74,6 +77,7 @@ input {
   margin-left: -1rem;
   margin-right: 1rem;
   border-radius: var(--br);
+  background-color: transparent;
 }
 input:hover {
   border: 1px solid var(--border);

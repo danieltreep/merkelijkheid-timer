@@ -7,20 +7,28 @@
       {{dateString}} 
       <span class="d-flex align-items-center ms-auto">Total: <span class="time ms-1"> {{reduceTimeElapsed(sessions)}} </span></span>
     </li>
-    <SessionListItem :session="session" v-for="session in sessions" :key="session.session_id"/>
+    <SessionListItemGroup :sessions="sessionGroup" v-for="(sessionGroup, key) in stackedSessions" :key="key" :sessionsArrayKey="key"/>
   </ul>
   
 </template>
 
 <script setup>
+import { storeToRefs } from 'pinia'
+import { onMounted, computed } from 'vue'
+import { useSessionStore } from '@/stores/session'
 import SessionListItem from "@/components/SessionListItem.vue";
+import SessionListItemGroup from "@/components/SessionListItemGroup.vue";
 
 const props = defineProps({
-  sessions: Array,
+  sessions: Object,
   date: String
 })
 
+// onMounted(() => {
+//   console.log(stackedSessions.value)
+// })
 
+// const { stackedSessions } = storeToRefs(useSessionStore()) 
 
 const date = new Date(props.date);
 
@@ -59,6 +67,22 @@ function reduceTimeElapsed(sessions) {
   return formattedTime;
 }
 
+const stackedSessions = computed(() => {
+  let sessionGroups = {};
+  
+  props.sessions.forEach(session => {
+    let key = `${session.title}-${session.project_id}`;
+
+    if (!sessionGroups[key]) {
+      sessionGroups[key] = [];
+    }
+
+    sessionGroups[key].push(session);
+  });
+
+  return sessionGroups;
+})
+
 
 </script>
 
@@ -71,4 +95,5 @@ function reduceTimeElapsed(sessions) {
   font-size: 12px;
   padding-block: .3rem;
 }
+
 </style>
