@@ -12,7 +12,7 @@ import { Datepicker } from 'vanillajs-datepicker';
 import { useSessionStore } from '@/stores/session'
 import { formatDate } from '@/composables/functions'
 
-const { sessionDateChange } = storeToRefs(useSessionStore())
+const { sessionToBePatched } = storeToRefs(useSessionStore())
 
 const emit = defineEmits(['changedate'])
 
@@ -33,11 +33,11 @@ onMounted(() => {
     } 
 })
 
-watch(sessionDateChange, () => {
+watch(sessionToBePatched, () => {
 
     if (!props.today) {
         const elem = document.querySelector('input[name=date]');
-        const formattedDate = formatDate(new Date(sessionDateChange.value.created_at));
+        const formattedDate = formatDate(new Date(sessionToBePatched.value.created_at));
         elem.value = formattedDate;
     }
 })

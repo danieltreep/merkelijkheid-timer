@@ -4,7 +4,11 @@
     </button>
 
     <div class="options position-absolute p-2 d-flex flex-column text-start" v-if="openOptions">
-      <button class="btn" data-bs-toggle="modal" data-bs-target="#changeDateModal" @click="handleDateChange()">
+      <button class="btn" data-bs-toggle="modal" data-bs-target="#shareSessionModal" @click="handleChange()">
+        <img src="@/assets/share-icon.svg" class="me-2" alt="">
+        Share session
+      </button>
+      <button class="btn" data-bs-toggle="modal" data-bs-target="#changeDateModal" @click="handleChange()">
         <img src="@/assets/date-icon-black.svg" class="me-2" alt="">
         Change date
       </button>
@@ -20,7 +24,7 @@ import { storeToRefs } from 'pinia'
 import { useSessionStore } from '@/stores/session'
 import deleteData from "@/composables/deleteData";
 
-const { sessionDateChange } = storeToRefs(useSessionStore())
+const { sessionToBePatched } = storeToRefs(useSessionStore())
 
 const props = defineProps({
     session: Object
@@ -33,9 +37,9 @@ function handleDelete() {
   deleteData('sessions', props.session.session_id)
 }
 
-function handleDateChange() {
+function handleChange() {
   openOptions.value = false;
-  sessionDateChange.value = props.session;
+  sessionToBePatched.value = props.session;
 }
 </script>
 <style scoped>

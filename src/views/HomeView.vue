@@ -5,6 +5,7 @@
     <SessionList :projects="projects" v-for="(sessions, key) in groupSessionsByDay" :sessions="sessions" :date="key"  :key="key"/>
 
     <ChangeDateModal :today="false"/>
+    <ShareSessionModal />
   </main>
 </template>
 
@@ -18,6 +19,7 @@ import { useUserStore } from "@/stores/user";
 import getData from "@/composables/getData";
 import TimerBar from "@/components/TimerBar.vue";
 import ChangeDateModal from "@/components/ChangeDateModal.vue";
+import ShareSessionModal from "@/components/ShareSessionModal.vue";
 
 import SessionList from "@/components/SessionList.vue";
 import getSessions from "@/composables/getSessions";

@@ -22,8 +22,10 @@ const getSessions = async (userid, days) => {
       console.error("Error:", error);
     });
 
-    // console.log(data);
-  
+    data.forEach(item => {
+      item.shared_with = JSON.parse(item.shared_with)
+    });
+    
     return data
   };
   

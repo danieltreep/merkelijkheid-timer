@@ -30,6 +30,7 @@ CREATE TABLE sessions (
   stopped_at TIMESTAMP,
   time_elapsed VARCHAR(255),
   is_running BOOLEAN,
+  shared_with JSON,
   FOREIGN KEY (user_id) REFERENCES users(user_id),
   FOREIGN KEY (project_id) REFERENCES projects(project_id)
 );

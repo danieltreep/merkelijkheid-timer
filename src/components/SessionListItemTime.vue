@@ -1,11 +1,11 @@
 <template >
   <div class="time align-items-center gap-1">
     <img src="@/assets/clock-icon.svg" alt="">
-    <input type="text" v-model="started" @blur="handleChange(started, 'created_at')">
+    <input type="text" v-model="started" @blur="handleChange(started, 'created_at')" :class="!isEditable ? 'disabled' : ''" :disabled="!isEditable">
     <div>-</div>
-    <input type="text" v-model="ended" @blur="handleChange(ended, 'stopped_at')">
+    <input type="text" v-model="ended" @blur="handleChange(ended, 'stopped_at')" :class="!isEditable ? 'disabled' : ''" :disabled="!isEditable">
   </div>
-  <input type="text" class="duur elapsed" v-model="time" @blur="handleTimeChange(time)">
+  <input type="text" class="duur elapsed" v-model="time" @blur="handleTimeChange(time)" :class="!isEditable ? 'disabled' : ''" :disabled="!isEditable">
 </template>
 <script setup>
 import { onMounted, ref } from "vue";
@@ -13,12 +13,11 @@ import { prefixZero, makeDateSqlCompatible, calculateTimeElapsed } from '@/compo
 import patchData from '@/composables/patchData'
 
 const props = defineProps({
-  session: Object
+  session: Object,
+  isEditable: Boolean
 })
 
 const thisSession = ref({...props.session})
-
-// console.log(session)
 
 const started = ref(prefixZero(new Date(props.session.created_at).getHours()) + ':' + prefixZero(new Date(props.session.created_at).getMinutes()))
 const ended = ref(prefixZero(new Date(props.session.stopped_at).getHours()) + ':' + prefixZero(new Date(props.session.stopped_at).getMinutes()))
@@ -146,8 +145,10 @@ input {
   border: 1px solid transparent;
   padding: .5rem .3rem;
   border-radius: var(--br);
+  cursor: text;
+  color: black;
 }
-input:hover {
+input:hover:not(.disabled) {
   border: 1px solid #d1d1d1;   
 }
 .time {

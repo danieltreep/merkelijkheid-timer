@@ -1,6 +1,6 @@
 <template>
     
-    <div class="accordion-item">
+    <div class="accordion-item" v-if="filterSessionsByProject.length">
         <div class="accordion-header gap-3">
             <div class="position-relative d-flex align-items-center">
                 <button v-if="filterSessionsByProject.length" class="btn show-content-button d-flex align-items-center me-4 gap-2 justify-content-center collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="`#accordion-${project.project_id}`" aria-expanded="true" :aria-controls="`accordion-${project.project_id}`">
@@ -18,17 +18,23 @@
                 
                 <li class="list-group-item list-item-accordion py-2 d-grid align-items-center" v-for="session in filterSessionsByProject" :key="session.session_id">
                     {{ session.title }}
-                    <div class="collega d-flex align-items-center gap-2">
-                        <img class="avatar" :src="userOfProject(session.user_id).photo" alt="">
-                        {{ userOfProject(session.user_id).username }}
+                    <div class="collega d-grid align-items-center justify-content-center gap-2">
+                        <div class="d-flex justify-content-end">
+                            <div v-if="session.shared_with.length" class="colleague-avatars">
+                                <img class="avatar" v-for="colleague in session.shared_with" :src="userOfProject(colleague).photo" :key="colleague.user_id" >
+                            </div>
+                            <img class="avatar" :src="userOfProject(session.user_id).photo">
+                        </div>
+                        <div>
+                            {{ userOfProject(session.user_id).username }}
+                        </div>
                     </div>
                     <div class="d-flex align-items-center gap-2">
                         <img src="@/assets/date-icon.svg" alt="">
                         {{ formatDate(new Date(session.created_at)) }}
                     </div>
-                    <div class="duur">{{ session.time_elapsed.slice(0, -3)}}</div>
+                    <div class="duur">{{ session.time_elapsed.slice(0, -3)}} <span class="superscript ms-1" v-if="session.shared_with.length">x{{ session.shared_with.length + 1 }}</span></div>
                 </li>
-             
             </div>
         </div>
     </div>
@@ -51,6 +57,7 @@ const props = defineProps({
 })
 
 const userOfProject = (userId) => {
+    // console.log(users.value.find(user => user.user_id === userId))
     return users.value.find(user => user.user_id === userId);
 }
 
@@ -62,8 +69,15 @@ function reduceTimeElapsed(sessions) {
     let totalSeconds = 0;
 
     sessions.forEach(session => {
+
+        let amountOfColleagues = 1;
+        
+        if (session.shared_with) {
+            amountOfColleagues += session.shared_with.length; // Als sessie gedeeld is tel op bij aantal collega's
+        }
+
         const [hours, minutes, seconds] = session.time_elapsed.split(':').map(Number);
-        totalSeconds += (hours * 3600) + (minutes * 60);
+        totalSeconds += ((hours * amountOfColleagues) * 3600) + ((minutes * amountOfColleagues) * 60);
     });
 
     const totalHours = Math.floor(totalSeconds / 3600);
@@ -107,7 +121,7 @@ function reduceTimeElapsed(sessions) {
 .list-item-accordion {
     background-color: transparent;
     padding-right: 1.8rem;
-    grid-template-columns: 55% 1fr 1fr 55px;
+    grid-template-columns: 45% 1.5fr 1fr 55px;
 }
 .show-content-button {
     border: 1px solid var(--border);
@@ -118,6 +132,8 @@ function reduceTimeElapsed(sessions) {
 .duur {
   font-size: 20px;
   font-weight: 500;
+  display: flex;
+  align-items: center;
 }
 .btn img {
     transform: rotate(-180deg);
@@ -127,8 +143,22 @@ function reduceTimeElapsed(sessions) {
     transform: rotate(0);
 }
 .avatar {
-    height: 22px;
-    width: 22px;
+    height: 25px;
+    width: 25px;
     border-radius: 50%;
+    border: 1px solid white;
+}
+.collega {
+    margin-right: 5rem;
+    grid-template-columns: 1fr 1fr;
+}
+
+.colleague-avatars img {
+    margin-right: -10px;
+}
+.superscript {
+    font-size: 11px;
+    color: rgb(110, 110, 110);
+    font-weight: 400;
 }
 </style>

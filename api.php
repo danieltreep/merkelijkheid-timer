@@ -13,11 +13,16 @@ header('Access-Control-Allow-Methods: GET, POST, PATCH, DELETE, OPTIONS');
 
 header('Content-Type: application/json');
 
-// DATABASE CONNECTIE VOOR LOKAAL, kies 1 van de 2
-$conn = new mysqli('localhost', 'root', 'mysql', 'timer');
+$host = $_SERVER['HTTP_HOST'];
 
-// DATABASE CONNECTIE VOOR SERVER, kies 1 van de 2
-// $conn = new mysqli('localhost', 'merktoday_timer', 'F9gtrL3xDU2nfMgwMrJF', 'merktoday_timer');
+// Check if the host contains 'localhost'
+if (strpos($host, 'localhost') !== false) {
+    // Database connection for local environment
+    $conn = new mysqli('localhost', 'root', 'mysql', 'timer');
+} else {
+    // Database connection for server environment
+    $conn = new mysqli('localhost', 'merktoday_timer', 'F9gtrL3xDU2nfMgwMrJF', 'merktoday_timer');
+}
 
 // Check the connection
 if ($conn->connect_error) {
@@ -103,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $days = $_GET['days'];
         
         // Query that merges the tables: sessions, projects and clients
-        $result = $conn->query("SELECT * FROM $table LEFT JOIN projects ON sessions.project_id = projects.project_id LEFT JOIN clients ON projects.client_id = clients.client_id WHERE user_id = $userid AND sessions.created_at >= DATE_SUB(NOW(), INTERVAL $days DAY) ORDER BY sessions.created_at DESC");
+        $result = $conn->query("SELECT * FROM $table LEFT JOIN projects ON sessions.project_id = projects.project_id LEFT JOIN clients ON projects.client_id = clients.client_id WHERE (user_id = $userid OR JSON_CONTAINS(shared_with, '\"$userid\"', '$')) ORDER BY sessions.created_at DESC");
     
         // Fetch the data and encode it as JSON
         $data = [];
@@ -258,7 +263,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'PATCH') {
 
     // Construct the SET part of the SQL query
     foreach ($data as $column => $value) {
-        $setClause .= $conn->real_escape_string($column) . " = '" . $conn->real_escape_string($value) . "', ";
+        if ($value === null) {
+            $setClause .= $conn->real_escape_string($column) . " = NULL, ";
+        } else {
+            $setClause .= $conn->real_escape_string($column) . " = '" . $conn->real_escape_string($value) . "', ";
+        }
     }
 
     // Remove the trailing comma
@@ -267,7 +276,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'PATCH') {
     // Construct the SQL query for the update operation
     $sql = "UPDATE " . $conn->real_escape_string($table) . 
            " SET " . $setClause .
-           " WHERE $idprefix" . "id = " . $conn->real_escape_string($id);
+           " WHERE " . $idprefix . "id = " . $conn->real_escape_string($id);
 
     // Execute the update query
     if ($conn->query($sql) === TRUE) {
@@ -279,6 +288,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'PATCH') {
     // Send the JSON response
     echo json_encode($response);
 }
+
 ?>
 
 

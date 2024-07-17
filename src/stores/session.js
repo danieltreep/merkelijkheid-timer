@@ -5,7 +5,7 @@ import { useDataStore } from "@/stores/data";
 export const useSessionStore = defineStore("session", () => {
 
   const { sessions, projects } = storeToRefs(useDataStore());
-  const sessionDateChange = ref({})
+  const sessionToBePatched = ref({})
   
   const finishedSessions = computed(() => {
     return sessions.value.filter(session => session.is_running === '0');
@@ -20,7 +20,8 @@ export const useSessionStore = defineStore("session", () => {
     project_id: null,
     created_at: null,
     stopped_at: null,
-    time_elapsed: `00:00:00`
+    time_elapsed: `00:00:00`,
+    shared_with: []
   });
 
   function resetCurrentSession() {
@@ -29,6 +30,7 @@ export const useSessionStore = defineStore("session", () => {
     currentSession.value.stopped_at = null;
     currentSession.value.created_at = null;
     currentSession.value.time_elapsed = `00:00:00`;
+    currentSession.value.shared_with = [];
   }
 
   const groupSessionsByDay = computed(() => {
@@ -77,7 +79,7 @@ export const useSessionStore = defineStore("session", () => {
     finishedSessions,
     stackedSessions,
     groupSessionsByDay,
-    sessionDateChange,
+    sessionToBePatched,
     resetCurrentSession
   };
 });

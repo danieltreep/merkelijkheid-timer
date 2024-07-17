@@ -25,29 +25,29 @@ import patchData from "@/composables/patchData";
 import DatePicker from '@/components/DatePicker.vue'
 import { makeDateSqlCompatible, parseDateString } from '@/composables/functions'
 
-const { sessionDateChange } = storeToRefs(useSessionStore())
+const { sessionToBePatched } = storeToRefs(useSessionStore())
 
 function handleChange(newDate) {
     
     const [day, month, year] = parseDateString(newDate);
  
-    const newCreatedAt = new Date(sessionDateChange.value.created_at)
+    const newCreatedAt = new Date(sessionToBePatched.value.created_at)
     newCreatedAt.setDate(day)
     newCreatedAt.setMonth(month)
     newCreatedAt.setFullYear(year)
-    sessionDateChange.value.created_at = newCreatedAt;
+    sessionToBePatched.value.created_at = newCreatedAt;
 
-    const newStoppedAt = new Date(sessionDateChange.value.stopped_at)
+    const newStoppedAt = new Date(sessionToBePatched.value.stopped_at)
     newStoppedAt.setDate(day)
     newStoppedAt.setMonth(month)
     newStoppedAt.setFullYear(year)
 
-    sessionDateChange.value.stopped_at = newStoppedAt;
+    sessionToBePatched.value.stopped_at = newStoppedAt;
     
 }
 
 function handleConfirm() {
-    patchData('sessions', sessionDateChange.value.session_id, {created_at: makeDateSqlCompatible(sessionDateChange.value.created_at), stopped_at: makeDateSqlCompatible(sessionDateChange.value.stopped_at)})
+    patchData('sessions', sessionToBePatched.value.session_id, {created_at: makeDateSqlCompatible(sessionToBePatched.value.created_at), stopped_at: makeDateSqlCompatible(sessionToBePatched.value.stopped_at)})
 }
 </script>
 <style scoped>
