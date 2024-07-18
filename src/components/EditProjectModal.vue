@@ -1,18 +1,17 @@
 <template>
-    <div class="modal fade" id="addProjectModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addProjectModalLabel" aria-hidden="true">
+    <div class="modal fade" id="editProjectModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editProjectModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content p-4">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="addProjectModalLabel">Add project</h4>
+                    <h4 class="modal-title" id="editProjectModalLabel">Edit project</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <input type="text" placeholder="Project name" class="project-input w-100" v-model="projectName">
 
-                    <!-- <div class="d-flex flex-wrap mt-4 gap-3">
-    
+                    <div class="d-flex flex-wrap mt-4 gap-3">
                         <TaskButton v-for="task in tasks" :task="task" @handle-click="handleClick" :selectedIds="selectedTaskIds" />
-                    </div> -->
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" :disabled="!projectName" @click="handleConfirm()" data-bs-dismiss="modal" class="btn btn-dark border-0">Confirm</button>
@@ -27,38 +26,43 @@ import { useDataStore } from '@/stores/data';
 import { storeToRefs } from 'pinia';
 import TaskButton from '@/components/TaskButton.vue'
 
-import postData from "@/composables/postData";
+import patchData from "@/composables/patchData";
 
-const { currentClientId, tasks } = storeToRefs(useDataStore())
-const projectName = ref('');
-const selectedTaskIds = ref(tasks.value.map(task => task.task_id))
+const { projectToBePatched, tasks } = storeToRefs(useDataStore())
+
+const projectName = ref(projectToBePatched.value.project_name);
+const selectedTaskIds = ref([])
+const availableTasks = ref(tasks.value)
 
 async function handleConfirm() {
     // console.log(selectedTaskIds.value)
 
-    await postData('projects', {
+    await patchData('projects', projectToBePatched.value.project_id, {
         project_name: projectName.value,
-        client_id: currentClientId.value, 
         available_tasks: JSON.stringify(selectedTaskIds.value)
     });
-    
-    projectName.value = '';
 }
 
 function handleClick(id) {
 
-    if (selectedTaskIds.value.indexOf(id) > -1) {
-        
+    if (selectedTaskIds.value.includes(id)) {
         const index = selectedTaskIds.value.indexOf(id);
         selectedTaskIds.value.splice(index, 1);
-       
+        projectToBePatched.value.available_tasks = JSON.stringify(selectedTaskIds.value)
     } else {
         selectedTaskIds.value.push(id)
+        projectToBePatched.value.available_tasks = JSON.stringify(selectedTaskIds.value)
     }
 }
 
 watchEffect(() => {
-    selectedTaskIds.value = tasks.value.map(task => task.task_id)
+    projectName.value = projectToBePatched.value.project_name
+
+    if (projectToBePatched.value.available_tasks) {
+        selectedTaskIds.value = JSON.parse(projectToBePatched.value.available_tasks)
+        const filteredTasks = tasks.value.filter(task => selectedTaskIds.value.includes(task.task_id))
+        availableTasks.value = filteredTasks
+    }
 })
 
 </script>

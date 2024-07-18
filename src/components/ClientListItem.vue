@@ -1,5 +1,5 @@
 <template>
-    <li class="list-group-item d-grid align-items-center py-2" v-if="!isEditing" :class="archived ? 'archived' : ''">
+    <li class="list-group-item d-grid align-items-center py-2 border-bottom"  v-if="!isEditing" :class="archived ? 'archived' : ''">
         <input v-if="!archived" type="text" class="edit-client-name" v-model="clientName" @blur="handleEditName()">
         <ColorSelector v-if="!archived" :color="client.color" :clientId="client.client_id" />
 
@@ -10,7 +10,8 @@
             <div 
                 v-for="(project, index) in filterProjectsByClient" 
                     :key="index"
-                    
+                    data-bs-toggle="modal" data-bs-target="#editProjectModal"
+                    @click="projectToBePatched = project"
                     class="me-2 project"
                     :class="project.project_name === 'General' ? 'pinguin' : '' "
                 >
@@ -37,7 +38,7 @@ import AddProjectButton from '@/components/AddProjectButton.vue';
 import { useDataStore } from "@/stores/data";
 import { storeToRefs } from "pinia";
 
-const { projects } = storeToRefs(useDataStore());
+const { projects, projectToBePatched } = storeToRefs(useDataStore());
 
 const props = defineProps({
     client: Object,
@@ -67,6 +68,10 @@ async function handleEditName() {
     font-weight: 500;
     border: none;
     display: flex;
+}
+.project:hover {
+    background-color: #D8D8D8;
+    cursor: pointer;
 }
 .edit-client-name {
     border: 1px solid transparent;

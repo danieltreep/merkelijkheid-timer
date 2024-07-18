@@ -50,8 +50,12 @@
 </template>
 <script setup>
 import { ref } from 'vue';
+import { storeToRefs } from 'pinia'
+import { useDataStore } from '@/stores/data'
+
 import postData from "@/composables/postData";
 
+const { tasks } = storeToRefs(useDataStore())
 const clientName = ref('')
 const projects = ref(['General'])
 const projectName = ref('');
@@ -73,8 +77,13 @@ async function handleConfirm() {
     const clientId = await postData('clients', {client_name: clientName.value, color: colorRef.value, is_archived: 0});
     
     for (const project of projects.value) {
-        await postData('projects', {project_name: project, client_id: clientId});
+        await postData('projects', {
+            project_name: project, 
+            client_id: clientId, 
+            available_tasks: JSON.stringify(tasks.value.map(task => task.task_id))
+        });
     }
+
     clientName.value = '';
 }
 

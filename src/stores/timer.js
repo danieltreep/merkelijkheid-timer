@@ -24,7 +24,13 @@ export const useTimerStore = defineStore("timer", () => {
             timerRunning.value = true;
             currentSession.value.created_at = new Date();
             currentSession.value.stopped_at = null;
-            currentSessionId.value = await postData('sessions', {...currentSession.value, created_at: makeDateSqlCompatible(new Date()), user_id: user.value.user_id, is_running: 1, shared_with: JSON.stringify(currentSession.value.shared_with)})
+            currentSessionId.value = await postData('sessions', {
+                ...currentSession.value, 
+                created_at: makeDateSqlCompatible(new Date()), 
+                user_id: user.value.user_id, 
+                is_running: 1, 
+                shared_with: JSON.stringify(currentSession.value.shared_with)
+            })
         }
         timerInterval = setInterval(clockRunning, 1000);
     }
@@ -33,6 +39,7 @@ export const useTimerStore = defineStore("timer", () => {
         currentSession.value = { 
             title: session.title,
             project_id: session.project_id,
+            task_id: session.task_id,
             created_at: new Date(session.created_at),
             stopped_at: null,
             time_elapsed: `00:00:00`

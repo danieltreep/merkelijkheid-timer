@@ -96,7 +96,7 @@ function validateInput(value) {
 }
 
 function handleTimeChange(value) {
-  console.log(value)
+  
   // Check if the value has 3 or 4 digits and a colon on position 2
   if (value.length !== 3 && value.length !== 4) {
     time.value = currentSession.value.time_elapsed.slice(1, -3)
@@ -141,7 +141,7 @@ function handleSubmit() {
   currentSession.value.created_at = makeDateSqlCompatible(currentSession.value.created_at);
   currentSession.value.stopped_at = makeDateSqlCompatible(currentSession.value.stopped_at);
   
-  postData("sessions", {...currentSession.value, user_id: user.value.user_id, is_running: 0});
+  postData("sessions", {...currentSession.value, user_id: user.value.user_id, is_running: 0, shared_with: JSON.stringify([])});
 
   // Reset de waarden van de huidige sessie
   resetCurrentSession();

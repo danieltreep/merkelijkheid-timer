@@ -17,6 +17,7 @@
                         @click="() => handleCLick(project)"
                         class="ms-2"
                         :class="project.project_name === 'General' ? 'pinguin' : '' "
+                        data-bs-toggle="modal" :data-bs-target="target === 'addTask' ? '#addTaskModal' : '#changeTaskModal'"
                     >
                         {{ project.project_name === 'General' ? '🐧' : project.project_name }}
                     </button>
@@ -30,7 +31,7 @@
 import { useDataStore } from "@/stores/data";
 import { storeToRefs } from "pinia";
 
-const { projects, searchterm, clientsNotArchived } = storeToRefs(useDataStore());
+const { projects, searchterm, clientsNotArchived, projectToBePatched } = storeToRefs(useDataStore());
 
 const emit = defineEmits(['handleClick']);
 
@@ -40,8 +41,13 @@ function filterProjectsByClient(client) {
 
 function handleCLick(project) {
     emit('handleClick', project);
+    projectToBePatched.value = project
     searchterm.value = '';
 }
+
+const props = defineProps({
+    target: String
+})
 
 </script>
 <style scoped>

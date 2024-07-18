@@ -11,11 +11,14 @@
       <div class="bolletje me-2" v-if="currentSession.project_id" :style="{ backgroundColor: currentProject?.color ? currentProject.color : '' }"></div>
       <p class="mb-0 me-3" v-if="currentSession.project_id">{{ currentProject?.client_name ? currentProject.client_name : '' }}</p>
       <button class="add-project-button" :class="currentProject?.project_name === 'General' ? 'pinguin' : '' " @click="openProjectSelector = !openProjectSelector">
-        {{ currentProject?.project_name ? (currentProject.project_name === 'General' ? '🐧' : currentProject.project_name) : 'Project' }}
+        <div class="d-flex align-items-center">
+          {{ currentProject?.project_name ? (currentProject.project_name === 'General' ? '🐧' : currentProject.project_name) : 'Project' }}<span v-if="currentSession?.task_id">: {{ findMatchingTask(currentSession?.task_id) }} </span>
+        </div>
         <img src="@/assets/add-icon.svg" v-if="!currentSession.project_id">
+        
       </button>
 
-      <ProjectSelector v-show="openProjectSelector" @handleClick="addProject"/>
+      <ProjectSelector v-show="openProjectSelector"  @handleClick="addProject" target="addTask" />
 
     </div>
 
@@ -38,6 +41,7 @@
 <script setup>
 import { useSessionStore } from "@/stores/session";
 import { useTimerStore } from "@/stores/timer";
+import { useDataStore } from "@/stores/data";
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 
@@ -47,6 +51,7 @@ import ProjectSelector from "@/components/ProjectSelector.vue";
 
 const { currentSession, currentProject } = storeToRefs(useSessionStore());
 const { timerRunning } = storeToRefs(useTimerStore());
+const { tasks } = storeToRefs(useDataStore());
 
 const initialized = ref(false) // Houdt bij of de timer al geinitieerd is
 const editing = ref(false);
@@ -63,6 +68,13 @@ function handleSwitch(boolean) {
   
   if (!boolean) {
     currentSession.value.stopped_at = null
+  }
+}
+
+function findMatchingTask(id) {
+  const matchingTask = tasks.value.find(task => +task.task_id === +id)
+  if (matchingTask !== undefined) {
+    return matchingTask.taskname;
   }
 }
 

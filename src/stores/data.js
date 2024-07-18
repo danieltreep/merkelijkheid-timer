@@ -10,8 +10,11 @@ export const useDataStore = defineStore("data", () => {
   const sessionsOfAmountDays = ref(7) // Show sessions of last 7 days
   const projects = ref([]);
   const clients = ref([]);
+  const tasks = ref([]);
+
   const searchterm = ref('');
   const currentClientId = ref('')
+  const projectToBePatched = ref({})
 
   const { user } = storeToRefs(useUserStore())
 
@@ -47,6 +50,9 @@ export const useDataStore = defineStore("data", () => {
       case 'clients':
         clients.value = await getData('clients');
         break;
+      case 'tasks':
+        tasks.value = await getData('tasks');
+        break;
     }
   }
 
@@ -54,7 +60,9 @@ export const useDataStore = defineStore("data", () => {
     sessions,
     sessionsOfAmountDays,
     projects, 
+    projectToBePatched,
     clients, 
+    tasks,
     clientsThatMatchSearch, 
     searchterm, 
     currentClientId,

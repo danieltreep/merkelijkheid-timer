@@ -5,11 +5,12 @@
     <div class="position-relative d-flex align-items-center">
       <div class="bolletje me-2" v-if="session.project_id" :style="{ backgroundColor: session?.color ? session.color : '' }"></div>
       <p class="mb-0 me-3" v-if="session.project_id">{{ session?.client_name ? session.client_name : '' }}</p>
-      <button class="project" :disabled="!sessionOwned" :class="session?.project_name === 'General' ? 'pinguin' : '' " @click="openProjectSelector = !openProjectSelector">
-        {{ session?.project_name ? (session.project_name === 'General' ? '🐧' : session.project_name) : 'Project' }}
+      <button class="project" :disabled="!sessionOwned" :class="session?.project_name === 'General' ? 'pinguin' : '' " @click="handleOpenSelector">
+        {{ session?.project_name ? (session.project_name === 'General' ? '🐧' : session.project_name) : 'Project' }}<span v-if="session?.taskname">: {{ session?.taskname }}</span>
+        
       </button>
 
-      <ProjectSelector v-if="openProjectSelector && sessionOwned" @handleClick="addProject"/>
+      <ProjectSelector v-if="openProjectSelector && sessionOwned" target="changeTask" @handleClick="addProject"/>
 
     </div>
 
@@ -44,7 +45,7 @@ const props = defineProps({
 
 const { startTimerStore } = useTimerStore();
 const { timerRunning } = storeToRefs(useTimerStore());
-const { currentSession } = storeToRefs(useSessionStore());
+const { currentSession, sessionToBePatched } = storeToRefs(useSessionStore());
 const { user, users } = storeToRefs(useUserStore());
 
 const openProjectSelector = ref(false);
@@ -60,6 +61,7 @@ const imgUrl = computed(() => {
 function startTimer() {
   currentSession.value.project_id = props.session.project_id;
   currentSession.value.title = props.session.title;
+  currentSession.value.task_id = props.session.task_id;
   startTimerStore()
 }
 
@@ -74,8 +76,10 @@ function addProject(project) {
   openProjectSelector.value = false
 }
 
-
-
+function handleOpenSelector() {
+  openProjectSelector.value = !openProjectSelector.value
+  sessionToBePatched.value = props.session
+}
 </script>
 
 <style scoped>

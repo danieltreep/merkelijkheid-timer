@@ -6,6 +6,8 @@
 
     <ChangeDateModal :today="false"/>
     <ShareSessionModal />
+    <AddTaskModal />
+    <ChangeTaskModal />
   </main>
 </template>
 
@@ -19,12 +21,14 @@ import { useUserStore } from "@/stores/user";
 import getData from "@/composables/getData";
 import TimerBar from "@/components/TimerBar.vue";
 import ChangeDateModal from "@/components/ChangeDateModal.vue";
+import AddTaskModal from "@/components/AddTaskModal.vue";
+import ChangeTaskModal from "@/components/ChangeTaskModal.vue";
 import ShareSessionModal from "@/components/ShareSessionModal.vue";
 
 import SessionList from "@/components/SessionList.vue";
 import getSessions from "@/composables/getSessions";
 
-const { projects, clients, sessions, sessionsOfAmountDays } = storeToRefs(useDataStore());
+const { projects, clients, sessions, tasks, sessionsOfAmountDays } = storeToRefs(useDataStore());
 const { groupSessionsByDay, stackedSessions } = storeToRefs(useSessionStore());
 const { users, user } = storeToRefs(useUserStore());
 
@@ -35,6 +39,7 @@ onMounted(async () => {
   sessions.value = await getSessions(user.value.user_id, sessionsOfAmountDays.value);
   clients.value = await getData('clients');
   users.value = await getData('users');
+  tasks.value = await getData('tasks');
 });
 
 </script>

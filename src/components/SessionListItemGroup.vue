@@ -13,7 +13,7 @@
                 <div class="bolletje me-2" v-if="sessions[0].project_id" :style="{ backgroundColor: sessions[0]?.color ? sessions[0].color : '' }"></div>
                 <p class="mb-0 me-3" v-if="sessions[0].project_id">{{ sessions[0]?.client_name ? sessions[0].client_name : '' }}</p>
                 <div class="project" :class="sessions[0]?.project_name === 'General' ? 'pinguin' : '' " >
-                    {{ sessions[0]?.project_name ? (sessions[0].project_name === 'General' ? '🐧' : sessions[0].project_name) : 'Project' }}
+                    {{ sessions[0]?.project_name ? (sessions[0].project_name === 'General' ? '🐧' : sessions[0].project_name) : 'Project' }}<span v-if="sessions[0].taskname">: {{ sessions[0].taskname }}</span>
                 </div>
             </div>      
 
@@ -46,14 +46,8 @@
 </template>
 <script setup>
 import { storeToRefs } from 'pinia'
-import { computed, ref } from 'vue'
-import { formatDate } from '@/composables/functions'
 import { useSessionStore } from "@/stores/session";
 import { useTimerStore } from "@/stores/timer"
-import SessionListItemTime from '@/components/SessionListItemTime.vue'
-import SessionOptions from '@/components/SessionOptions.vue'
-import ProjectSelector from "@/components/ProjectSelector.vue";
-import patchData from '@/composables/patchData'
 
 import SessionListItem from '@/components/SessionListItem.vue'
 
@@ -65,7 +59,6 @@ const props = defineProps({
 const { startTimerStore } = useTimerStore();
 const { timerRunning } = storeToRefs(useTimerStore());
 const { currentSession } = storeToRefs(useSessionStore());
-const openProjectSelector = ref(false);
 
 function startTimer() {
   currentSession.value.project_id = props.sessions[0].project_id;

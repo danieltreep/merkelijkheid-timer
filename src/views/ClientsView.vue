@@ -2,16 +2,19 @@
   <main class="py-5">
       <div class="d-flex">
         <ClientSearchbar />
-      <button class="ms-auto me-3" @click="showArchive = !showArchive" :class="showArchive ? 'active' : ''">
-        <img class="me-2" v-if="!showArchive" src="@/assets/archive-icon.svg">
-        <img class="me-2" v-if="showArchive" src="@/assets/archive-icon-paars.svg">
-        Archive
-      </button>
-      <AddClientButton />
+        <button class="ms-auto me-3" @click="showArchive = !showArchive" :class="showArchive ? 'active' : ''">
+          <img class="me-2" v-if="!showArchive" src="@/assets/archive-icon.svg">
+          <img class="me-2" v-if="showArchive" src="@/assets/archive-icon-paars.svg">
+          Archive
+        </button>
+        <AddClientButton />
       </div>
+      
       <ClientList :clients="clientsNotArchived" v-show="!showArchive" :archived="false" />      
-      <ClientList :clients="clientsArchive" v-show="showArchive" :archived="true" />      
+      <ClientList :clients="clientsArchive" v-show="showArchive" :archived="true" />    
+
       <AddProjectModal />
+      <EditProjectModal />
   </main>
 </template>
 
@@ -25,15 +28,17 @@ import getData from "@/composables/getData";
 import ClientSearchbar from "@/components/ClientSearchbar.vue";
 import ClientList from "@/components/ClientList.vue";
 import AddClientButton from "@/components/AddClientButton.vue";
+import EditProjectModal from "@/components/EditProjectModal.vue";
 import AddProjectModal from "@/components/AddProjectModal.vue";
 
 const showArchive = ref(false);
 
-const { projects, clients, clientsArchive, clientsNotArchived } = storeToRefs(useDataStore());
+const { projects, clients, tasks, clientsArchive, clientsNotArchived } = storeToRefs(useDataStore());
 
 onMounted(async () => {
   projects.value = await getData('projects');
   clients.value = await getData('clients');
+  tasks.value = await getData('tasks');
 });
 </script>
 

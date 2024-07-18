@@ -20,12 +20,14 @@ export const useSessionStore = defineStore("session", () => {
     project_id: null,
     created_at: null,
     stopped_at: null,
+    task_id: null,
     time_elapsed: `00:00:00`,
     shared_with: []
   });
 
   function resetCurrentSession() {
     currentSession.value.project_id = null;
+    currentSession.value.task_id = null;
     currentSession.value.title = null;
     currentSession.value.stopped_at = null;
     currentSession.value.created_at = null;
