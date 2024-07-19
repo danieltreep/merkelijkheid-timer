@@ -1,18 +1,18 @@
 <template>
-  <div class="timerbar d-grid align-items-center py-1 pe-2 my-4 mb-5">
+  <div class="timerbar d-md-grid align-items-center py-2 pe-2 my-4 mb-5">
     <input
       type="text"
       v-model="currentSession.title"
-      placeholder="What are you working on?"
+      placeholder="Enter task?"
       class="ps-0"
     />
 
     <div class="position-relative d-flex align-items-center">
-      <div class="bolletje me-2" v-if="currentSession.project_id" :style="{ backgroundColor: currentProject?.color ? currentProject.color : '' }"></div>
-      <p class="mb-0 me-3" v-if="currentSession.project_id">{{ currentProject?.client_name ? currentProject.client_name : '' }}</p>
-      <button class="add-project-button" :class="currentProject?.project_name === 'General' ? 'pinguin' : '' " @click="openProjectSelector = !openProjectSelector">
+      <div class="bolletje me-2 d-none d-md-inline" v-if="currentSession.project_id" :style="{ backgroundColor: currentProject?.color ? currentProject.color : '' }"></div>
+      <p class="mb-0 me-3 d-none d-md-inline" v-if="currentSession.project_id">{{ currentProject?.client_name ? currentProject.client_name : '' }}</p>
+      <button class="add-project-button me-2" :class="currentProject?.project_name === 'General' ? 'pinguin' : '' " @click="openProjectSelector = !openProjectSelector">
         <div class="d-flex align-items-center">
-          {{ currentProject?.project_name ? (currentProject.project_name === 'General' ? '🐧' : currentProject.project_name) : 'Project' }}<span v-if="currentSession?.task_id">: {{ findMatchingTask(currentSession?.task_id) }} </span>
+          {{ currentProject?.project_name ? (currentProject.project_name === 'General' ? '🐧' : currentProject.project_name) : 'Project' }}<span class="d-none d-md-inline" v-if="currentSession?.task_id">: {{ findMatchingTask(currentSession?.task_id) }} </span>
         </div>
         <img src="@/assets/add-icon.svg" v-if="!currentSession.project_id">
         
@@ -25,7 +25,7 @@
     <Timer v-if="!editing || timerRunning" @initialized="initialized = true" :initialized="initialized"/>
     <TimerEditable v-else="editing" />
 
-    <div class="options d-flex flex-column justify-content-around align-items-center ms-2 h-100">
+    <div class="options d-flex flex-column justify-content-around align-items-center ms-2 h-100 d-none d-md-flex">
       <button class="clock" @click="handleSwitch(false)" :disabled="currentSession.time_elapsed !== '00:00:00'">
         <img v-if="editing" src="@/assets/clock-icon.svg" >
         <img v-else src="@/assets/clock-icon-paars.svg" >
@@ -88,13 +88,14 @@ function findMatchingTask(id) {
   font-size: 14px;
   grid-template-columns: minmax(max-content, 30%) 1fr 1fr 30px;
   padding-left: 2rem;
-  height: 50px;
+  /* height: 50px; */
 }
 
 input {
   border: none;
   outline: none;
   font-size: 14px;
+  min-width: none;
 }
 .options button {
   border: none;
@@ -119,5 +120,17 @@ input {
 }
 .add-project-button:hover {
   background-color: #C2C2C260;
+}
+
+@media (max-width: 768px) {
+  .timerbar {
+    display: flex;
+    justify-content: space-between;
+    /* grid-template-columns: .5fr 1fr 1.2fr; */
+    padding-left: 1rem;
+  }
+  input {
+    min-width: 100px;
+  }
 }
 </style>

@@ -95,5 +95,9 @@ const stackedSessions = computed(() => {
   font-size: 12px;
   padding-block: .3rem;
 }
-
+@media (max-width: 768px) {
+  .list-header {
+    padding-left: 1rem;
+  }
+}
 </style>

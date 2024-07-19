@@ -68,5 +68,8 @@ function handleChange() {
 .delete-button {
   color: #EE7170;
 }
+.more-button {
+  width: 35px;
+}
 
 </style>

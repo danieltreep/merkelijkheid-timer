@@ -1,7 +1,7 @@
 <template>
     
     <div class="accordion-item" v-if="sessions.length > 1">
-        <div class="accordion-header pe-2">
+        <div class="accordion-header pe-2 py-3 py-md-0">
             <div class="position-relative d-flex align-items-center">
                 <button v-if="sessions.length > 1" class="btn show-content-button d-flex align-items-center me-4 gap-2 justify-content-center collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="`#accordion-${sessionsArrayKey}`" aria-expanded="true" :aria-controls="`accordion-${sessionsArrayKey}`">
                     {{ sessions.length }} 
@@ -9,7 +9,7 @@
                 </button>
                 <div>{{ sessions[0].title }}</div>
             </div>
-            <div class="position-relative d-flex align-items-center">
+            <div class="position-relative d-flex align-items-center projectsection">
                 <div class="bolletje me-2" v-if="sessions[0].project_id" :style="{ backgroundColor: sessions[0]?.color ? sessions[0].color : '' }"></div>
                 <p class="mb-0 me-3" v-if="sessions[0].project_id">{{ sessions[0]?.client_name ? sessions[0].client_name : '' }}</p>
                 <div class="project" :class="sessions[0]?.project_name === 'General' ? 'pinguin' : '' " >
@@ -17,8 +17,8 @@
                 </div>
             </div>      
 
-            <div class="time align-items-center gap-1">
-                <img src="@/assets/clock-icon.svg" alt="">
+            <div class="time align-items-center gap-1 d-none d-md-flex">
+                <img src="@/assets/clock-icon.svg">
                 <div type="text">{{ sessions[sessions.length - 1].created_at.slice(11, -3)}}</div>
                 <div>-</div>
                 <div type="text" >{{ sessions[0].stopped_at.slice(11, -3)}}</div>
@@ -26,7 +26,7 @@
 
             <div class="duur d-flex align-items-center">{{reduceTimeElapsed(sessions)}}</div>
 
-            <button class="play-button" @click="startTimer" :disabled="timerRunning">
+            <button class="play-button me-auto" @click="startTimer" :disabled="timerRunning">
                 <img src="@/assets/play-icon.svg" alt="Start deze taak">
             </button>
             
@@ -38,7 +38,7 @@
         </div>
     </div>
 
-    <div v-if="sessions.length === 1" class="border-bottom item">
+    <div v-if="sessions.length === 1" class="border-botto item">
         <SessionListItem v-for="session in sessions" :key="session.session_id" :session="session" :bg="'#fff'"/>
     </div>
     
@@ -94,7 +94,9 @@ function reduceTimeElapsed(sessions) {
     border: none;
     border-bottom: 1px solid #dee2e6;
 }
-
+.item:not(:last-child) {
+    border-bottom: 1px solid #dee2e6;
+}
 .accordion-header {
     grid-template-columns: minmax(max-content, 30%) 35% 4fr 1.1fr 40px 40px;
     display: grid;
@@ -111,6 +113,7 @@ function reduceTimeElapsed(sessions) {
 }
 .item:last-child .list-group-item{
   border-radius: 0 0 var(--br) var(--br);
+  border-bottom: none !important;
 }
 .list-item-accordion {
     background-color: transparent;
@@ -156,4 +159,31 @@ function reduceTimeElapsed(sessions) {
   border-radius: 0 0 var(--br) var(--br);
 }
 
+@media (max-width: 768px) {
+    .accordion-header {
+        padding-left: 1rem;
+        grid-template-columns: 1fr 45px 80px;
+        gap: .5rem 0;
+        height: auto;
+    }
+    .taskinput {
+        order: 0;
+    }
+    .duur {
+        order: 1;
+        text-align: right;
+    }
+    .projectsection {
+        order: 4;
+        grid-column: 1 / span 3;
+    }
+    .play-button {
+        order: 2;
+        margin-left: 11px;
+    }
+    .avatar {
+        height: 23px;
+        width: 23px;
+    }
+}
 </style>

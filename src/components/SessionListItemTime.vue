@@ -1,5 +1,5 @@
 <template >
-  <div class="time align-items-center gap-1">
+  <div class="time align-items-center d-none d-md-grid gap-1">
     <img src="@/assets/clock-icon.svg" alt="">
     <input type="text" v-model="started" @blur="handleChange(started, 'created_at')" :class="!isEditable ? 'disabled' : ''" :disabled="!isEditable">
     <div>-</div>
@@ -162,5 +162,12 @@ input:hover:not(.disabled) {
   width: 55px;
   margin-left: -6px;
   padding: .3rem .3rem;
+}
+
+@media (max-width: 768px) {
+  .duur {
+    order: 0;
+    text-align: end;
+  }
 }
 </style>

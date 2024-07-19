@@ -1,18 +1,18 @@
 <template>
   <div class="container pb-2">
-    <header class="py-4 d-flex justify-content-between align-items-center" v-if="userAuthenticated">
+    <header class="py-4 d-flex justify-content-between align-items-center flex-wrap" v-if="userAuthenticated">
   
       <img class="logo" src="@/assets/logo.svg" @click="$router.push({name: 'home'})">
       
       <OnlineColleagues />
 
-      <nav class="ms-auto" >
+      <nav class="ms-lg-auto me-lg-4 mx-auto mt-5 mt-lg-0" >
         <RouterLink :to="{name: 'home'}">Time tracker</RouterLink>
         <RouterLink :to="{name: 'clients'}">Clients</RouterLink>
         <RouterLink :to="{name: 'reports'}">Reports</RouterLink>
       </nav>
     
-      <div  class="d-flex align-items-center" >
+      <div  class="align-items-center d-none d-lg-flex" >
         <img class="avatar" v-if="user.picture" :src="user.picture" >
         <div class="empty-avatar" v-if="!user.picture">{{ getUserCredentials() }} </div>
       </div>
@@ -64,14 +64,12 @@ onMounted(() => {
   font-weight: 700;
   color: #2e2e2e;
 }
-nav {
-  margin-right: 1rem;
-}
+
 nav a {
   color: black;
   text-decoration: none;
-  padding: .8rem 1.5rem;
-  margin-left: .5rem;
+  padding: .8rem 1rem;
+  margin-right: .5rem;
   border-radius: var(--br);
 }
 nav a:hover {

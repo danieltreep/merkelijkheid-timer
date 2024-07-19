@@ -1,5 +1,8 @@
 <template>
-     <button class="btn ms-2" >Clear</button>
+     <button class="btn ms-2 d-none d-lg-inline" >
+        <span class="d-none d-lg-inline">Clear</span>
+        <img class="d-lg-none" src="@/assets/cross-icon.svg">
+      </button>
 </template>
 <script setup>
 

@@ -1,8 +1,8 @@
 <template>
-  <li class="list-group-item d-grid py-0 pe-2 position-relative" :style="{backgroundColor: bg}" >
-    <input type="text" v-model="title" @blur="handleBlur" :disabled="!sessionOwned" :class="!sessionOwned ? 'disabled' : ''">
+  <li class="list-group-item d-grid py-2 py-lg-0 pb-3 pe-2 position-relative" :style="{backgroundColor: bg}" >
+    <input class="taskinput" type="text" v-model="title" @blur="handleBlur" :disabled="!sessionOwned" :class="!sessionOwned ? 'disabled' : ''">
     
-    <div class="position-relative d-flex align-items-center">
+    <div class="position-relative d-flex align-items-center projectsection">
       <div class="bolletje me-2" v-if="session.project_id" :style="{ backgroundColor: session?.color ? session.color : '' }"></div>
       <p class="mb-0 me-3" v-if="session.project_id">{{ session?.client_name ? session.client_name : '' }}</p>
       <button class="project" :disabled="!sessionOwned" :class="session?.project_name === 'General' ? 'pinguin' : '' " @click="handleOpenSelector">
@@ -16,13 +16,15 @@
 
     <SessionListItemTime :session="session" :isEditable="sessionOwned" />
 
-    <button class="play-button" @click="startTimer" :disabled="timerRunning">
-      <img src="@/assets/play-icon.svg" alt="Start deze taak">
-    </button>
-
-    <SessionOptions :session="session" v-if="sessionOwned"/>
+    <div class="d-flex session-buttons justify-content-end align-items-center">
+      <button class="play-button" @click="startTimer" :disabled="timerRunning">
+        <img src="@/assets/play-icon.svg" alt="Start deze taak">
+      </button>
+  
+      <SessionOptions :session="session" v-if="sessionOwned"/>
+      <img class="avatar mx-lg-auto" :src="imgUrl?.photo" v-if="!sessionOwned">
+    </div>
     
-    <img class="avatar mx-auto" :src="imgUrl?.photo" v-if="!sessionOwned">
 
   </li>
 </template>
@@ -83,21 +85,25 @@ function handleOpenSelector() {
 
 <style scoped>
 li.d-grid {
-  grid-template-columns: minmax(max-content, 30%) 35% 4fr 1.1fr 40px 40px;
+  grid-template-columns: minmax(max-content, 30%) 35% 4fr 1.1fr 80px;
   align-items: center;
   height: 57px;
 }
-
+.border-bottom:last-child {
+  border: none;
+}
 button:disabled {
-  background-color: var(--tag);
+  /* background-color: var(--tag); */
   color: black;
   cursor: text;
+}
+.play-button {
+  padding: .7rem;
 }
 input {
   border: 1px solid transparent;
   padding: .4rem 1rem;
   margin-left: -1rem;
-  margin-right: 1rem;
   border-radius: var(--br);
   background-color: transparent;
   color: black;
@@ -111,5 +117,34 @@ input:hover:not(.disabled) {
   height: 28px;
   width: 28px;
   border-radius: 50%;
+}
+
+@media (max-width: 768px) {
+  li.d-grid {
+    grid-template-columns: 1fr 45px 80px;
+    height: auto;
+    padding-left: 1rem;
+    gap: .5rem 0;
+  }
+  .taskinput {
+    order: 0;
+  }
+  .duur {
+    order: 1;
+    text-align: right;
+  }
+  .projectsection {
+    order: 3;
+    grid-column: 1 / span 3;
+  }
+  .session-buttons {
+    order: 2;
+  }
+  .avatar {
+    margin-right: 5px;
+    margin-left: 7px;
+    height: 24px;
+    width: 24px;
+  }
 }
 </style>

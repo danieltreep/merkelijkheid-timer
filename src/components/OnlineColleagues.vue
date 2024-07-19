@@ -1,5 +1,5 @@
 <template >
-    <div class="online-colleagues d-flex ms-5">
+    <div class="online-colleagues d-lg-flex d-none ms-5">
         <div v-for="session in runningSessionsFromOthers" :key="session.session_id">
           <div class="avatar-wrapper position-relative">
             <img :src="session.photo" alt="">
