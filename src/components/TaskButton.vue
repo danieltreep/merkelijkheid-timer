@@ -18,15 +18,22 @@ const emit = defineEmits(['handleClick'])
 const selected = ref(true);
 
 onUpdated(() => {
-    // console.log(props.selectedIds)
+    // console.log('from updated', props.selectedIds)
     selected.value = props.selectedIds.includes(props.task.task_id)
 })
 
 function handleClick() {
-    // selected.value = !selected.value
+    selected.value = !selected.value
     emit('handleClick', props.task.task_id)
 }
 </script>
 <style scoped>
-    
+.project.selected {
+    background-color: #EFE3F6;
+    border: 2px solid var(--paars);
+    color: var(--paars);
+}
+.project {
+    border: 2px solid transparent;
+}
 </style>

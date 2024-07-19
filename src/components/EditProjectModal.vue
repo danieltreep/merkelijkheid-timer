@@ -7,14 +7,15 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <input type="text" placeholder="Project name" class="project-input w-100" v-model="projectName">
+                    <input type="text" placeholder="Project name" class="project-input w-100" v-model="projectToBePatched.project_name">
 
                     <div class="d-flex flex-wrap mt-4 gap-3">
                         <TaskButton v-for="task in tasks" :task="task" @handle-click="handleClick" :selectedIds="selectedTaskIds" />
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" :disabled="!projectName" @click="handleConfirm()" data-bs-dismiss="modal" class="btn btn-dark border-0">Confirm</button>
+                <div class="modal-footer d-flex justify-content-betwee">
+                    <DeleteProjectButton :projectId="projectToBePatched.project_id" />
+                    <button type="button" :disabled="!projectToBePatched.project_name" @click="handleConfirm()" data-bs-dismiss="modal" class="btn btn-dark border-0">Confirm</button>
                 </div>
             </div>
         </div>
@@ -25,12 +26,12 @@ import { ref, watchEffect } from 'vue';
 import { useDataStore } from '@/stores/data';
 import { storeToRefs } from 'pinia';
 import TaskButton from '@/components/TaskButton.vue'
+import DeleteProjectButton from "@/components/DeleteProjectButton.vue";
 
 import patchData from "@/composables/patchData";
 
 const { projectToBePatched, tasks } = storeToRefs(useDataStore())
 
-const projectName = ref(projectToBePatched.value.project_name);
 const selectedTaskIds = ref([])
 const availableTasks = ref(tasks.value)
 
@@ -38,9 +39,9 @@ async function handleConfirm() {
     // console.log(selectedTaskIds.value)
 
     await patchData('projects', projectToBePatched.value.project_id, {
-        project_name: projectName.value,
+        project_name: projectToBePatched.value.project_name,
         available_tasks: JSON.stringify(selectedTaskIds.value)
-    });
+    })
 }
 
 function handleClick(id) {
@@ -56,7 +57,7 @@ function handleClick(id) {
 }
 
 watchEffect(() => {
-    projectName.value = projectToBePatched.value.project_name
+    // projectName.value = projectToBePatched.value.project_name
 
     if (projectToBePatched.value.available_tasks) {
         selectedTaskIds.value = JSON.parse(projectToBePatched.value.available_tasks)
@@ -91,8 +92,5 @@ watchEffect(() => {
     align-items: center;
     gap: .3rem;
 }
-.project.selected {
-    background-color: var(--paars);
-    color: white;
-}
+
 </style>

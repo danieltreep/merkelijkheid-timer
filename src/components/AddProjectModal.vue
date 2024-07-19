@@ -9,10 +9,10 @@
                 <div class="modal-body">
                     <input type="text" placeholder="Project name" class="project-input w-100" v-model="projectName">
 
-                    <!-- <div class="d-flex flex-wrap mt-4 gap-3">
+                    <div class="d-flex flex-wrap mt-4 gap-3">
     
                         <TaskButton v-for="task in tasks" :task="task" @handle-click="handleClick" :selectedIds="selectedTaskIds" />
-                    </div> -->
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" :disabled="!projectName" @click="handleConfirm()" data-bs-dismiss="modal" class="btn btn-dark border-0">Confirm</button>
@@ -31,7 +31,7 @@ import postData from "@/composables/postData";
 
 const { currentClientId, tasks } = storeToRefs(useDataStore())
 const projectName = ref('');
-const selectedTaskIds = ref(tasks.value.map(task => task.task_id))
+const selectedTaskIds = ref([])
 
 async function handleConfirm() {
     // console.log(selectedTaskIds.value)
@@ -51,14 +51,16 @@ function handleClick(id) {
         
         const index = selectedTaskIds.value.indexOf(id);
         selectedTaskIds.value.splice(index, 1);
-       
+        // console.log(selectedTaskIds.value)
     } else {
         selectedTaskIds.value.push(id)
+        // console.log(selectedTaskIds.value)
     }
 }
 
 watchEffect(() => {
     selectedTaskIds.value = tasks.value.map(task => task.task_id)
+    // console.log(selectedTaskIds.value)
 })
 
 </script>
@@ -87,8 +89,5 @@ watchEffect(() => {
     align-items: center;
     gap: .3rem;
 }
-.project.selected {
-    background-color: var(--paars);
-    color: white;
-}
+
 </style>

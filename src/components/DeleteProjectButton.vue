@@ -1,12 +1,15 @@
 <template>
     <div class="delete ms-2 position-relative">
-        <img class="delete-icon" src="@/assets/cross-icon.svg" @click="isDeleting = true">
+        <button class="btn btn-clear delete-button" @click="isDeleting = true">
+            <img class="delete-icon" src="@/assets/delete-icon.svg" >
+            Delete project
+        </button>
 
         <div class="delete-tooltip" v-if="isDeleting">
             <p class="mb-2 ms-1">Are you sure?</p>
             <div class="d-flex">
-                <button @click="isDeleting = false">Cancel</button>
-                <button @click="handleDelete()" class="delete-button" >Delete</button>
+                <button @click="isDeleting = false" class="hover">Cancel</button>
+                <button @click="handleDelete()" class="delete-option" data-bs-dismiss="modal" >Delete</button>
             </div>
         </div>
     </div>
@@ -33,12 +36,14 @@ function handleDelete() {
 }
 .delete-tooltip {
     position: absolute;
-    left: -60px;
+    left: 0px;
     top: calc(100% + 16px);
     background-color: white;
     box-shadow: var(--bs);
     z-index: 10;
     padding: .7rem;
+    font-size: 13px;
+    /* text-align: center; */
     border-radius: var(--br);
     border: 1px solid var(--border);
 }
@@ -65,5 +70,18 @@ function handleDelete() {
 }
 .delete-button {
     color: #EE7170;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: .3rem;
+    height: 100%;
+    padding: .5rem 1rem;
+}
+.delete-option {
+    color: #EE7170;
+}
+.delete-button:hover, .hover:hover {
+    background-color: var(--hover);
+    border-radius: var(--br);
 }
 </style>

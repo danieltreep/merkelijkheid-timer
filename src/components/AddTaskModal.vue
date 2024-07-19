@@ -9,7 +9,7 @@
                 <div class="modal-body d-flex flex-wrap gap-3">
                     <div 
                         class="project" 
-                        v-for="task in tasks" 
+                        v-for="task in availableTasks" 
                         :key="task.task_id"
                         @click="currentTaskId = task.task_id"
                         :class="task.task_id === currentTaskId ? 'selected' : ''"
@@ -24,20 +24,28 @@
 </template>
 <script setup>
 import { storeToRefs } from 'pinia'
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 import { useDataStore } from "@/stores/data";
 import { useSessionStore } from "@/stores/session";
 
-import patchData from "@/composables/patchData";
-
-const { tasks } = storeToRefs(useDataStore());
+const { tasks, projectToBePatched } = storeToRefs(useDataStore());
 const { currentSession } = storeToRefs(useSessionStore());
 
 const currentTaskId = ref(currentSession.value.task_id)
+const availableTasksIds = ref(tasks.value)
+const availableTasks = ref([])
 
 function handleConfirm() {
     currentSession.value.task_id = currentTaskId.value
 }
+
+watchEffect(() => {
+
+    if (projectToBePatched.value.available_tasks) {
+        availableTasksIds.value = JSON.parse(projectToBePatched.value.available_tasks)
+        availableTasks.value = tasks.value.filter(task => availableTasksIds.value.includes(task.task_id))
+    }
+})
 
 </script>
 <style scoped>
@@ -67,7 +75,11 @@ function handleConfirm() {
     cursor: pointer;
 }
 .project.selected {
-    background-color: var(--paars);
-    color: white;
+    background-color: #EFE3F6;
+    border: 2px solid var(--paars);
+    color: var(--paars);
+}
+.project {
+    border: 2px solid transparent;
 }
 </style>

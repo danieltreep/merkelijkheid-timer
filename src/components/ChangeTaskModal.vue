@@ -80,7 +80,11 @@ watchEffect(() => {
     cursor: pointer;
 }
 .project.selected {
-    background-color: var(--paars);
-    color: white;
+    background-color: #EFE3F6;
+    border: 2px solid var(--paars);
+    color: var(--paars);
+}
+.project {
+    border: 2px solid transparent;
 }
 </style>

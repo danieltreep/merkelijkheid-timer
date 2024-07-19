@@ -16,7 +16,7 @@
                     :class="project.project_name === 'General' ? 'pinguin' : '' "
                 >
                 {{ project.project_name === 'General' ? '🐧' : project.project_name }}
-                <DeleteProjectButton :projectId="project.project_id" v-if="project.project_name !== 'General' && !archived"/>
+                <!-- <DeleteProjectButton :projectId="project.project_id" @click.capture="console.log('hello')" v-if="project.project_name !== 'General' && !archived"/> -->
             </div>
         </div>
         <AddProjectButton :clientId="client.client_id" v-if="!archived"/>
@@ -29,7 +29,6 @@
 import { ref, computed } from "vue";
 import patchData from "@/composables/patchData";
 
-import DeleteProjectButton from "@/components/DeleteProjectButton.vue";
 import DeleteClientButton from "@/components/DeleteClientButton.vue";
 import ArchiveClientButton from "@/components/ArchiveClientButton.vue";
 import ColorSelector from '@/components/ColorSelector.vue';
@@ -61,7 +60,7 @@ async function handleEditName() {
 <style scoped>
 .project {
     background-color: var(--tag);
-    padding: .4rem 1rem .4rem 1.2rem;
+    padding: .4rem 1.2rem .4rem 1.2rem;
     border-radius: 30px;
     width: fit-content;
     font-size: 12px;
