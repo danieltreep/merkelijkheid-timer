@@ -69,6 +69,7 @@ export const useTimerStore = defineStore("timer", () => {
     function clockRunning() {
         const currentTime = new Date(); 
         currentSession.value.time_elapsed = calculateTimeElapsed(currentSession.value.created_at, currentTime);
+        document.title = 'Timer running: ' + currentSession.value.time_elapsed;
     }
 
     function clearTimerStore() {
@@ -76,7 +77,7 @@ export const useTimerStore = defineStore("timer", () => {
         timerRunning.value = false;
         deleteData('sessions', currentSessionId.value)
         resetCurrentSession();
-      
+        document.title = 'Merkelijkheid Today';
     }
   
 

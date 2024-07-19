@@ -1,31 +1,11 @@
-<script setup>
-import { RouterLink, RouterView } from "vue-router";
-import { onMounted } from 'vue'
-import { useUserStore } from '@/stores/user'
-import { storeToRefs } from "pinia";
-
-const { user, userAuthenticated } = storeToRefs(useUserStore());
-
-function getUserCredentials() {
-  const voorletter = user.value.given_name.slice(0, 1);
-  const achterletter = user.value.family_name.slice(0, 1);
-
-  return voorletter + achterletter;
-}
-
-onMounted(() => {
-  if (localStorage.getItem('user')) {
-    user.value = JSON.parse(localStorage.getItem('user'))
-  }
-})
-</script>
-
 <template>
   <div class="container pb-2">
     <header class="py-4 d-flex justify-content-between align-items-center" v-if="userAuthenticated">
   
       <img class="logo" src="@/assets/logo.svg" @click="$router.push({name: 'home'})">
       
+      <OnlineColleagues />
+
       <nav class="ms-auto" >
         <RouterLink :to="{name: 'home'}">Time tracker</RouterLink>
         <RouterLink :to="{name: 'clients'}">Clients</RouterLink>
@@ -41,6 +21,28 @@ onMounted(() => {
     <RouterView />
   </div>
 </template>
+
+<script setup>
+import { RouterLink, RouterView } from "vue-router";
+import { onMounted, ref } from 'vue'
+import { useUserStore } from '@/stores/user'
+import { storeToRefs } from "pinia";
+import OnlineColleagues from '@/components/OnlineColleagues.vue'
+const { user, userAuthenticated } = storeToRefs(useUserStore());
+
+function getUserCredentials() {
+  const voorletter = user.value.given_name.slice(0, 1);
+  const achterletter = user.value.family_name.slice(0, 1);
+
+  return voorletter + achterletter;
+}
+
+onMounted(() => {
+  if (localStorage.getItem('user')) {
+    user.value = JSON.parse(localStorage.getItem('user'))
+  }
+})
+</script>
 
 <style scoped>
 

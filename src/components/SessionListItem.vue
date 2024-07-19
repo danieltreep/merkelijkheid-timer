@@ -72,7 +72,6 @@ function handleBlur() {
 function addProject(project) {
   patchData('sessions', props.session.session_id, {project_id: project.project_id})
 
-  // currentSession.value.project_id = project.project_id
   openProjectSelector.value = false
 }
 

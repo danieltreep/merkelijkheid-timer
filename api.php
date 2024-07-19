@@ -122,6 +122,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Send the JSON response
         echo json_encode($data);
 
+    } elseif ($table === 'sessions' && isset($_GET['isrunning'])) {
+
+        $days = $_GET['days'];
+        
+        // Query that merges the tables: sessions, projects and clients
+        $result = $conn->query("SELECT * FROM $table LEFT JOIN projects ON sessions.project_id = projects.project_id LEFT JOIN clients ON projects.client_id = clients.client_id  LEFT JOIN users ON users.user_id = sessions.user_id LEFT JOIN tasks ON tasks.task_id = sessions.task_id WHERE sessions.created_at >= DATE_SUB(NOW(), INTERVAL $days DAY) AND sessions.is_running = true");
+    
+        // Fetch the data and encode it as JSON
+        $data = [];
+        while ($row = $result->fetch_assoc()) {
+            $data[] = $row;
+        }
+        
+        // Close the database connection
+        $conn->close();
+    
+        // Send the JSON response
+        echo json_encode($data);
+
     } elseif ($table === 'sessions') {
 
         $days = $_GET['days'];

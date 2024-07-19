@@ -1,11 +1,15 @@
 import { getBaseUrl } from './functions';
 
-const getSessions = async (userid, days) => {
+const getSessions = async (userid, days, isrunning) => {
 
   let url = `${getBaseUrl()}?table=sessions&days=${days}`;
   
   if (userid) {
     url += `&userid=${encodeURI(userid)}`;
+  }
+
+  if (isrunning) {
+    url += '&isrunning=true'
   }
 
   console.log(url);
