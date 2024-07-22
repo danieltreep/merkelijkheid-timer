@@ -1,7 +1,8 @@
 <template>
     <button class="add-client-button" data-bs-toggle="modal" data-bs-target="#addClientModal">
-        <img class="me-2"  src="@/assets/plus-icon-white.svg">
-        Add client
+        <img class="me-md-2"  src="@/assets/plus-icon-white.svg">
+        <span class="d-none d-md-inline">Add client</span>
+        
     </button>
 
     <div class="modal fade" id="addClientModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addClientModalLabel" aria-hidden="true">

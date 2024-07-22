@@ -2,12 +2,12 @@
     <div class="position-relative d-flex align-items-end">
         <button class="d-flex align-items-center open-options" @click="showOptions = !showOptions">
             {{ startDateString }} - {{ endDateString }} 
-            <img class="ms-2" src="@/assets/calendar-icon.svg" alt="">
+            <img class="ms-2" src="@/assets/calendar-icon.svg">
         </button>
 
         <div class="filter-tooltip" v-if="showOptions">
             <p class="mb-2"><small>Show reports for</small></p>
-            <div class="tabs d-flex justify-content-between">
+            <div class="tabs d-grid justify-content-between">
                 <input type="radio" name="daterange" id="7days" value="7" v-model="sessionsOfAmountDays" checked>
                 <label for="7days">7 days</label>
 
@@ -16,22 +16,29 @@
 
                 <input type="radio" name="daterange" id="90days" value="90" v-model="sessionsOfAmountDays" >
                 <label for="90days">90 days</label>
+                
+                
+                <input type="radio" name="daterange" id="halfjaar" value="180" v-model="sessionsOfAmountDays" >
+                <label for="halfjaar">1/2 year</label>
 
-                <!-- <input type="radio" name="daterange" id="customrange" value="Custom" >
+                <input type="radio" name="daterange" id="jaar" value="365" v-model="sessionsOfAmountDays" >
+                <label for="jaar">1 year</label>
+
+                <!-- <input type="radio" name="daterange" id="customrange" v-model="sessionsOfAmountDays" value="Custom" >
                 <label for="customrange">Custom</label> -->
             </div>
 
-            <!-- <div class="customrangeoptions mt-4" v-show="dateRangeDays === 'Custom'">
+            <!-- <div class="customrangeoptions mt-4" v-show="sessionsOfAmountDays === 'Custom'">
                 <p class="mb-2"><small>Select your date range</small></p>
 
                 <div class="d-flex gap-2">
                     <div class="input d-flex align-items-center gap-1">
-                        <img src="@/assets/calendar-icon-grijs.svg" alt="">
+                        <img src="@/assets/calendar-icon-grijs.svg">
                         <input type="text" id="start-date" >
 
                     </div>
                     <div class="input d-flex align-items-center gap-1">
-                        <img src="@/assets/calendar-icon-grijs.svg" alt="">
+                        <img src="@/assets/calendar-icon-grijs.svg">
                         <input type="text" id="end-date">
 
                     </div>
@@ -45,7 +52,7 @@
 </template>
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-// import { Datepicker } from 'vanillajs-datepicker';
+import { Datepicker } from 'vanillajs-datepicker';
 import { storeToRefs } from "pinia";
 import { useDataStore } from "@/stores/data";
 import getSessions from '@/composables/getSessions'
@@ -192,5 +199,9 @@ input[type="text"] {
     border-radius: 30px;
     padding: .3rem .5rem;
     width: 50%;
+}
+
+.tabs {
+    grid-template-columns: repeat(3, 1fr);
 }
 </style>

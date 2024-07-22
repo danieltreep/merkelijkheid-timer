@@ -6,7 +6,7 @@
       
       <OnlineColleagues />
 
-      <nav class="ms-lg-auto me-lg-4 mx-auto mt-5 mt-lg-0" >
+      <nav class="ms-lg-auto me-lg-4 mx-auto mt-5 mt-lg-0 d-none d-md-inline" >
         <RouterLink :to="{name: 'home'}">Time tracker</RouterLink>
         <RouterLink :to="{name: 'clients'}">Clients</RouterLink>
         <RouterLink :to="{name: 'reports'}">Reports</RouterLink>

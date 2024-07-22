@@ -3,7 +3,7 @@
     <div class="accordion-item" v-if="sessions.length > 1">
         <div class="accordion-header pe-2 py-3 py-md-2 ">
             <div class="position-relative d-flex align-items-center">
-                <button v-if="sessions.length > 1" class="btn show-content-button d-flex align-items-center me-4 gap-2 justify-content-center collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="`#accordion-${replaceSpaces(sessionsArrayKey)}`" aria-expanded="true" :aria-controls="`accordion-${replaceSpaces(sessionsArrayKey)}`">
+                <button v-if="sessions.length > 1" class="btn show-content-button d-flex align-items-center me-md-4 me-2 gap-2 justify-content-center collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="`#accordion-${replaceSpaces(sessionsArrayKey)}`" aria-expanded="true" :aria-controls="`accordion-${replaceSpaces(sessionsArrayKey)}`">
                     {{ sessions.length }} 
                     <img src="@/assets/chevron-icon.svg" alt="">
                 </button>

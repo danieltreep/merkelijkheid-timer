@@ -27,4 +27,11 @@ const {  searchterm } = storeToRefs(useDataStore());
     font-size: 15px;
     color: #6C757D;
 }
+
+@media (max-width: 768px) {
+    .search {
+        max-width: 50%;
+        padding: .2rem 1rem;
+    }
+}
 </style>

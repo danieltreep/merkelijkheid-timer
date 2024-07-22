@@ -12,15 +12,17 @@
       />
   
       <SuggestedSessions :search="currentSession.title" v-if="showSuggestedSessions" @handleClick="showSuggestedSessions = false"/>
-  
 
     <div class="position-relative d-flex align-items-center">
       <div class="bolletje me-2 d-none d-md-inline" v-if="currentSession.project_id" :style="{ backgroundColor: currentProject?.color ? currentProject.color : '' }"></div>
       <p class="mb-0 me-3 d-none d-md-inline" v-if="currentSession.project_id">{{ currentProject?.client_name ? currentProject.client_name : '' }}</p>
+      
       <button class="add-project-button me-2" :class="currentProject?.project_name === 'General' ? 'pinguin' : '' " @click="openProjectSelector = !openProjectSelector">
-        <div class="d-flex align-items-center">
-          {{ currentProject?.project_name ? (currentProject.project_name === 'General' ? '🐧' : currentProject.project_name) : 'Project' }}<span class="d-none d-md-inline" v-if="currentSession?.task_id">: {{ findMatchingTask(currentSession?.task_id) }} </span>
+        <div class="d-flex align-items-center" v-if="currentProject?.project_name">
+          <span class="d-none d-md-inline">{{ currentProject.project_name === 'General' ? '🐧' : currentProject.project_name }}:&nbsp;</span>
+          <span> {{ findMatchingTask(currentSession?.task_id) }} </span>
         </div>
+        <span class="d-none d-md-inline" v-if="!currentProject?.project_name">Project</span>
         <img src="@/assets/add-icon.svg" v-if="!currentSession.project_id">
         
       </button>

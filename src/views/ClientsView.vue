@@ -3,9 +3,9 @@
       <div class="d-flex">
         <ClientSearchbar />
         <button class="ms-auto me-3" @click="showArchive = !showArchive" :class="showArchive ? 'active' : ''">
-          <img class="me-2" v-if="!showArchive" src="@/assets/archive-icon.svg">
-          <img class="me-2" v-if="showArchive" src="@/assets/archive-icon-paars.svg">
-          Archive
+          <img class="me-md-2" v-if="!showArchive" src="@/assets/archive-icon.svg">
+          <img class="me-md-2" v-if="showArchive" src="@/assets/archive-icon-paars.svg">
+          <span class="d-none d-md-inline">Archive</span>
         </button>
         <AddClientButton />
       </div>

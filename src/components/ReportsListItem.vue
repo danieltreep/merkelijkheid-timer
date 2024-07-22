@@ -161,4 +161,10 @@ function reduceTimeElapsed(sessions) {
     color: rgb(110, 110, 110);
     font-weight: 400;
 }
+
+@media (max-width: 768px) {
+    .accordion-header {
+        padding-inline: 1rem;
+    }
+}
 </style>
