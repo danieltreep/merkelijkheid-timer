@@ -61,6 +61,7 @@ export const useTimerStore = defineStore("timer", () => {
         
         // Stop interval en POST de data
         patchData("sessions", currentSessionId.value, {...currentSession.value, is_running: 0, shared_with: JSON.stringify(currentSession.value.shared_with)});
+        document.title = 'Merkelijkheid Today';
 
         // Reset de waarden van de huidige sessie
         resetCurrentSession();

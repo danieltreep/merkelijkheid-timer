@@ -14,7 +14,7 @@
     
       <div  class="align-items-center d-none d-lg-flex" >
         <img class="avatar" v-if="user.picture" :src="user.picture" >
-        <div class="empty-avatar" v-if="!user.picture">{{ getUserCredentials() }} </div>
+        <div class="empty-avatar" v-if="!user.picture">{{ getUserInitials() }} </div>
       </div>
     </header>
   
@@ -27,10 +27,12 @@ import { RouterLink, RouterView } from "vue-router";
 import { onMounted, ref } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { storeToRefs } from "pinia";
+
 import OnlineColleagues from '@/components/OnlineColleagues.vue'
+
 const { user, userAuthenticated } = storeToRefs(useUserStore());
 
-function getUserCredentials() {
+function getUserInitials() {
   const voorletter = user.value.given_name.slice(0, 1);
   const achterletter = user.value.family_name.slice(0, 1);
 

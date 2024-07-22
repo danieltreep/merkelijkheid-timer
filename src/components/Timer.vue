@@ -14,7 +14,7 @@
         !currentSession.project_id
       "
     >
-      <span class="d-inline d-md-none">{{ currentSession.time_elapsed.slice(0, -3) }}</span>
+      <span class="d-inline d-md-none">{{ currentSession.time_elapsed }}</span>
       <img src="@/assets/stop-icon-white.svg" alt="">
       <span class="d-none d-md-inline">Stop</span>
     </button>

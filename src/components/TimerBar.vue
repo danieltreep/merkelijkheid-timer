@@ -1,11 +1,18 @@
 <template>
-  <div class="timerbar d-md-grid align-items-center py-2 pe-2 my-4 mb-5">
-    <input
-      type="text"
-      v-model="currentSession.title"
-      placeholder="Enter task?"
-      class="ps-0"
-    />
+  <div class="timerbar d-md-grid align-items-center py-2 pe-2 my-4 mb-5 position-relative">
+
+    
+      <input
+        type="text"
+        v-model="currentSession.title"
+        placeholder="What are you working on?"
+        class="ps-0"
+        @click="showSuggestedSessions = true"
+        @blur="handleBlur"
+      />
+  
+      <SuggestedSessions :search="currentSession.title" v-if="showSuggestedSessions" @handleClick="showSuggestedSessions = false"/>
+  
 
     <div class="position-relative d-flex align-items-center">
       <div class="bolletje me-2 d-none d-md-inline" v-if="currentSession.project_id" :style="{ backgroundColor: currentProject?.color ? currentProject.color : '' }"></div>
@@ -48,6 +55,7 @@ import { ref } from "vue";
 import Timer from "@/components/Timer.vue";
 import TimerEditable from "@/components/TimerEditable.vue";
 import ProjectSelector from "@/components/ProjectSelector.vue";
+import SuggestedSessions from "@/components/SuggestedSessions.vue";
 
 const { currentSession, currentProject } = storeToRefs(useSessionStore());
 const { timerRunning } = storeToRefs(useTimerStore());
@@ -56,6 +64,7 @@ const { tasks } = storeToRefs(useDataStore());
 const initialized = ref(false) // Houdt bij of de timer al geinitieerd is
 const editing = ref(false);
 const openProjectSelector = ref(false);
+const showSuggestedSessions = ref(false)
 
 function addProject(project) {
   currentSession.value.project_id = project.project_id
@@ -78,6 +87,11 @@ function findMatchingTask(id) {
   }
 }
 
+function handleBlur() {
+  setTimeout(() => {
+    showSuggestedSessions.value = false
+  }, 100);
+}
 </script>
 
 <style scoped>
@@ -102,6 +116,7 @@ input {
   background-color: transparent;
   display: flex;
 }
+
 .clock img {
   height: 13px;
   width: 13px;

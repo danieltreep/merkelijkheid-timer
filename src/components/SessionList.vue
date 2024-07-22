@@ -13,22 +13,13 @@
 </template>
 
 <script setup>
-import { storeToRefs } from 'pinia'
-import { onMounted, computed } from 'vue'
-import { useSessionStore } from '@/stores/session'
-import SessionListItem from "@/components/SessionListItem.vue";
+import { computed } from 'vue'
 import SessionListItemGroup from "@/components/SessionListItemGroup.vue";
 
 const props = defineProps({
   sessions: Object,
   date: String
 })
-
-// onMounted(() => {
-//   console.log(stackedSessions.value)
-// })
-
-// const { stackedSessions } = storeToRefs(useSessionStore()) 
 
 const date = new Date(props.date);
 
@@ -71,7 +62,7 @@ const stackedSessions = computed(() => {
   let sessionGroups = {};
   
   props.sessions.forEach(session => {
-    let key = `${session.title}-${session.project_id}`;
+    let key = `${session.title}-${session.project_id}-${session.task_id}`;
 
     if (!sessionGroups[key]) {
       sessionGroups[key] = [];

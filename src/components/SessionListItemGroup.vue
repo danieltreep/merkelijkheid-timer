@@ -1,9 +1,9 @@
 <template>
     
     <div class="accordion-item" v-if="sessions.length > 1">
-        <div class="accordion-header pe-2 py-3 py-md-0">
+        <div class="accordion-header pe-2 py-3 py-md-2 ">
             <div class="position-relative d-flex align-items-center">
-                <button v-if="sessions.length > 1" class="btn show-content-button d-flex align-items-center me-4 gap-2 justify-content-center collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="`#accordion-${sessionsArrayKey}`" aria-expanded="true" :aria-controls="`accordion-${sessionsArrayKey}`">
+                <button v-if="sessions.length > 1" class="btn show-content-button d-flex align-items-center me-4 gap-2 justify-content-center collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="`#accordion-${replaceSpaces(sessionsArrayKey)}`" aria-expanded="true" :aria-controls="`accordion-${replaceSpaces(sessionsArrayKey)}`">
                     {{ sessions.length }} 
                     <img src="@/assets/chevron-icon.svg" alt="">
                 </button>
@@ -17,7 +17,7 @@
                 </div>
             </div>      
 
-            <div class="time align-items-center gap-1 d-none d-md-flex">
+            <div class="time align-items-center gap-1 d-none d-md-grid">
                 <img src="@/assets/clock-icon.svg">
                 <div type="text">{{ sessions[sessions.length - 1].created_at.slice(11, -3)}}</div>
                 <div>-</div>
@@ -26,12 +26,12 @@
 
             <div class="duur d-flex align-items-center">{{reduceTimeElapsed(sessions)}}</div>
 
-            <button class="play-button me-auto" @click="startTimer" :disabled="timerRunning">
+            <button class="play-button" @click="startTimer" :disabled="timerRunning">
                 <img src="@/assets/play-icon.svg" alt="Start deze taak">
             </button>
             
         </div>
-        <div :id="`accordion-${sessionsArrayKey}`" class="accordion-collapse collapse">
+        <div :id="`accordion-${replaceSpaces(sessionsArrayKey)}`" class="accordion-collapse collapse">
             <div class="accordion-body p-0">
                 <SessionListItem v-for="session in sessions" :key="session.session_id" :session="session" :bg="'#F9F9F9'"/>
             </div>
@@ -63,6 +63,8 @@ const { currentSession } = storeToRefs(useSessionStore());
 function startTimer() {
   currentSession.value.project_id = props.sessions[0].project_id;
   currentSession.value.title = props.sessions[0].title;
+  currentSession.value.task_id = props.sessions[0].task_id;
+
   startTimerStore()
 }
 
@@ -82,6 +84,9 @@ function reduceTimeElapsed(sessions) {
     return formattedTime;
 }
 
+function replaceSpaces(string) {
+    return string.split(' ').join('-');
+}
 </script>
 <style scoped>
 .accordion {
@@ -98,13 +103,14 @@ function reduceTimeElapsed(sessions) {
     border-bottom: 1px solid #dee2e6;
 }
 .accordion-header {
-    grid-template-columns: minmax(max-content, 30%) 35% 4fr 1.1fr 40px 40px;
+    grid-template-columns: minmax(max-content, 30%) 35% 4fr 1.1fr 80px;
     display: grid;
     font-size: 14px;
     padding-block: .5rem;
     height: 57px;
     background-color: white;
     padding-inline: 2rem 1rem;
+    align-items: center;
 }
 
 .accordion-body {
@@ -141,6 +147,11 @@ function reduceTimeElapsed(sessions) {
     height: 22px;
     width: 22px;
     border-radius: 50%;
+}
+.play-button {
+    width: 35px;
+    height: 35px;
+    margin-left: 10px;
 }
 .time {
   display: grid;

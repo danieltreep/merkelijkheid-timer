@@ -50,25 +50,25 @@ export const useSessionStore = defineStore("session", () => {
     }, {});
   })
 
-  const stackedSessions = computed(() => {
-    let sessionGroups = {};
+  // const stackedSessions = computed(() => {
+  //   let sessionGroups = {};
 
-    Object.entries(groupSessionsByDay.value).forEach(([date, daySessions]) => {
-      sessionGroups[date] = {};
+  //   Object.entries(groupSessionsByDay.value).forEach(([date, daySessions]) => {
+  //     sessionGroups[date] = {};
 
-      daySessions.forEach(session => {
-        let key = `${session.title}-${session.project_id}`;
+  //     daySessions.forEach(session => {
+  //       let key = `${session.title}-${session.project_id}`;
 
-        if (!sessionGroups[date][key]) {
-          sessionGroups[date][key] = [];
-        }
+  //       if (!sessionGroups[date][key]) {
+  //         sessionGroups[date][key] = [];
+  //       }
 
-        sessionGroups[date][key].push(session);
-      });
-    });
+  //       sessionGroups[date][key].push(session);
+  //     });
+  //   });
 
-    return sessionGroups;
-  })
+  //   return sessionGroups;
+  // })
 
   const currentProject = computed(() => {
     return projects.value.find(project => project.project_id === currentSession.value.project_id);
@@ -79,7 +79,7 @@ export const useSessionStore = defineStore("session", () => {
     currentSession, 
     runningSession,
     finishedSessions,
-    stackedSessions,
+    // stackedSessions,
     groupSessionsByDay,
     sessionToBePatched,
     resetCurrentSession

@@ -22,7 +22,7 @@
       </button>
   
       <SessionOptions :session="session" v-if="sessionOwned"/>
-      <img class="avatar mx-lg-auto" :src="imgUrl?.photo" v-if="!sessionOwned">
+      <img class="avatar mx-lg-1" :src="imgUrl?.photo" v-if="!sessionOwned">
     </div>
     
 
@@ -99,6 +99,8 @@ button:disabled {
 }
 .play-button {
   padding: .7rem;
+  width: 35px;
+  height: 35px;
 }
 input {
   border: 1px solid transparent;
