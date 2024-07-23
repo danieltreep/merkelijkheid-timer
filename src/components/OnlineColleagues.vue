@@ -10,19 +10,22 @@
     </div>
 </template>
 <script setup>
-import getSessions from '@/composables/getSessions'
 import { onMounted, ref, computed } from 'vue'
-import { useUserStore } from '@/stores/user'
 import { storeToRefs } from "pinia";
 
-const { user } = storeToRefs(useUserStore());
+// Stores
+import { useUserStore } from '@/stores/user'
 
+// Composables
+import getSessions from '@/composables/getSessions'
+
+// Refs
+const { user } = storeToRefs(useUserStore());
 const runningSessions = ref([]);
 
-const runningSessionsFromOthers = computed(() => {
-  return runningSessions.value.filter(session => +session.user_id !== +user.value.user_id)
-})
+const runningSessionsFromOthers = computed(() => runningSessions.value.filter(session => +session.user_id !== +user.value.user_id))
 
+// Lifecycle
 onMounted(() => {
 
   setInterval(async () => {

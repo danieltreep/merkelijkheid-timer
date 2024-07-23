@@ -9,17 +9,29 @@ import { onMounted, watch } from 'vue';
 import { storeToRefs } from 'pinia'
 import { Datepicker } from 'vanillajs-datepicker';
 
+// Stores
 import { useSessionStore } from '@/stores/session'
+
+// Composables
 import { formatDate } from '@/composables/functions'
 
-const { sessionToBePatched } = storeToRefs(useSessionStore())
-
+// Props and emits
 const emit = defineEmits(['changedate'])
 
 const props = defineProps({
     today: Boolean
 })
 
+// Refs
+const { sessionToBePatched } = storeToRefs(useSessionStore())
+
+// Methods
+function handleChange() {
+    const elem = document.querySelector('input[name=date]');
+    emit('changedate', elem.value)
+}
+
+// Lifecycle
 onMounted(() => {
     const elem = document.querySelector('input[name=date]');
     const datepicker = new Datepicker(elem, { // ...options
@@ -33,6 +45,7 @@ onMounted(() => {
     } 
 })
 
+// Watchers
 watch(sessionToBePatched, () => {
 
     if (!props.today) {
@@ -41,12 +54,6 @@ watch(sessionToBePatched, () => {
         elem.value = formattedDate;
     }
 })
-
-function handleChange() {
-    const elem = document.querySelector('input[name=date]');
-    emit('changedate', elem.value)
-}
-
 
 </script>
 <style scoped>

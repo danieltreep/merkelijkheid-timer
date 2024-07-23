@@ -13,19 +13,25 @@
 <script setup>
 import { storeToRefs } from "pinia";
 import { onBeforeMount, ref } from "vue";
+
+// Stores
 import { useDataStore } from "@/stores/data";
 import { useUserStore } from "@/stores/user";
 
+// Composables
 import getData from "@/composables/getData";
 import getSessions from "@/composables/getSessions";
 
-import ReportsList from "@/components/ReportsList.vue";
-import ReportsFilter from "@/components/ReportsFilter.vue";
-import ClientSearchbar from "@/components/ClientSearchbar.vue";
+// Components
+import ReportsList from "@/components/reports/ReportsList.vue";
+import ReportsFilter from "@/components/reports/ReportsFilter.vue";
+import ClientSearchbar from "@/components/clients/ClientSearchbar.vue";
 
+// Refs
 const { projects, sessions, clients, projectsNotArchived, sessionsOfAmountDays } = storeToRefs(useDataStore());
 const { users } = storeToRefs(useUserStore());
 
+// Methods
 onBeforeMount(async () => {
   users.value = await getData('users');
   projects.value = await getData('projects');

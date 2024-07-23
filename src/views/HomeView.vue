@@ -14,24 +14,30 @@
 <script setup>
 import { onMounted } from "vue";
 import { storeToRefs } from "pinia";
+
+// Stores
 import { useDataStore } from "@/stores/data";
 import { useSessionStore } from "@/stores/session";
 import { useUserStore } from "@/stores/user";
 
+// Composables
 import getData from "@/composables/getData";
-import TimerBar from "@/components/TimerBar.vue";
-import ChangeDateModal from "@/components/ChangeDateModal.vue";
-import AddTaskModal from "@/components/AddTaskModal.vue";
-import ChangeTaskModal from "@/components/ChangeTaskModal.vue";
-import ShareSessionModal from "@/components/ShareSessionModal.vue";
-
-import SessionList from "@/components/SessionList.vue";
 import getSessions from "@/composables/getSessions";
 
+// Components
+import TimerBar from "@/components/timer/TimerBar.vue";
+import ChangeDateModal from "@/components/modals/ChangeDateModal.vue";
+import AddTaskModal from "@/components/modals/AddTaskModal.vue";
+import ChangeTaskModal from "@/components/modals/ChangeTaskModal.vue";
+import ShareSessionModal from "@/components/modals/ShareSessionModal.vue";
+import SessionList from "@/components/sessions/SessionList.vue";
+
+// Refs
 const { projects, clients, sessions, tasks, sessionsOfAmountDays } = storeToRefs(useDataStore());
 const { groupSessionsByDay, stackedSessions } = storeToRefs(useSessionStore());
 const { users, user } = storeToRefs(useUserStore());
 
+// Methods
 onMounted(async () => {
   sessionsOfAmountDays.value = 7;
 

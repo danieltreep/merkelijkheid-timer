@@ -18,20 +18,23 @@
 </template>
 <script setup>
 import { ref, computed } from 'vue';
+
+// Composables
 import patchData from '@/composables/patchData';
 
+// Props
 const props = defineProps({
     color: String,
     clientId: String
 })
 
+// Refs
 const colors = ref(['#F8D84A', '#C2B5ED', '#F09D37', '#EE732F', '#EB592A']);
 const colorRef = ref(props.color)
 
-const notTheSelectedColors = computed(() => {
-    return colors.value.filter(color => color !== colorRef.value);
-}) 
+const notTheSelectedColors = computed(() => colors.value.filter(color => color !== colorRef.value)) 
 
+// Methods
 function handleColorChange(color) {
     colorRef.value = color;
     patchData('clients', props.clientId, {color: colorRef.value})

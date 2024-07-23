@@ -9,23 +9,27 @@
 <script setup>
 import { ref, onUpdated } from 'vue'
 
+// Props and emits
+const emit = defineEmits(['handleClick'])
 const props = defineProps({
     task: Object,
     selectedIds: Array
 })
-const emit = defineEmits(['handleClick'])
 
+// Refs
 const selected = ref(true);
 
-onUpdated(() => {
-    // console.log('from updated', props.selectedIds)
-    selected.value = props.selectedIds.includes(props.task.task_id)
-})
-
+// Methods
 function handleClick() {
     selected.value = !selected.value
     emit('handleClick', props.task.task_id)
 }
+
+// Lifecycle
+onUpdated(() => {
+    selected.value = props.selectedIds.includes(props.task.task_id)
+})
+
 </script>
 <style scoped>
 .project.selected {

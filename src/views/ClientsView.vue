@@ -21,20 +21,25 @@
 <script setup>
 import { storeToRefs } from "pinia";
 import { onMounted, ref } from "vue";
+
+// Stores
 import { useDataStore } from "@/stores/data";
 
+// Composables
 import getData from "@/composables/getData";
 
-import ClientSearchbar from "@/components/ClientSearchbar.vue";
-import ClientList from "@/components/ClientList.vue";
-import AddClientButton from "@/components/AddClientButton.vue";
-import EditProjectModal from "@/components/EditProjectModal.vue";
-import AddProjectModal from "@/components/AddProjectModal.vue";
+// Components
+import ClientSearchbar from "@/components/clients/ClientSearchbar.vue";
+import ClientList from "@/components/clients/ClientList.vue";
+import AddClientButton from "@/components/clients/AddClientButton.vue";
+import EditProjectModal from "@/components/modals/EditProjectModal.vue";
+import AddProjectModal from "@/components/modals/AddProjectModal.vue";
 
+// Refs
 const showArchive = ref(false);
-
 const { projects, clients, tasks, clientsArchive, clientsNotArchived } = storeToRefs(useDataStore());
 
+// Methods
 onMounted(async () => {
   projects.value = await getData('projects');
   clients.value = await getData('clients');
