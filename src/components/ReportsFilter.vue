@@ -7,7 +7,7 @@
 
         <div class="filter-tooltip" v-if="showOptions">
             <p class="mb-2"><small>Show reports for</small></p>
-            <div class="tabs d-grid justify-content-between">
+            <div class="tabs d-grid gap-2 justify-content-between">
                 <input type="radio" name="daterange" id="7days" value="7" v-model="sessionsOfAmountDays" checked>
                 <label for="7days">7 days</label>
 
@@ -17,45 +17,39 @@
                 <input type="radio" name="daterange" id="90days" value="90" v-model="sessionsOfAmountDays" >
                 <label for="90days">90 days</label>
                 
-                
                 <input type="radio" name="daterange" id="halfjaar" value="180" v-model="sessionsOfAmountDays" >
                 <label for="halfjaar">1/2 year</label>
 
                 <input type="radio" name="daterange" id="jaar" value="365" v-model="sessionsOfAmountDays" >
                 <label for="jaar">1 year</label>
 
-                <!-- <input type="radio" name="daterange" id="customrange" v-model="sessionsOfAmountDays" value="Custom" >
-                <label for="customrange">Custom</label> -->
+                <input type="radio" name="daterange" id="customrange" v-model="sessionsOfAmountDays" value="custom" >
+                <label for="customrange">Custom</label>
             </div>
 
-            <!-- <div class="customrangeoptions mt-4" v-show="sessionsOfAmountDays === 'Custom'">
+            <div class="customrangeoptions mt-4" v-show="sessionsOfAmountDays === 'custom'">
                 <p class="mb-2"><small>Select your date range</small></p>
 
-                <div class="d-flex gap-2">
-                    <div class="input d-flex align-items-center gap-1">
-                        <img src="@/assets/calendar-icon-grijs.svg">
-                        <input type="text" id="start-date" >
-
-                    </div>
-                    <div class="input d-flex align-items-center gap-1">
-                        <img src="@/assets/calendar-icon-grijs.svg">
-                        <input type="text" id="end-date">
-
-                    </div>
-                </div>
-
+                <ReportsFilterDateInput 
+                    :startDate="startDateRef"
+                    :endDate="endDateRef"
+                    @handleStartChange="handleStartChange" 
+                    @handleEndChange="handleEndChange"
+                />
                 
-            </div> -->
+            </div>
             <button class="btn select-button mt-4" @click="handleSubmit">Select</button>
         </div>
     </div>
 </template>
 <script setup>
-import { ref, onMounted, computed } from 'vue';
-import { Datepicker } from 'vanillajs-datepicker';
+import { ref, computed } from 'vue';
 import { storeToRefs } from "pinia";
 import { useDataStore } from "@/stores/data";
 import getSessions from '@/composables/getSessions'
+import { makeDateSqlCompatible } from '@/composables/functions'
+
+import ReportsFilterDateInput from '@/components/ReportsFilterDateInput.vue'
 
 const { sessionsOfAmountDays, sessions } = storeToRefs(useDataStore());
 
@@ -67,56 +61,24 @@ lastWeek.setDate(lastWeek.getDate() - sessionsOfAmountDays.value)
 const startDateRef = ref(lastWeek)
 const endDateRef = ref(new Date())
 
-const startDateString = computed(() => {
-    return formatDate(startDateRef.value)
-})
-const endDateString = computed(() => {
-    return formatDate(endDateRef.value)
-})
+const startDateString = computed(() => formatDate(startDateRef.value))
+const endDateString = computed(() => formatDate(endDateRef.value))
 
 async function handleSubmit() {
     showOptions.value = false;
-    const startDate = new Date(endDateRef.value);
-    startDate.setDate(endDateRef.value.getDate() - sessionsOfAmountDays.value)
-    startDateRef.value = startDate
-    sessions.value = await getSessions(null, sessionsOfAmountDays.value);
+    
+    if (sessionsOfAmountDays.value === 'custom') {
+        sessions.value = await getSessions(null, null, null, makeDateSqlCompatible(startDateRef.value), makeDateSqlCompatible(endDateRef.value));
+
+    } else {
+        endDateRef.value = new Date();
+
+        const startDate = new Date();
+        startDate.setDate(endDateRef.value.getDate() - sessionsOfAmountDays.value)
+        startDateRef.value = startDate
+        sessions.value = await getSessions(null, sessionsOfAmountDays.value);
+    }
 }
-
-// onMounted(() => {
-//     const startDateInput = document.getElementById('start-date');
-//     const endDateInput = document.getElementById('end-date');
-
-//     const startDatePicker = new Datepicker(startDateInput, {
-//         autohide: true,
-//         format: 'dd-mm-yyyy'
-//     });
-
-//     const endDatePicker = new Datepicker(endDateInput, {
-//         autohide: true,
-//         format: 'dd-mm-yyyy'
-//     });
-
-//     startDateInput.addEventListener('changeDate', (e) => {
-//         const startDate = startDatePicker.getDate();
-//         endDatePicker.setOptions({
-//             minDate: startDate
-//         });
-
-//         if (endDatePicker.getDate() < startDate) {
-//             endDatePicker.setDate(startDate);
-//         }
-//         startDateRef.value = startDate
-//     });
-
-//     endDateInput.addEventListener('changeDate', (e) => {
-//         const endDate = endDatePicker.getDate();
-//         startDatePicker.setOptions({
-//             maxDate: endDate
-//         });
-//         endDateRef.value = endDate
-
-//     });
-// })
 
 function formatDate(date) {
     const monthNames = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
@@ -129,7 +91,13 @@ function formatDate(date) {
     return formattedDate;
 }
 
+function handleStartChange(date) {
+    startDateRef.value = date
+}
 
+function handleEndChange(date) {
+    endDateRef.value = date
+}
 
 </script>
 <style scoped>

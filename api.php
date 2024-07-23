@@ -1,27 +1,16 @@
-
-
 <?php
 // api.php
-// Allow requests from any origin
 header('Access-Control-Allow-Origin: *');
-
-// Allow additional headers if needed
 header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept');
-
-// Set the allowed methods (GET, POST, etc.)
 header('Access-Control-Allow-Methods: GET, POST, PATCH, DELETE, OPTIONS');
-
 header('Content-Type: application/json');
 
 $host = $_SERVER['HTTP_HOST'];
 
-// Check if the host contains 'localhost'
 if (strpos($host, 'localhost') !== false) {
-    // Database connection for local environment
     $conn = new mysqli('localhost', 'root', 'mysql', 'timer');
 } else {
-    // Database connection for server environment
-    $conn = new mysqli('localhost', 'merktoday_timer', 'F9gtrL3xDU2nfMgwMrJF', 'merktoday_timer');
+      $conn = new mysqli('localhost', 'merktoday_timer', 'F9gtrL3xDU2nfMgwMrJF', 'merktoday_timer');
 }
 
 // Check the connection
@@ -30,10 +19,9 @@ if ($conn->connect_error) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Get JSON data from request body
+    
     $postData = json_decode(file_get_contents("php://input"), true);
 
-    // Sanitize table name
     $table = $conn->real_escape_string($postData['table']);
 
     $columns = '';
@@ -47,7 +35,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($value === null) {
             $escapedValue = "NULL";
         } else {
-            // Escape and quote the value if it's not null
             $escapedValue = "'" . $conn->real_escape_string($value) . "'";
         }
 
@@ -59,7 +46,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $columns = rtrim($columns, ', ');
     $values = rtrim($values, ', ');
 
-    // Construct the SQL INSERT statement
     $sql = "INSERT INTO $table ($columns) VALUES ($values)";
 
     if ($conn->query($sql) === TRUE) {
@@ -70,9 +56,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $response = array('status' => 'error', 'message' => 'Error adding data: ' . $conn->error);
     }
 
-    // Send the JSON response
     echo json_encode($response);
-} elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
+} 
+
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     $table = $_GET['table'];
 
@@ -102,65 +89,79 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Send the JSON response. Send user ID if exists, otherwise false
         echo json_encode($userId !== null ? $userId : false);
 
-    } elseif ($table === 'sessions' && isset($_GET['userid'])) {
+    } 
 
-        $userid = $_GET['userid'];
-        $days = $_GET['days'];
-        
-        // Query that merges the tables: sessions, projects and clients
-        $result = $conn->query("SELECT * FROM $table LEFT JOIN projects ON sessions.project_id = projects.project_id LEFT JOIN clients ON projects.client_id = clients.client_id LEFT JOIN tasks ON tasks.task_id = sessions.task_id WHERE (user_id = $userid OR JSON_CONTAINS(shared_with, '\"$userid\"', '$')) ORDER BY sessions.created_at DESC");
-    
-        // Fetch the data and encode it as JSON
-        $data = [];
-        while ($row = $result->fetch_assoc()) {
-            $data[] = $row;
+    if ($table === 'sessions') {
+
+        $days = isset($_GET['days']) ? intval($_GET['days']) : 7;
+        $daysAgo = date('Y-m-d 00:00:00', strtotime('-' . $days . 'days'));
+
+        $query = "
+            SELECT *
+            FROM $table
+            LEFT JOIN projects ON sessions.project_id = projects.project_id
+            LEFT JOIN clients ON projects.client_id = clients.client_id
+            LEFT JOIN tasks ON tasks.task_id = sessions.task_id
+        ";
+
+        if (isset($_GET['startdate']) && isset($_GET['enddate'])) { // Haal sessies op op tussen aangegeven data
+            $endDate = $_GET['enddate'];
+            $startDate = $_GET['startdate'];
+
+            $endDateTimestamp = strtotime($endDate);
+            $startDateTimestamp = strtotime($startDate);
+
+            $formattedStartDate = date('Y-m-d 00:00:00', $startDateTimestamp);
+            $formattedEndDate = date('Y-m-d 23:59:59', $endDateTimestamp);
+
+            $enddate = "BETWEEN '$formattedStartDate' AND '$formattedEndDate'";
+
+            $query .= "
+                WHERE sessions.created_at $enddate
+                ORDER BY sessions.created_at DESC
+            ";
+        } elseif (isset($_GET['userid'])) { // Haal sessies op van de gebruiker of die gedeeld zijn, van de laatste 7 dagen voor op de home
+            $userid = $_GET['userid'];
+            
+            $query .= "
+                WHERE (user_id = $userid OR JSON_CONTAINS(shared_with, '\"$userid\"', '$')) AND sessions.created_at >= '$daysAgo'
+                ORDER BY sessions.created_at DESC
+            ";
+        } elseif (isset($_GET['isrunning'])) { // Haal alle lopende sessies op voor het tonen van online collega's
+            $query .= "
+                LEFT JOIN users ON users.user_id = sessions.user_id
+                WHERE sessions.is_running = true
+            ";
+        } elseif (!isset($_GET['userid'])) { // Haal van alle collega's sessies op van de laatste ... dagen
+
+            $query .= "
+                WHERE sessions.created_at >= '$daysAgo'
+            ";
         }
-        
-        // Close the database connection
-        $conn->close();
-    
-        // Send the JSON response
-        echo json_encode($data);
 
-    } elseif ($table === 'sessions' && isset($_GET['isrunning'])) {
+        if ($query !== "") {
+            $result = $conn->query($query);
 
-        $days = $_GET['days'];
-        
-        // Query that merges the tables: sessions, projects and clients
-        $result = $conn->query("SELECT * FROM $table LEFT JOIN projects ON sessions.project_id = projects.project_id LEFT JOIN clients ON projects.client_id = clients.client_id  LEFT JOIN users ON users.user_id = sessions.user_id LEFT JOIN tasks ON tasks.task_id = sessions.task_id WHERE sessions.created_at >= DATE_SUB(NOW(), INTERVAL $days DAY) AND sessions.is_running = true");
-    
-        // Fetch the data and encode it as JSON
-        $data = [];
-        while ($row = $result->fetch_assoc()) {
-            $data[] = $row;
+            // Check if the query was successful
+            if (!$result) {
+                die('Query error: ' . $conn->error);
+            }
+
+            // Fetch the data and encode it as JSON
+            $data = [];
+            while ($row = $result->fetch_assoc()) {
+                $data[] = $row;
+            }
+
+            // Close the database connection
+            $conn->close();
+
+            // Send the JSON response
+            echo json_encode($data);
         }
-        
-        // Close the database connection
-        $conn->close();
-    
-        // Send the JSON response
-        echo json_encode($data);
+    }
 
-    } elseif ($table === 'sessions') {
-
-        $days = $_GET['days'];
-        
-        // Query that merges the tables: sessions, projects and clients
-        $result = $conn->query("SELECT * FROM $table LEFT JOIN projects ON sessions.project_id = projects.project_id LEFT JOIN clients ON projects.client_id = clients.client_id LEFT JOIN tasks ON tasks.task_id = sessions.task_id WHERE sessions.created_at >= DATE_SUB(NOW(), INTERVAL $days DAY) ORDER BY sessions.created_at DESC");
-    
-        // Fetch the data and encode it as JSON
-        $data = [];
-        while ($row = $result->fetch_assoc()) {
-            $data[] = $row;
-        }
-        
-        // Close the database connection
-        $conn->close();
-    
-        // Send the JSON response
-        echo json_encode($data);
-
-    } elseif ($table === 'projects') {
+    elseif ($table === 'projects') {
         
         // Query that merges the tables: sessions, projects and clients
         $result = $conn->query("SELECT * FROM $table INNER JOIN clients ON projects.client_id = clients.client_id");
@@ -194,9 +195,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Send the JSON response
         echo json_encode($data);
     }
+} 
 
-
-} elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
 
     $requestData = json_decode(file_get_contents("php://input"), true);
 

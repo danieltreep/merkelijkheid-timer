@@ -1,6 +1,6 @@
 import { getBaseUrl } from './functions';
 
-const getSessions = async (userid, days, isrunning) => {
+const getSessions = async (userid, days, isrunning, startDate, endDate) => {
 
   let url = `${getBaseUrl()}?table=sessions&days=${days}`;
   
@@ -12,7 +12,15 @@ const getSessions = async (userid, days, isrunning) => {
     url += '&isrunning=true'
   }
 
-  console.log(url);
+  if (startDate) {
+    url += `&startdate=${startDate}`
+  }
+
+  if (endDate) {
+    url += `&enddate=${endDate}`
+  }
+
+  console.log('url: ', url);
 
   const data = await fetch(url)
     .then((res) => {
