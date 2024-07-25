@@ -7,7 +7,7 @@
                     {{ sessions.length }} 
                     <img src="@/assets/chevron-icon.svg" alt="">
                 </button>
-                <div>{{ sessions[0].title }}</div>
+                <div class="session-title">{{ sessions[0].title }}</div>
             </div>
             <div class="position-relative d-flex align-items-center projectsection">
                 <div class="bolletje me-2" v-if="sessions[0].project_id" :style="{ backgroundColor: sessions[0]?.color ? sessions[0].color : '' }"></div>
@@ -92,7 +92,13 @@ function reduceTimeElapsed(sessions) {
 }
 
 function replaceSpaces(string) {
-    return string.split(' ').join('-');
+    // Replace spaces with hyphens
+    let result = string.split(' ').join('-');
+    
+    // Remove characters that are not allowed in CSS selectors
+    result = result.replace(/[^a-zA-Z0-9-_]/g, '');
+
+    return result;
 }
 </script>
 <style scoped>
@@ -110,7 +116,7 @@ function replaceSpaces(string) {
     border-bottom: 1px solid #dee2e6;
 }
 .accordion-header {
-    grid-template-columns: minmax(max-content, 30%) 35% 4fr 1.1fr 80px;
+    grid-template-columns: minmax(10%, 30%) 35% 4fr 1.1fr 80px;
     display: grid;
     font-size: 14px;
     padding-block: .5rem;
@@ -158,7 +164,7 @@ function replaceSpaces(string) {
 .play-button {
     width: 35px;
     height: 35px;
-    margin-left: 10px;
+    /* margin-left: 10px; */
 }
 .time {
   display: grid;
@@ -176,6 +182,26 @@ function replaceSpaces(string) {
 .accordion-item:last-child .list-group-item:last-child {
   border-radius: 0 0 var(--br) var(--br);
 }
+.session-title {
+    overflow: hidden;
+    /* max-width: 35%; */
+    white-space: nowrap;
+    margin-right: 1rem;
+    position: relative;
+}
+.bolletje {
+    position: relative;
+}
+.bolletje::after {
+    content: '';
+    position: absolute;
+    height: 30px;
+    width: 60px;
+    background-color: black;
+    background: linear-gradient(-90deg,#ffffff, #FFFFFF00);
+    top: -10px;
+    left: -60px;
+}
 
 @media (max-width: 768px) {
     .accordion-header {
@@ -183,6 +209,7 @@ function replaceSpaces(string) {
         grid-template-columns: 1fr 45px 80px;
         gap: .5rem 0;
         height: auto;
+        /* overflow: hidden; */
     }
     .taskinput {
         order: 0;
@@ -202,6 +229,11 @@ function replaceSpaces(string) {
     .avatar {
         height: 23px;
         width: 23px;
+    }
+    .session-title {
+        white-space: wrap;
+        overflow: hidden;
+        max-width: 60%;
     }
 }
 </style>

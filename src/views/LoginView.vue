@@ -19,26 +19,40 @@ const router = useRouter()
 const { user, userAuthenticated } = storeToRefs(useUserStore());
 
 const loginUser = async (response) => {
-
+  // Check if user exists in local storage
   if (localStorage.getItem('user')) {
-    user.value = JSON.parse(localStorage.getItem('user'))
+    user.value = JSON.parse(localStorage.getItem('user'));
+    router.push({ name: 'home' });
   } else {
+   
+    const userData = decodeCredential(response.credential);
+    user.value = userData; // Save user data in the user store
 
-    const userData = decodeCredential(response.credential)
-    user.value = userData; // Sla userdata op in de user store
-    // Als gebruiker eindigt op merkelijkheid.com bekijk of dit de eerste login is. Zo ja, voeg toe aan users tabel.
-    if (userAuthenticated && !await getUser(user.value.email)) {
-      await postData('users', {username: user.value.name, is_clocking: 0, is_admin: 0, email: user.value.email, photo: user.value.picture})
-    } 
-  
-    // Voeg id toe aan gebruiker zodat die aan een sessie kan worden toegevoegd
-    user.value.user_id = await getUser(user.value.email);
-    localStorage.setItem("user", JSON.stringify({...userData, user_id: user.value.user_id}));
+    // Check if user is authenticated and not already in the users table
+    if (userAuthenticated.value && !await getUser(user.value.email)) {
+      
+      let picture = user.value.picture || 'https://merkelijkheid.nl/wp-content/themes/merkelijkheidnew/img/logo-dark.svg';
 
+      // Post user data to the users table
+      user.value.user_id = await postData('users', {
+        username: user.value.name,
+        is_clocking: 0,
+        is_admin: 0,
+        email: user.value.email,
+        photo: picture
+      });
+    } else {
+      user.value.user_id = await getUser(user.value.email);
+    }
+
+    // Save updated user data with user_id to local storage
+   localStorage.setItem('user', JSON.stringify({ ...userData, user_id: user.value.user_id }));
+    
+    // Navigate to the home page
+    router.push({ name: 'home' });
   }
+};
 
-  await router.push({name: 'home'})
-}
 </script>
 <style scoped>
 

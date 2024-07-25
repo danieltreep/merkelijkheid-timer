@@ -10,7 +10,7 @@ $host = $_SERVER['HTTP_HOST'];
 if (strpos($host, 'localhost') !== false) {
     $conn = new mysqli('localhost', 'root', 'mysql', 'timer');
 } else {
-      $conn = new mysqli('localhost', 'merktoday_timer', 'F9gtrL3xDU2nfMgwMrJF', 'merktoday_timer');
+    $conn = new mysqli('localhost', 'merktoday_timer', 'F9gtrL3xDU2nfMgwMrJF', 'merktoday_timer');
 }
 
 // Check the connection
@@ -62,36 +62,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     $table = $_GET['table'];
-
-    // Check if a user already exists
+    
+    // Check if required parameters are set
     if ($table === 'users' && isset($_GET['email'])) {
+        $email = urldecode($_GET['email']); // Decode the email parameter
 
-        $email = $_GET['email'];
-        
+        // Assuming $conn is your mysqli connection object
+        if (!$conn) {
+            throw new Exception('Database connection failed');
+        }
+
         // Prepare a SELECT query to check if the email exists and fetch the user ID
         $stmt = $conn->prepare('SELECT user_id FROM users WHERE email = ?');
+       
         $stmt->bind_param('s', $email);
-        $stmt->execute();
-        $result = $stmt->get_result();
+        if (!$stmt->execute()) {
+            throw new Exception('Execute failed: ' . $stmt->error);
+        }
 
-        // Fetch the user ID if any row is returned
+        $result = $stmt->get_result();
+        
+
         $userId = null;
         if ($row = $result->fetch_assoc()) {
             $userId = $row['user_id'];
         }
 
-        // Close the statement
         $stmt->close();
-        
-        // Close the database connection
         $conn->close();
 
-        // Send the JSON response. Send user ID if exists, otherwise false
-        echo json_encode($userId !== null ? $userId : false);
+        // Prepare the response
+        $response = ['user_id' => $userId];
+        echo json_encode($response);
 
     } 
 
-    if ($table === 'sessions') {
+    elseif ($table === 'sessions') {
 
         $days = isset($_GET['days']) ? intval($_GET['days']) : 7;
         $daysAgo = date('Y-m-d 00:00:00', strtotime('-' . $days . 'days'));
@@ -181,7 +187,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     } else {
 
         // Perform a SELECT query
-        $result = $conn->query('SELECT * FROM ' . $table);
+        $result = $conn->query("SELECT * FROM $table");
     
         // Fetch the data and encode it as JSON
         $data = [];

@@ -20,7 +20,7 @@ const getSessions = async (userid, days, isrunning, startDate, endDate) => {
     url += `&enddate=${endDate}`
   }
 
-  console.log('url: ', url);
+  // console.log('url: ', url);
 
   const data = await fetch(url)
     .then((res) => {

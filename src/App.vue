@@ -17,7 +17,7 @@
         <div class="empty-avatar" v-if="!user.picture">{{ getUserInitials() }} </div>
       </div>
     </header>
-  
+
     <RouterView />
   </div>
 </template>

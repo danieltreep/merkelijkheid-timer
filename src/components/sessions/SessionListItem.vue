@@ -16,7 +16,7 @@
 
     <SessionListItemTime :session="session" :isEditable="sessionOwned" />
 
-    <div class="d-flex session-buttons justify-content-end align-items-center">
+    <div class="d-flex session-buttons justify-content-center gap-2 align-items-center">
       <button class="play-button" @click="startTimer" :disabled="timerRunning">
         <img src="@/assets/play-icon.svg" alt="Start deze taak">
       </button>

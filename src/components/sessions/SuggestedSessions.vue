@@ -19,7 +19,6 @@ import { storeToRefs } from "pinia";
 import { computed } from 'vue'
 
 // Stores
-import { useDataStore } from "@/stores/data";
 import { useSessionStore } from "@/stores/session";
 import { useTimerStore } from "@/stores/timer";
 
@@ -30,14 +29,13 @@ const props = defineProps({
 })
 
 // Refs
-const { sessions } = storeToRefs(useDataStore());
-const { currentSession } = storeToRefs(useSessionStore());
+const { currentSession, finishedSessions } = storeToRefs(useSessionStore());
 const { startTimerStore } = useTimerStore()
 
 const stackedSessions = computed(() => {
   let sessionGroups = [];
 
-    const sessionIndicators = sessions.value.map(session => {
+    const sessionIndicators = finishedSessions.value.map(session => {
         return {
             title: session.title, 
             project_id: session.project_id, 

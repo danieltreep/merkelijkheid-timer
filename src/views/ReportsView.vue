@@ -31,7 +31,7 @@ import ClientSearchbar from "@/components/clients/ClientSearchbar.vue";
 const { projects, sessions, clients, projectsNotArchived, sessionsOfAmountDays } = storeToRefs(useDataStore());
 const { users } = storeToRefs(useUserStore());
 
-// Methods
+// Lifecycle
 onBeforeMount(async () => {
   users.value = await getData('users');
   projects.value = await getData('projects');
