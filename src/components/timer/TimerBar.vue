@@ -17,7 +17,7 @@
       <div class="bolletje me-2 d-none d-md-inline" v-if="currentSession.project_id" :style="{ backgroundColor: currentProject?.color ? currentProject.color : '' }"></div>
       <p class="mb-0 me-3 d-none d-md-inline" v-if="currentSession.project_id">{{ currentProject?.client_name ? currentProject.client_name : '' }}</p>
       
-      <button class="add-project-button me-2" :class="currentProject?.project_name === 'General' ? 'pinguin' : '' " @click="openProjectSelector = !openProjectSelector">
+      <button class="add-project-button me-2" :class="currentProject?.project_name === 'General' ? 'pinguin' : '' " @click.stop="openProjectSelector = !openProjectSelector">
         <div class="d-flex align-items-center" v-if="currentProject?.project_name">
           <span class="d-none d-md-inline">{{ currentProject.project_name === 'General' ? '🐧' : currentProject.project_name }}:&nbsp;</span>
           <span> {{ findMatchingTask(currentSession?.task_id) }} </span>
@@ -27,7 +27,7 @@
         
       </button>
 
-      <ProjectSelector v-show="openProjectSelector"  @handleClick="addProject" target="addTask" />
+      <ProjectSelector v-if="openProjectSelector" @close="openProjectSelector = false" @handleClick="addProject" target="addTask" />
 
     </div>
 
@@ -98,6 +98,7 @@ function handleBlur() {
     showSuggestedSessions.value = false
   }, 100);
 }
+
 </script>
 
 <style scoped>

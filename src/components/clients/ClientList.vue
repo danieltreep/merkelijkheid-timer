@@ -7,17 +7,19 @@
         <span>Projects</span>
       </li>
       <ClientListItem 
-        v-for="client in clients" 
+        v-for="client in sortedClients" 
         :key="client.client_id" 
         :client="client" 
         :projects="projects"
         :archived="archived" />
     </ul>
+
   </div>
 </template>
 
 <script setup>
 import { storeToRefs } from "pinia";
+import { computed } from 'vue'
 
 // Stores
 import { useDataStore } from "@/stores/data";
@@ -29,9 +31,15 @@ import ClientListItem from "@/components/clients/ClientListItem.vue";
 const { projects } = storeToRefs(useDataStore());
 
 // Props
-defineProps({
+const props = defineProps({
   clients: Array,
   archived: Boolean
+})
+
+const sortedClients = computed(() => {
+  return props.clients.sort((a, b) => {
+    return a.client_name.localeCompare(b.client_name);
+  })
 })
 
 </script>

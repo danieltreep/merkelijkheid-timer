@@ -3,7 +3,7 @@ import { getBaseUrl } from './functions';
 
 const deleteData = (table, id) => {
 
-  const { updateTable } = useDataStore();
+  const { updateTable, triggerToast } = useDataStore();
 
   fetch(getBaseUrl(), {
     method: 'DELETE',
@@ -20,10 +20,12 @@ const deleteData = (table, id) => {
     })
     .then((result) => {
       console.log(result.message);
+      triggerToast(result.message, false)
       updateTable(table);
     })
     .catch((error) => {
       console.error("Error:", error);
+      triggerToast(error.message, true)
     });
 };
 

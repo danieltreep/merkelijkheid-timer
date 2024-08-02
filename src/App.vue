@@ -19,6 +19,9 @@
     </header>
 
     <RouterView />
+
+    <Toast />
+
   </div>
 </template>
 
@@ -29,6 +32,8 @@ import { useUserStore } from '@/stores/user'
 import { storeToRefs } from "pinia";
 
 import OnlineColleagues from '@/components/OnlineColleagues.vue'
+import Toast from '@/components/Toast.vue'
+
 
 const { user, userAuthenticated } = storeToRefs(useUserStore());
 
@@ -44,6 +49,7 @@ onMounted(() => {
     user.value = JSON.parse(localStorage.getItem('user'))
   }
 })
+
 </script>
 
 <style scoped>

@@ -3,12 +3,7 @@ import { getBaseUrl } from './functions';
 
 const patchData = async (table, id, data) => {
 
-  // console.log(data)
-
-  const { updateTable } = useDataStore();
-
-  const serverUrl = 'https://merkelijkheid.today/api.php';
-  const localUrl = 'http://localhost/merkelijkheid-timer/api.php';
+  const { updateTable, triggerToast } = useDataStore();
 
   fetch(getBaseUrl(), {
     method: "PATCH",
@@ -25,10 +20,12 @@ const patchData = async (table, id, data) => {
     })
     .then((result) => {
       console.log(result.message);
+      triggerToast(result.message, false)
       updateTable(table);
     })
     .catch((error) => {
       console.error("Error:", error);
+      triggerToast(error.message, true)
     });
 };
 

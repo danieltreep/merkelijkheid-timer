@@ -1,16 +1,16 @@
 <template>
   <li class="list-group-item d-grid py-2 py-lg-0 pb-3 pe-2 position-relative" :style="{backgroundColor: bg}" >
-    <input class="taskinput" type="text" v-model="title" @blur="handleBlur" :disabled="!sessionOwned" :class="!sessionOwned ? 'disabled' : ''">
+    <input class="taskinput me-2" type="text" v-model="title" @blur="handleBlur" :disabled="!sessionOwned" :class="!sessionOwned ? 'disabled' : ''">
     
     <div class="position-relative d-flex align-items-center projectsection">
       <div class="bolletje me-2" v-if="session.project_id" :style="{ backgroundColor: session?.color ? session.color : '' }"></div>
       <p class="mb-0 me-3" v-if="session.project_id">{{ session?.client_name ? session.client_name : '' }}</p>
-      <button class="project" :disabled="!sessionOwned" :class="session?.project_name === 'General' ? 'pinguin' : '' " @click="handleOpenSelector">
+      <button class="project add-project-button" :disabled="!sessionOwned" :class="session?.project_name === 'General' ? 'pinguin' : '' " @click.stop="handleOpenSelector">
         {{ session?.project_name ? (session.project_name === 'General' ? '🐧' : session.project_name) : 'Project' }}<span v-if="session?.taskname">: {{ session?.taskname }}</span>
         
       </button>
 
-      <ProjectSelector v-if="openProjectSelector && sessionOwned" target="changeTask" @handleClick="addProject"/>
+      <ProjectSelector v-if="openProjectSelector && sessionOwned" target="changeTask" @handleClick="addProject" @close="openProjectSelector = false"/>
 
     </div>
 

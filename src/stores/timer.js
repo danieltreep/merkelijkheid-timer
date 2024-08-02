@@ -83,7 +83,6 @@ export const useTimerStore = defineStore("timer", () => {
   
 
     return {
-        // currentSession, 
         currentSessionId,
         timerRunning,
         startTimerStore,

@@ -15,11 +15,18 @@ export const useDataStore = defineStore("data", () => {
   const searchterm = ref('');
   const currentClientId = ref('')
   const projectToBePatched = ref({})
+  
+  const toast = ref({
+    message: 'Record deleted succesfully',
+    error: false,
+    show: false
+  })
+  
 
   const { user } = storeToRefs(useUserStore())
 
   const clientsThatMatchSearch = computed(() => {
-    return clients.value.filter(client => client.client_name.toLowerCase().includes(searchterm.value.toLowerCase()))
+    return clients.value.filter(client => client.client_name.toLowerCase().startsWith(searchterm.value.toLowerCase()))
   })
 
   const clientsNotArchived = computed(() => {
@@ -56,11 +63,22 @@ export const useDataStore = defineStore("data", () => {
     }
   }
 
+  function triggerToast(message, error) {
+    toast.value.message = message;
+    toast.value.error = error
+    toast.value.show = true
+
+    setTimeout(() => {
+      toast.value.show = false
+    }, 3000)
+  }
+
   return { 
     sessions,
     sessionsOfAmountDays,
     projects, 
     projectToBePatched,
+    toast,
     clients, 
     tasks,
     clientsThatMatchSearch, 
@@ -70,5 +88,6 @@ export const useDataStore = defineStore("data", () => {
     clientsNotArchived,
     projectsNotArchived,
     updateTable, 
+    triggerToast
   };
 });
