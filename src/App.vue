@@ -34,7 +34,6 @@ import { storeToRefs } from "pinia";
 import OnlineColleagues from '@/components/OnlineColleagues.vue'
 import Toast from '@/components/Toast.vue'
 
-
 const { user, userAuthenticated } = storeToRefs(useUserStore());
 
 function getUserInitials() {

@@ -16,14 +16,13 @@ export const useDataStore = defineStore("data", () => {
   const currentClientId = ref('')
   const projectToBePatched = ref({})
   
+  const { user } = storeToRefs(useUserStore())
+
   const toast = ref({
     message: 'Record deleted succesfully',
     error: false,
     show: false
   })
-  
-
-  const { user } = storeToRefs(useUserStore())
 
   const clientsThatMatchSearch = computed(() => {
     return clients.value.filter(client => client.client_name.toLowerCase().startsWith(searchterm.value.toLowerCase()))

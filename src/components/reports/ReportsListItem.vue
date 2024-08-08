@@ -16,7 +16,7 @@
         <div :id="`accordion-${project.project_id}`" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
             <div class="accordion-body p-0">
                 
-                <li class="list-group-item list-item-accordion py-2 d-grid align-items-center" v-for="session in filterSessionsByProject" :key="session.session_id">
+                <li class="list-group-item list-item-accordion py-2 d-grid align-items-center" v-for="session in filterSessionsByProject" :key="session.session_id" :style="{borderLeft: `4px solid ${session.taskcolor}`}">
                     {{ session.title }}
                     <div class="collega d-grid align-items-center justify-content-center gap-2">
                         <div class="d-flex justify-content-end">
@@ -38,7 +38,6 @@
             </div>
         </div>
     </div>
-   
 
 </template>
 <script setup>
@@ -50,7 +49,7 @@ import { useDataStore } from '@/stores/data'
 import { useUserStore } from '@/stores/user'
 
 // Composables
-import { formatDate } from '@/composables/functions'
+import { formatDate, reduceTimeElapsed } from '@/composables/functions'
 
 // Props
 const props = defineProps({
@@ -66,29 +65,6 @@ const filterSessionsByProject = computed(() => sessions.value.filter(session => 
 // Methods
 function userOfProject(userId) {
     return users.value.find(user => user.user_id === userId);
-}
-
-function reduceTimeElapsed(sessions) {
-    let totalSeconds = 0;
-
-    sessions.forEach(session => {
-
-        let amountOfColleagues = 1;
-        
-        if (session.shared_with) {
-            amountOfColleagues += session.shared_with.length; // Als sessie gedeeld is tel op bij aantal collega's
-        }
-
-        const [hours, minutes, seconds] = session.time_elapsed.split(':').map(Number);
-        totalSeconds += ((hours * amountOfColleagues) * 3600) + ((minutes * amountOfColleagues) * 60);
-    });
-
-    const totalHours = Math.floor(totalSeconds / 3600);
-    totalSeconds %= 3600;
-    const totalMinutes = Math.floor(totalSeconds / 60);
-
-    const formattedTime = `${String(totalHours).padStart(2, '0')}:${String(totalMinutes).padStart(2, '0')}`;
-    return formattedTime;
 }
 
 </script>

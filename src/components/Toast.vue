@@ -1,6 +1,6 @@
 <template>
   <Transition>
-    <div class="toast-wrapper d-flex justify-content-between p-2 ps-3" v-if="toast.show" :style="{backgroundColor: toast.error ? 'var(--rood)' : 'var(--groen)'}">
+    <div class="toast-wrapper d-flex justify-content-between p-2 px-3" v-if="toast.show" :style="{backgroundColor: toast.error ? 'var(--rood)' : 'var(--groen)'}">
       {{ toast.message }}
     </div>
   </Transition>
@@ -21,7 +21,7 @@ const { toast } = storeToRefs(useDataStore())
   /* background-color: var(--groen); */
   box-shadow: var(--bs);
   /* border: 1px solid var(--groen); */
-  width: 300px;
+  width: fit-content;
   color: white;
   border-radius: 8px;
   position: absolute;

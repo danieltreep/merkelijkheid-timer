@@ -1,3 +1,5 @@
+@import './fonts.css';
+
 :root {
   --bg: #F7F7F7;
   --hover: #F1F1F1;
@@ -11,7 +13,7 @@
   --bs: 1px 1px 5px rgba(0, 0, 0, .1);
 }
 body {
-
+  font-family: 'Helvetica Neue';
   background-color: var(--bg);
 }
 #app {
@@ -80,4 +82,44 @@ input:hover {
   font-size: 12px;
   font-weight: 500;
 }
+.percentage {
+  font-size: 12px;
+}
+.up {
+  color: var(--groen) !important;
+  position: relative;
+  padding-left: 12px;
+}
+.up::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  /* display: inline; */
+  transform: translateY(-50%);
+  background-image: url(../assets/icon-arrow-up-green.svg);
+  height: 12px;
+  width: 12px;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
 
+.down {
+  color: var(--rood) !important;
+  position: relative;
+  padding-left: 12px;
+}
+
+.down::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  /* display: inline; */
+  transform: translateY(-50%);
+  background-image: url(../assets/icon-arrow-down-red.svg);
+  height: 12px;
+  width: 12px;
+  background-size: contain;
+  background-repeat: no-repeat;
+}

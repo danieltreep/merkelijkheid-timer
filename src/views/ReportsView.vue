@@ -5,7 +5,9 @@
       <ReportsFilter />
     </div>
 
-    <ReportsList :projects="projectsNotArchived" />         
+    <div class="mt-4 d-grid">
+      <ReportsCard v-for="client in sessionsByClient" :key="client.client_id" :client="client" />
+    </div>     
 
   </main>
 </template>
@@ -17,19 +19,23 @@ import { onBeforeMount, ref } from "vue";
 // Stores
 import { useDataStore } from "@/stores/data";
 import { useUserStore } from "@/stores/user";
+import { useReportsStore } from "@/stores/reports";
 
 // Composables
 import getData from "@/composables/getData";
 import getSessions from "@/composables/getSessions";
+import { getFirstDayOfPreviousMonth, getLastDayOfPreviousMonth, makeDateSqlCompatible } from '@/composables/functions'
 
 // Components
-import ReportsList from "@/components/reports/ReportsList.vue";
+import ReportsCard from "@/components/reports/ReportsCard.vue";
 import ReportsFilter from "@/components/reports/ReportsFilter.vue";
 import ClientSearchbar from "@/components/clients/ClientSearchbar.vue";
 
 // Refs
-const { projects, sessions, clients, projectsNotArchived, sessionsOfAmountDays } = storeToRefs(useDataStore());
+const { projects, sessions, clients, sessionsOfAmountDays } = storeToRefs(useDataStore());
 const { users } = storeToRefs(useUserStore());
+const { sessionsByClient, lastMonthSessions } = storeToRefs(useReportsStore());
+
 
 // Lifecycle
 onBeforeMount(async () => {
@@ -37,27 +43,15 @@ onBeforeMount(async () => {
   projects.value = await getData('projects');
   clients.value = await getData('clients');
   sessions.value = await getSessions(null, sessionsOfAmountDays.value);
+  lastMonthSessions.value = await getSessions(null, null, null, makeDateSqlCompatible(getFirstDayOfPreviousMonth()), makeDateSqlCompatible(getLastDayOfPreviousMonth()));
 });
+
 </script>
 
 <style scoped>
-
-.search {
-  border: 1px solid var(--border);
-  border-radius: var(--br);
-  padding: 0 1rem;
-  outline: none;
-  background-color: transparent;
-  width: 270px;
+.d-grid {
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
 }
-.search input {
-  padding: .5rem 1rem;
-  outline: none;
-  border: none;
-  background-color: transparent;
-  font-size: 15px;
-  color: #6C757D;
-}
-  
 </style>
   
