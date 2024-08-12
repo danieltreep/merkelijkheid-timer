@@ -2,6 +2,7 @@
   <main class="py-5">
     <div class="d-flex justify-content-between">
       <ClientSearchbar />
+      <FilterByUser />
       <ReportsFilter />
     </div>
 
@@ -14,7 +15,7 @@
 
 <script setup>
 import { storeToRefs } from "pinia";
-import { onBeforeMount, ref } from "vue";
+import { onBeforeMount, ref, watch } from "vue";
 
 // Stores
 import { useDataStore } from "@/stores/data";
@@ -30,21 +31,26 @@ import { getFirstDayOfPreviousMonth, getLastDayOfPreviousMonth, makeDateSqlCompa
 import ReportsCard from "@/components/reports/ReportsCard.vue";
 import ReportsFilter from "@/components/reports/ReportsFilter.vue";
 import ClientSearchbar from "@/components/clients/ClientSearchbar.vue";
+import FilterByTask from "@/components/reports/FilterByTask.vue";
+import FilterByUser from "@/components/reports/FilterByUser.vue";
 
 // Refs
 const { projects, sessions, clients, sessionsOfAmountDays } = storeToRefs(useDataStore());
 const { users } = storeToRefs(useUserStore());
-const { sessionsByClient, lastMonthSessions } = storeToRefs(useReportsStore());
-
+const { sessionsByClient, lastMonthSessions, filterUser } = storeToRefs(useReportsStore());
 
 // Lifecycle
 onBeforeMount(async () => {
   users.value = await getData('users');
   projects.value = await getData('projects');
   clients.value = await getData('clients');
-  sessions.value = await getSessions(null, sessionsOfAmountDays.value);
+  sessions.value = await getSessions(filterUser.value.user_id, sessionsOfAmountDays.value);
   lastMonthSessions.value = await getSessions(null, null, null, makeDateSqlCompatible(getFirstDayOfPreviousMonth()), makeDateSqlCompatible(getLastDayOfPreviousMonth()));
 });
+
+watch(filterUser, async () => {
+  sessions.value = await getSessions(filterUser.value.user_id, sessionsOfAmountDays.value);
+})
 
 </script>
 

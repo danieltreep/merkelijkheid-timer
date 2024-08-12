@@ -1,22 +1,23 @@
 <template>
     
-    <div class="accordion-item" v-if="filterSessionsByProject.length">
+    <div class="accordion-item" v-if="groupSessionsByProject.length">
         <div class="accordion-header gap-3">
             <div class="position-relative d-flex align-items-center">
-                <button v-if="filterSessionsByProject.length" class="btn show-content-button d-flex align-items-center me-4 gap-2 justify-content-center collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="`#accordion-${project.project_id}`" aria-expanded="true" :aria-controls="`accordion-${project.project_id}`">
-                    {{ filterSessionsByProject.length }} 
-                    <img src="@/assets/chevron-icon.svg" alt="">
+                <button v-if="groupSessionsByProject.length" class="btn show-content-button d-flex align-items-center me-4 gap-2 justify-content-center collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="`#accordion-${project.project_id}`" aria-expanded="true" :aria-controls="`accordion-${project.project_id}`">
+                    {{ groupSessionsByProject.length }} 
+                    <img src="@/assets/chevron-icon.svg" >
                 </button>
                 <div class="bolletje me-3" :style="{backgroundColor: project.color}"></div>
                 <p class="mb-0 me-3">{{ project.client_name }}</p>
                 <div class="project" :class="project.project_name === 'General' ? 'pinguin' : '' ">{{ project.project_name === 'General' ? '🐧' : project.project_name }}</div>
             </div>
-            <div class="duur">{{reduceTimeElapsed(filterSessionsByProject)}}</div>
+            <div class="duur">{{reduceTimeElapsed(groupSessionsByProject)}}</div>
         </div>
+        
         <div :id="`accordion-${project.project_id}`" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
             <div class="accordion-body p-0">
                 
-                <li class="list-group-item list-item-accordion py-2 d-grid align-items-center" v-for="session in filterSessionsByProject" :key="session.session_id" :style="{borderLeft: `4px solid ${session.taskcolor}`}">
+                <li class="list-group-item list-item-accordion py-2 d-grid align-items-center" v-for="session in groupSessionsByProject" :key="session.session_id" :style="{borderLeft: `4px solid ${session.taskcolor}`}">
                     {{ session.title }}
                     <div class="collega d-grid align-items-center justify-content-center gap-2">
                         <div class="d-flex justify-content-end">
@@ -53,14 +54,24 @@ import { formatDate, reduceTimeElapsed } from '@/composables/functions'
 
 // Props
 const props = defineProps({
-    project: Object
+    project: Object,
+    filterUserId: String || null
 })
 
 // Refs
 const { sessions } = storeToRefs(useDataStore())
 const { users } = storeToRefs(useUserStore());
 
-const filterSessionsByProject = computed(() => sessions.value.filter(session => session.project_id === props.project.project_id)) 
+const groupSessionsByProject = computed(() => sessions.value.filter(session => session.project_id === props.project.project_id)) 
+const sessionsByUser = computed(() => {
+
+    if (props.filterUserId) {
+        return groupSessionsByProject.value.filter(session => session.session)
+    }
+
+    return groupSessionsByProject
+    
+})
 
 // Methods
 function userOfProject(userId) {

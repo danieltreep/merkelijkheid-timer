@@ -6,7 +6,7 @@
         <span>Duration</span>
       </li>
       <div class="accordion" id="accordionExample">
-        <ReportsListItem v-for="project in projects" :key="project.project_id" :project="project"/>
+        <ReportsListItem v-for="project in projects" :key="project.project_id" :project="project" :filterUserId="filterUserId" />
       </div>
     </ul>
   </div>
@@ -18,7 +18,8 @@ import ReportsListItem from "@/components/reports/ReportsListItem.vue";
 
 // Props
 defineProps({
-  projects: Array
+  projects: Array,
+  filterUserId: String || null
 })
 
 </script>
@@ -28,6 +29,7 @@ defineProps({
   font-size: 12px;
   padding-inline: 2rem;
 }
+
 .list-group {
   overflow: hidden;
 }

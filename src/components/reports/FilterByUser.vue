@@ -1,16 +1,16 @@
 <template>
     <div class="position-relative mt-auto pe-4">
         <button class="d-flex align-items-center open-options" @click="show = !show">
-            <img class="small-avatar" v-if="activeUserImg" :src="activeUserImg">
-            {{ activeUser }}
+            <img class="small-avatar" v-if="filterUser.photo" :src="filterUser.photo">
+            {{ filterUser.username ? filterUser.username : 'Iedereen' }}
             <img class="ms-2" src="@/assets/chevron-icon.svg">
         </button>
     
         <div class="task-tooltip position-absolute" v-if="show">
             <ul class="list-group p-2" >
                 
-                <li class="d-flex align-items-center gap-2 colleague" @click="addColleague('0', 'Iedereen', '')">
-                    <div class="avatar-wrapper" :class="activeUserId === '0' ? 'added' : ''">
+                <li class="d-flex align-items-center gap-2 colleague" @click="changeUser({})">
+                    <div class="avatar-wrapper" :class="!filterUser.user_id ? 'added' : ''">
                         <img class="avatar-inline" src="@/assets/merkelijkheid-logo.png" >
                     </div>
                     Iedereen
@@ -20,9 +20,9 @@
                     v-for="colleague in users"
                     class="d-flex align-items-center gap-2 colleague" 
                     
-                    @click="addColleague(colleague.user_id, colleague.username, colleague.photo)"
+                    @click="changeUser(colleague)"
                 >
-                    <div class="avatar-wrapper" :class="activeUserId === colleague.user_id ? 'added' : ''">
+                    <div class="avatar-wrapper" :class="filterUser.user_id === colleague.user_id ? 'added' : ''">
                         <img class="avatar-inline" :src="colleague.photo" >
                     </div>
                     {{ colleague.username }}
@@ -38,20 +38,18 @@ import { ref } from 'vue'
 
 // Stores
 import { useUserStore } from "@/stores/user";
+import { useReportsStore } from "@/stores/reports";
 
 // Refs
 const { users } = storeToRefs(useUserStore())
+const { filterUser } = storeToRefs(useReportsStore())
 const show = ref(false)
-const activeUserId = ref('0')
-const activeUser = ref('Iedereen')
-const activeUserImg = ref('')
 
 // Methods
-function addColleague(id, naam, photo) {
-    activeUserId.value = id;
-    activeUser.value = naam
-    activeUserImg.value = photo
+function changeUser(user) {
     show.value = false
+    filterUser.value = user
+
 }
 
 </script>
@@ -62,7 +60,7 @@ function addColleague(id, naam, photo) {
     background-color: white;
     right: 20%;
     width: 220px;
-    z-index: 10;
+    z-index: 100;
     top: calc(100% + 15px);
     border-radius: var(--br);
     border: 1px solid #E8E8E8;

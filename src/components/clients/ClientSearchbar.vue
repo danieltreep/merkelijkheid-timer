@@ -1,5 +1,5 @@
 <template >
-    <div class="search d-flex align-items-center">
+    <div class="search d-flex align-items-center me-auto">
         <img src="@/assets/search-icon.svg">
         <input type="text" v-model="searchterm" placeholder="Search client">
     </div>
