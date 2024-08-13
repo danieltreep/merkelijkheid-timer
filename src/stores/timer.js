@@ -59,7 +59,6 @@ export const useTimerStore = defineStore("timer", () => {
         currentSession.value.created_at = makeDateSqlCompatible(currentSession.value.created_at);
         currentSession.value.stopped_at = makeDateSqlCompatible(currentSession.value.stopped_at);
         
-        // Stop interval en POST de data
         patchData("sessions", currentSessionId.value, {...currentSession.value, is_running: 0, shared_with: JSON.stringify(currentSession.value.shared_with)});
         document.title = 'Merkelijkheid Today';
 

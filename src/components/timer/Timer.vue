@@ -1,6 +1,6 @@
 <template>
-  <div class="d-flex align-items-center ms-lg-auto">
-    <div class="time me-3 d-none d-md-inline">{{ currentSession.time_elapsed }}</div>
+  <div class="d-flex align-items-center ms-lg-auto position-relative">
+    <div class="time me-3 d-none d-md-inline" @click="showStartTimeChanger = !showStartTimeChanger">{{ currentSession.time_elapsed }}</div>
     <button v-if="!timerRunning" class="btn start d-flex align-items-center gap-2" @click="startTimerStore">
       <img src="@/assets/play-icon-white.svg" alt="">
       Start
@@ -20,11 +20,12 @@
     </button>
    
     <ClearButton @click="clearTimer" v-if="timerRunning"/>
+    <EditRunningTimer v-if="showStartTimeChanger && timerRunning" @close-editor="showStartTimeChanger = false"/>
   </div>
 </template>
 
 <script setup>
-import { onMounted, watch } from "vue";
+import { onMounted, watch, ref } from "vue";
 import { storeToRefs } from "pinia";
 
 // Stores
@@ -33,6 +34,7 @@ import { useTimerStore } from '@/stores/timer'
 
 // Components
 import ClearButton from '@/components/timer/ClearButton.vue'
+import EditRunningTimer from '@/components/timer/EditRunningTimer.vue'
 
 // Props and emits
 const emit = defineEmits(['reset', 'initialized']);
@@ -43,6 +45,7 @@ const props = defineProps({
 // Refs
 const { currentSession, runningSession } = storeToRefs(useSessionStore());
 const { timerRunning } = storeToRefs(useTimerStore());
+const showStartTimeChanger = ref(false)
 
 // Methods
 const { startTimerStore, clearTimerStore, stopTimerStore, continueTimerStore } = useTimerStore();
@@ -96,6 +99,7 @@ onMounted(() => {
 .time {
   font-size: 20px;
   font-weight: 500;
+  cursor: pointer;
 }
 
 @media (max-width: 768px) {
