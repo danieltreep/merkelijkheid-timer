@@ -1,31 +1,24 @@
 <template>
     <div class="position-relative ms-auto mt-auto pe-4">
         <button class="d-flex align-items-center open-options" @click="show = !show">
-            <img class="small-avatar" v-if="activeUserImg" :src="activeUserImg">
-            {{ activeUser }}
+            {{ activeTask }}
             <img class="ms-2" src="@/assets/chevron-icon.svg">
         </button>
     
         <div class="task-tooltip position-absolute" v-if="show">
             <ul class="list-group p-2" >
-                
-                <li class="d-flex align-items-center gap-2 colleague" @click="addColleague('0', 'All tasks', '')">
-                    <div class="avatar-wrapper" :class="activeUserId === '0' ? 'added' : ''">
-                        <img class="avatar-inline" src="@/assets/merkelijkheid-logo.png" >
-                    </div>
+                <li class="d-flex align-items-center gap-2 task" @click="handleClick({taskname: 'All tasks', task_id: null})" :style="{borderLeft: `3px solid transparent`}">
+                    <div class="taskcolor" :style="{background: 'transparent'}"></div>
                     All tasks
                 </li>
 
                 <li 
-                    v-for="colleague in users"
-                    class="d-flex align-items-center gap-2 colleague" 
-                    
-                    @click="addColleague(colleague.user_id, colleague.username, colleague.photo)"
+                    v-for="task in tasks"
+                    class="d-flex align-items-center gap-2 task" 
+                    @click="handleClick(task)"
                 >
-                    <div class="avatar-wrapper" :class="activeUserId === colleague.user_id ? 'added' : ''">
-                        <img class="avatar-inline" :src="colleague.photo" >
-                    </div>
-                    {{ colleague.username }}
+                    <div class="taskcolor" :style="{background: task.taskcolor}"></div>
+                    {{ task.taskname }}
                 </li>
             </ul>
         </div>
@@ -33,27 +26,24 @@
 </template>
 
 <script setup>
-import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
 
-// Stores
-import { useUserStore } from "@/stores/user";
+const emit = defineEmits(['changeTaskFilter'])
+const props = defineProps({
+    tasks: Array
+})
 
 // Refs
-const { users } = storeToRefs(useUserStore())
 const show = ref(false)
-const activeUserId = ref('0')
-const activeUser = ref('All tasks')
-const activeUserImg = ref('')
+
+const activeTask = ref('All tasks')
 
 // Methods
-function addColleague(id, naam, photo) {
-    activeUserId.value = id;
-    activeUser.value = naam
-    activeUserImg.value = photo
+function handleClick(task) {
+    activeTask.value = task.taskname
+    emit('changeTaskFilter', task)
     show.value = false
 }
-
 </script>
 
 <style scoped>
@@ -61,7 +51,7 @@ function addColleague(id, naam, photo) {
 .task-tooltip {
     background-color: white;
     right: 20%;
-    width: 220px;
+    width: 180px;
     z-index: 10;
     top: calc(100% + 15px);
     border-radius: var(--br);
@@ -106,22 +96,26 @@ button.select-button {
     font-weight: 500;
     width: 100%;
 }
-.colleague {
+.task {
     font-size: 13px;
     font-weight: 500;
     cursor: pointer;
-    padding: .2rem .3rem;
+    padding: .3rem .3rem;
     width: 100%;
     border-radius: 8px;
 }
 
-.colleague:hover {
+.task:hover {
     background-color: var(--hover);
 }
-/* .added {
-    opacity: .7;
-} */
-.colleague:hover .avatar-wrapper {
+.taskcolor {
+    border-radius: 4px;
+    width: 4px;
+    height: 24px;
+    margin-right: 4px;
+}
+
+.task:hover .avatar-wrapper {
     border: 2px solid var(--paars);
 }
 .avatar-wrapper.added {

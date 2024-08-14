@@ -5,12 +5,12 @@
         <img src="@/assets/icon-arrow-left.svg">
         Back to overview
       </button>
-      <!-- <FilterByTask /> -->
+      <FilterByTask :tasks="tasks" @change-task-filter="(task) => activeTask = task"/>
       <FilterByUser />
       <ReportsFilter />
     </div>
-
-    <ReportsList :projects="projectsBythisClient" />      
+  
+    <ReportsList :sessions="sessionsByClientThatMatchTask" />      
   </main>
 </template>
 
@@ -35,14 +35,20 @@ import FilterByTask from "@/components/reports/FilterByTask.vue";
 import FilterByUser from "@/components/reports/FilterByUser.vue";
 
 // Refs
-const { projects, sessions, clients, projectsNotArchived, sessionsOfAmountDays } = storeToRefs(useDataStore());
-const { filterUser } = storeToRefs(useReportsStore());
+const { projects, sessions, clients, tasks, sessionsOfAmountDays } = storeToRefs(useDataStore());
+const { filterUser, sessionsByClient } = storeToRefs(useReportsStore());
 const { users } = storeToRefs(useUserStore());
-
+const activeTask = ref({})
 const route = useRoute()
 
-const projectsBythisClient = computed(() => {
-  return projectsNotArchived.value.filter(session => session.client_id === route.params.clientid)
+const sessionsByThisClient = computed(() => sessionsByClient.value.find(session => session.client_id === route.params.clientid)?.sessions)
+
+const sessionsByClientThatMatchTask = computed(() => {
+  if (activeTask.value.task_id) {
+    return sessionsByThisClient.value.filter(session => session.task_id === activeTask.value.task_id)
+  } else {
+    return sessionsByThisClient.value
+  }
 })
 
 // Lifecycle
@@ -50,6 +56,7 @@ onBeforeMount(async () => {
   users.value = await getData('users')
   projects.value = await getData('projects');
   clients.value = await getData('clients');
+  tasks.value = await getData('tasks');
   sessions.value = await getSessions(filterUser.value.user_id, sessionsOfAmountDays.value);
 });
 

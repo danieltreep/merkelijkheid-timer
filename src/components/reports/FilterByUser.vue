@@ -116,9 +116,7 @@ button.select-button {
 .colleague:hover {
     background-color: var(--hover);
 }
-/* .added {
-    opacity: .7;
-} */
+
 .colleague:hover .avatar-wrapper {
     border: 2px solid var(--paars);
 }
