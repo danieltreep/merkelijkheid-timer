@@ -1,8 +1,13 @@
 <template>
-  <main>
-    <TimerBar :projects="projects" />
-
-    <SessionList :projects="projects" v-for="(sessions, key) in groupSessionsByDay" :sessions="sessions" :date="key"  :key="key"/>
+  <main class="row">
+    <!-- <div class="col-2">
+      <OnlineColleagues />
+    </div> -->
+    <div class="col-12">
+      <TimerBar :projects="projects" />
+  
+      <SessionList :projects="projects" v-for="(sessions, key) in groupSessionsByDay" :sessions="sessions" :date="key"  :key="key"/>
+    </div>
 
     <ChangeDateModal :today="false"/>
     <ShareSessionModal />
@@ -30,6 +35,7 @@ import ChangeDateModal from "@/components/modals/ChangeDateModal.vue";
 import AddTaskModal from "@/components/modals/AddTaskModal.vue";
 import ChangeTaskModal from "@/components/modals/ChangeTaskModal.vue";
 import ShareSessionModal from "@/components/modals/ShareSessionModal.vue";
+import OnlineColleagues from '@/components/OnlineColleagues.vue'
 import SessionList from "@/components/sessions/SessionList.vue";
 
 // Refs

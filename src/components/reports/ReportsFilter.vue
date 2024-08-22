@@ -134,8 +134,8 @@ button.select-button {
     border-radius: var(--br);
     border: 1px solid #E8E8E8;
     z-index: 999;
-  
 }
+
 .filter-tooltip::after {
     content: '';
     position: absolute;

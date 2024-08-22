@@ -3,8 +3,6 @@
     <header class="py-4 d-flex justify-content-between align-items-center flex-wrap" v-if="userAuthenticated">
   
       <img class="logo" src="@/assets/logo.svg" @click="$router.push({name: 'home'})">
-      
-      <OnlineColleagues />
 
       <nav class="ms-lg-auto me-lg-4 mx-auto mt-5 mt-lg-0 d-none d-md-inline" >
         <RouterLink :to="{name: 'home'}">Time tracker</RouterLink>
@@ -12,14 +10,18 @@
         <RouterLink :to="{name: 'reports'}">Reports</RouterLink>
       </nav>
     
-      <div  class="align-items-center d-none d-lg-flex" >
-        <img class="avatar" v-if="user.picture" :src="user.picture" >
-        <div class="empty-avatar" v-if="!user.picture">{{ getUserInitials() }} </div>
+      <div  class="align-items-center d-none d-lg-flex position-relative" >
+        <RouterLink :to="{name: 'profile'}">
+          <img class="avatar" v-if="user.picture" :src="user.picture" >
+          <div class="empty-avatar" v-if="!user.picture">{{ getUserInitials() }} </div>
+        </RouterLink>
+        <!-- <LocationPopup /> -->
+
       </div>
     </header>
 
     <RouterView />
-
+      
     <Toast />
 
   </div>
@@ -31,8 +33,8 @@ import { onMounted, ref } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { storeToRefs } from "pinia";
 
-import OnlineColleagues from '@/components/OnlineColleagues.vue'
 import Toast from '@/components/Toast.vue'
+import LocationPopup from '@/components/LocationPopup.vue'
 
 const { user, userAuthenticated } = storeToRefs(useUserStore());
 
@@ -87,5 +89,8 @@ nav a:hover {
 }
 .logo {
   cursor: pointer;
+}
+.main-section {
+  width: 94%;
 }
 </style>

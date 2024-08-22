@@ -1,13 +1,14 @@
 <template >
-    <div class="online-colleagues d-lg-flex d-none ms-5">
-        <div v-for="session in runningSessionsFromOthers" :key="session.session_id">
-          <div class="avatar-wrapper position-relative">
-            <img :src="session.photo" alt="">
-            <div class="indicator"></div>
-            
-          </div>
-        </div>
-    </div>
+    
+  <OnlineColleagueAccordion id="1" title="🐧 Office" />
+  <OnlineColleagueAccordion id="2" title="🏡 Home" />
+  <OnlineColleagueAccordion id="3" title="☕ Office no lunch" />
+  <OnlineColleagueAccordion id="4" title="⛔️ Fixed day off" />
+  <OnlineColleagueAccordion id="5" title="🏖️ Vacation day" />
+  <OnlineColleagueAccordion id="6" title="🤮 Sick" />
+  <OnlineColleagueAccordion id="7" title="🎄 Holiday" />
+  <OnlineColleagueAccordion id="8" title="👻 Unknown" />
+
 </template>
 <script setup>
 import { onMounted, ref, computed } from 'vue'
@@ -18,6 +19,9 @@ import { useUserStore } from '@/stores/user'
 
 // Composables
 import getSessions from '@/composables/getSessions'
+
+// Components
+import OnlineColleagueAccordion from '@/components/OnlineColleagueAccordion.vue'
 
 // Refs
 const { user } = storeToRefs(useUserStore());
@@ -37,25 +41,5 @@ onMounted(() => {
 </script>
 <style scoped>
 
-.avatar-wrapper img {
-    height: 35px;
-    width: 35px;
-    border-radius: 50%;
-    border: 2px solid white;
-}
 
-.avatar-wrapper {
-  margin-left: -10px;
-}
-
-.indicator {
-  height: 10px; 
-  width: 10px;
-  border-radius: 50%;
-  background-color: var(--groen);
-  border: 1.5px solid white;
-  position: absolute;
-  left: 0;
-  bottom: 0;
-}
 </style>
