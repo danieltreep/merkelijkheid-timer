@@ -97,36 +97,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     } 
 
-    elseif ($table === 'statuses' && isset($_GET['user_id'])) {
-        $user_id = urldecode($_GET['user_id']); // Decode the user_id parameter
-
-        // Assuming $conn is your mysqli connection object
-        if (!$conn) {
-            throw new Exception('Database connection failed');
-        }
-
-        // Prepare a SELECT query to fetch all statuses where the user_id matches
-        $stmt = $conn->prepare('SELECT * FROM statuses WHERE user_id = ?');
-       
-        $stmt->bind_param('s', $user_id);
-        if (!$stmt->execute()) {
-            throw new Exception('Execute failed: ' . $stmt->error);
-        }
-
-        $result = $stmt->get_result();
-        $statuses = [];
-
-        while ($row = $result->fetch_assoc()) {
-            $statuses[] = $row;
-        }
-
-        $stmt->close();
-        $conn->close();
-      
-        echo json_encode($statuses);
-
-    } 
-
     elseif ($table === 'sessions') {
 
         $days = isset($_GET['days']) ? intval($_GET['days']) : 7;
@@ -291,7 +261,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
             $response = array('status' => 'error', 'message' => implode(' ', $errorMessages));
         }
     } else {
-        $idprefix = $table === 'statuses' ? substr_replace($table, '', -2) . '_' : substr_replace($table, '', -1) . '_';
+        $idprefix = substr_replace($table, '', -1) . '_';
         $sql = "DELETE FROM " . $conn->real_escape_string($table) . " WHERE $idprefix" . "id = " . $conn->real_escape_string($id);
 
         if ($conn->query($sql) === TRUE) {
@@ -312,7 +282,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'PATCH') {
     $id = $requestData['id']; 
     $table = $requestData['table']; 
     $data = $requestData['data']; 
-    $idprefix = $table === 'statuses' ? substr_replace($table, '', -2) . '_' : substr_replace($table, '', -1) . '_';
+    $idprefix = substr_replace($table, '', -1) . '_';
 
     // Initialize the SET part of the SQL query
     $setClause = '';

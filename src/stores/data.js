@@ -11,6 +11,7 @@ export const useDataStore = defineStore("data", () => {
   const projects = ref([]);
   const clients = ref([]);
   const tasks = ref([]);
+  const statuses = ref([]);
 
   const searchterm = ref('');
   const currentClientId = ref('')
@@ -51,6 +52,9 @@ export const useDataStore = defineStore("data", () => {
       case 'tasks':
         tasks.value = await getData('tasks');
         break;
+      case 'statuses':
+        statuses.value = await getData('statuses');
+        break;
     }
   }
 
@@ -72,6 +76,7 @@ export const useDataStore = defineStore("data", () => {
     toast,
     clients, 
     tasks,
+    statuses,
     clientsThatMatchSearch, 
     searchterm, 
     currentClientId,

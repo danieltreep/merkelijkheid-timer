@@ -26,7 +26,7 @@
 <script setup>
 const props = defineProps({
     title: String,
-    id: Number
+    id: String
 
 })
 </script>

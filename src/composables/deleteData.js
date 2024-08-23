@@ -1,7 +1,7 @@
 import { useDataStore } from '@/stores/data'
 import { getBaseUrl } from './functions';
 
-const deleteData = (table, id) => {
+const deleteData = async (table, id) => {
 
   const { updateTable, triggerToast } = useDataStore();
 
