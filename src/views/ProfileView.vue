@@ -5,6 +5,7 @@
       </div>
       <div class="col-10">
         <Calendar />
+        <StatusOverview />
       </div>
     
   </main>
@@ -21,12 +22,14 @@ import getData from '@/composables/getData';
 // Components
 import Calendar from '@/components/calendar/Calendar.vue'
 import OnlineColleagues from '@/components/OnlineColleagues.vue'
+import StatusOverview from '@/components/calendar/StatusOverview.vue'
 
 const { statuses } = storeToRefs(useDataStore())
-const { user } = storeToRefs(useUserStore())
+const { user, users } = storeToRefs(useUserStore())
 
 onMounted(async () => {
     statuses.value = await getData('statuses', user.value.user_id)
+    users.value = await getData('users')
 })
 
 </script>

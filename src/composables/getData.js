@@ -1,11 +1,15 @@
 import { getBaseUrl } from './functions';
 
-const getData = async (tableName, userid) => {
+const getData = async (tableName, userid, date) => {
 
   let serverUrl = `${getBaseUrl()}?table=${encodeURI(tableName)}`;
 
   if (userid) {
     serverUrl += `&user_id=${userid}`
+  }
+
+  if (date) {
+    serverUrl += `&date=${date}`
   }
 
   const data = await fetch(serverUrl)

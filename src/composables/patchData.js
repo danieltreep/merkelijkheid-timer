@@ -4,7 +4,7 @@ import { getBaseUrl } from './functions';
 const patchData = async (table, id, data) => {
 
   const { updateTable, triggerToast } = useDataStore();
-
+  console.log(id, data)
   fetch(getBaseUrl(), {
     method: "PATCH",
     headers: {

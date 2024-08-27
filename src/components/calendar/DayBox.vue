@@ -3,26 +3,26 @@
         <div class="d-flex align-items-center justify-content-between position-relative">
             <p class="day-number mb-0">{{ day.getDate() }}</p>
             <button class="d-flex align-items-center gap-2 location-button" @click="showTooltip = !showTooltip" v-if="!statusFilledIn">
-                <img src="@/assets/icon-plus-grey.svg" v-if="workLocation === 'Location'">
-                {{ workLocation}}
+                <img src="@/assets/icon-plus-grey.svg" v-if="!statusOfToday?.location">
+                {{ statusOfToday?.location ? statusOfToday.location : 'Location' }}
             </button>
             <div class="location-tooltip position-absolute d-flex flex-column justify-content-start" v-if="showTooltip">
-                <button @click="changeWorkLocation('🐧  Office')">🐧  Office</button>
-                <button @click="changeWorkLocation('🏠  Home')">🏠  Home</button>
-                <button @click="changeWorkLocation('☕  Office no lunch')">☕  Office no lunch</button>
+                <button @click="changeWorkLocation('🐧 Office')">🐧 Office</button>
+                <button @click="changeWorkLocation('🏡 Home')">🏡 Home</button>
+                <button @click="changeWorkLocation('☕ Half day')">☕ Half day</button>
             </div>
         </div>
         <div class="position-relative">
 
             <button class="status mt-4 d-flex align-items-center gap-2" v-if="!filledIn" @click="showStatusTooltip = !showStatusTooltip">
                 <img src="@/assets/icon-error.svg" alt="error" v-if="!statusFilledIn && hasDayPassed">
-                {{ status }}
+                {{ statusOfToday?.status ? statusOfToday.status : 'Fill in absence' }}
                 <img src="@/assets/chevron-icon.svg" alt="chevron" v-if="!statusFilledIn">
             </button>
             <div class="status-tooltip position-absolute d-flex flex-column justify-content-start" v-if="showStatusTooltip">
                 <button @click="changeWorkStatus('⛔️ Fixed day off')">⛔️ Fixed day off</button>
-                <button @click="changeWorkStatus('🏖️ Vacation day')">🏖️ Vacation day</button>
                 <button @click="changeWorkStatus('🤮 Sick')">🤮 Sick</button>
+                <button @click="changeWorkStatus('🏖️ Vacation day')">🏖️ Vacation day</button>
                 <button @click="changeWorkStatus('🎄 Holiday')">🎄 Holiday</button>
             </div>
         </div>
@@ -34,7 +34,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onUpdated, onMounted, onBeforeMount, onBeforeUpdate } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { storeToRefs } from 'pinia';
 
 // Stores
@@ -45,6 +45,7 @@ import { useDataStore } from '@/stores/data';
 import postData from '@/composables/postData';
 import deleteData from '@/composables/deleteData';
 import patchData from '@/composables/patchData';
+import { dateToYYYYMMDD } from '@/composables/functions'
 
 const props = defineProps({
     day: {
@@ -57,20 +58,9 @@ const props = defineProps({
 const { user } = storeToRefs(useUserStore())
 const { statuses } = storeToRefs(useDataStore())
 
-const workLocation = ref('Location')
-const status = ref('Fill in absence')
-
 const showTooltip = ref(false)
 const showStatusTooltip = ref(false)
 const statusId = ref(null)
-
-// const workLocationDisplay = computed(() => {
-//     return statusOfToday.value ? statusOfToday.value.location : 'Location'
-// })
-
-// const workStatusDisplay = computed(() => {
-//     return statusOfToday.value ? statusOfToday.value.status : 'Fill in absence'
-// })
 
 const today = computed(() => {
     const today = new Date();
@@ -99,66 +89,42 @@ const statusFilledIn = computed(() => {
 })
 
 
-watch([statusOfToday, statuses], () => {
-    if (statusOfToday.value?.location) {
-        workLocation.value = statusOfToday.value?.location
+watch([statusOfToday], () => {
+
+    showTooltip.value = false
+    showStatusTooltip.value = false
+    statusId.value = null
+
+    if (statusOfToday.value) {
         statusId.value = statusOfToday.value?.status_id
-    } else if (statusOfToday.value?.status) {
-        status.value = statusOfToday.value?.status
-     
-        statusId.value = statusOfToday.value?.status_id
-    } else {
-        workLocation.value = 'Location'
-        status.value = 'Fill in absence'
-        showTooltip.value = false
-        showStatusTooltip.value = false
-        statusId.value = null
-    }
+    } 
 })
 
 // Methods
 async function changeWorkLocation(location) {
-    workLocation.value = location
     showTooltip.value = false
 
-
     if (statusId.value) {
-        await patchData('statuses', statusId.value, {location: workLocation.value})
+        await patchData('statuses', statusId.value, {location})
     } else {
-        statusId.value = await postData('statuses', {date: dateToYYYYMMDD(props.day), user_id: user.value.user_id, location: workLocation.value})
+        statusId.value = await postData('statuses', {date: dateToYYYYMMDD(props.day), user_id: user.value.user_id, location})
     }
-    console.log(statuses.value)
-
-    // statuses.value = await getData('statuses', user.value.user_id)
 }
 
-async function changeWorkStatus(newStatus) {
-    status.value = newStatus
+async function changeWorkStatus(status) {
     showStatusTooltip.value = false
   
-
     if (statusId.value) {
-        await patchData('statuses', statusId.value, {status: status.value})
+        await patchData('statuses', statusId.value, {status})
     } else {
-        statusId.value = await postData('statuses', {date: dateToYYYYMMDD(props.day), user_id: user.value.user_id, status: status.value})
+        statusId.value = await postData('statuses', {date: dateToYYYYMMDD(props.day), user_id: user.value.user_id, status})
     }
 
-}
-
-function dateToYYYYMMDD(date) {
-    if (!date) return
-
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
 }
 
 
 async function resetDay() {
     await deleteData('statuses', statusId.value)
-    workLocation.value = 'Location'
-    status.value = 'Fill in absence'
     statusId.value = null
 }
 

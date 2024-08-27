@@ -97,18 +97,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     } 
 
-    elseif ($table === 'statuses' && isset($_GET['user_id'])) {
-        $user_id = urldecode($_GET['user_id']); // Decode the user_id parameter
-
+    elseif ($table === 'statuses' && (isset($_GET['user_id']) || isset($_GET['date']))) {
         // Assuming $conn is your mysqli connection object
         if (!$conn) {
             throw new Exception('Database connection failed');
         }
 
-        // Prepare a SELECT query to fetch all statuses where the user_id matches
-        $stmt = $conn->prepare('SELECT * FROM statuses WHERE user_id = ?');
-       
-        $stmt->bind_param('s', $user_id);
+        // Determine the query based on the provided parameters
+        if (isset($_GET['user_id'])) {
+            $user_id = urldecode($_GET['user_id']); // Decode the user_id parameter
+            $stmt = $conn->prepare('SELECT * FROM statuses WHERE user_id = ?');
+            $stmt->bind_param('s', $user_id);
+        } elseif (isset($_GET['date'])) {
+            $date = urldecode($_GET['date']); // Decode the date parameter
+            $stmt = $conn->prepare('SELECT * FROM statuses JOIN users ON statuses.user_id = users.user_id WHERE statuses.date = ?');
+            $stmt->bind_param('s', $date);
+        }
+
         if (!$stmt->execute()) {
             throw new Exception('Execute failed: ' . $stmt->error);
         }
@@ -124,7 +129,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $conn->close();
       
         echo json_encode($statuses);
-
     } 
 
     elseif ($table === 'sessions') {
