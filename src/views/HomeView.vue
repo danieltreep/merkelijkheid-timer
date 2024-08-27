@@ -1,9 +1,9 @@
 <template>
   <main class="row">
-    <!-- <div class="col-2">
+    <div class="col-2">
       <OnlineColleagues />
-    </div> -->
-    <div class="col-12">
+    </div>
+    <div class="col-10">
       <TimerBar :projects="projects" />
   
       <SessionList :projects="projects" v-for="(sessions, key) in groupSessionsByDay" :sessions="sessions" :date="key"  :key="key"/>

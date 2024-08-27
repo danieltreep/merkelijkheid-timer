@@ -1,5 +1,5 @@
 <template>
-  <main class="pb-5 pt-2 row">
+  <main class="pb-5 row">
     <div class="col-2">
         <OnlineColleagues />
       </div>

@@ -1,5 +1,5 @@
 <template>
-    <div class="day-box day position-relative" v-if="day" :class="{ today, filledIn, hasDayPassed }">
+    <div class="day-box day position-relative" v-if="day" :class="{ today, filledIn, statusFilledIn, hasDayPassed, needToFill: !statusFilledIn && !filledIn && hasDayPassed }">
         <div class="d-flex align-items-center justify-content-between position-relative">
             <p class="day-number mb-0">{{ day.getDate() }}</p>
             <button class="d-flex align-items-center gap-2 location-button" @click="showTooltip = !showTooltip" v-if="!statusFilledIn">
@@ -164,7 +164,7 @@ async function resetDay() {
     color: black;
 }
 .today {
-    border: 1px solid var(--paars);
+    border: 2px solid var(--paars);
     color: black;
 }
 .filledIn {
@@ -173,6 +173,12 @@ async function resetDay() {
 .filledIn .location-button {
     border: 1px solid var(--paars);
     background-color: #A53EF415;
+}
+.statusFilledIn {
+    background-color: #FDF5EB;
+}
+.needToFill {
+    border: 1px solid #EE7170;
 }
 .status {
     background-color: transparent;

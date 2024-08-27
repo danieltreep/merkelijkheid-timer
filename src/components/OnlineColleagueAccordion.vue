@@ -1,36 +1,37 @@
 <template>
-     <div class="accordion-item" >
-        <div class="accordion-header py-3 py-md-2 ">
-            <div class="position-relative d-flex align-items-center">
-            <p class="mb-0 title">{{ title }} </p>
-            <button class=" show-content-button d-flex align-items-center ms-auto gap-2 justify-content-center" :class="open ? '' : 'collapsed'" type="button" data-bs-toggle="collapse" :data-bs-target="`#accordion-${id}`" aria-expanded="true" :aria-controls="`accordion-${id}`">
-                {{ usersWithThisStatus.length }}
-                <img src="@/assets/chevron-icon.svg" alt="">
-            </button>
-            
-            </div>
-        </div>
-        <div :id="`accordion-${id}`" class="accordion-collapse" :class="open ? 'show' : 'collapse'">
-            <div class="accordion-body p-0">
-              <div class="avatar-container pe-4 d-flex">
-                <div v-for="user in usersWithThisStatus" :key="user.user_id" class="avatar-wrapper">
-                  <div class="avatar position-relative">
-                    <img :src="user.photo" alt="">
-                    <div class="indicator"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-        </div>
+  <div class="accordion-item" >
+    <div class="accordion-header py-3 py-md-2 ">
+      <div class="position-relative d-flex align-items-center">
+        <p class="mb-0 title">{{ title }} </p>
+        <button class=" show-content-button d-flex align-items-center ms-auto gap-2 justify-content-center" :class="open ? '' : 'collapsed'" type="button" data-bs-toggle="collapse" :data-bs-target="`#accordion-${id}`" aria-expanded="true" :aria-controls="`accordion-${id}`">
+          {{ usersWithThisStatus.length }}
+          <img src="@/assets/chevron-icon.svg" alt="">
+        </button>
+      </div>
     </div>
+    <div :id="`accordion-${id}`" class="accordion-collapse" :class="open ? 'show' : 'collapse'">
+      <div class="accordion-body p-0">
+        <div class="avatar-container pe-4 d-flex">
+          <div v-for="user in usersWithThisStatus" :key="user.user_id" class="avatar-wrapper">
+            <div class="avatar position-relative">
+              <img :src="user.photo" alt="">
+              <div class="indicator" v-if="checkIfOnline(user)"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
 import { computed } from 'vue'
 import { storeToRefs } from "pinia";
 import { useUserStore } from '@/stores/user'
+import { useSessionStore } from '@/stores/session'
 
 const { users } = storeToRefs(useUserStore())
+const { allRunningSessions } = storeToRefs(useSessionStore())
 
 const props = defineProps({
   title: String,
@@ -47,6 +48,10 @@ const usersWithThisStatus = computed(() => {
   }
   return props.statuses?.filter(status => status.location === props.title || status.status === props.title)
 })
+
+const checkIfOnline = (user) => {
+  return allRunningSessions.value.some(session => +session.user_id === +user.user_id)
+}
 </script>
 
 <style scoped>

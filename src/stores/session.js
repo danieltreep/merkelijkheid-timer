@@ -6,6 +6,7 @@ export const useSessionStore = defineStore("session", () => {
 
   const { sessions, projects } = storeToRefs(useDataStore());
   const sessionToBePatched = ref({})
+  const allRunningSessions = ref([])
   
   const finishedSessions = computed(() => {
     return sessions.value.filter(session => session.is_running === '0');
@@ -61,6 +62,7 @@ export const useSessionStore = defineStore("session", () => {
     finishedSessions,
     groupSessionsByDay,
     sessionToBePatched,
+    allRunningSessions,
     resetCurrentSession
   };
 });

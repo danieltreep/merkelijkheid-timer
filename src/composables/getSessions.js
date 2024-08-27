@@ -1,7 +1,7 @@
 import { getBaseUrl } from './functions';
 
 const getSessions = async (userid, days, isrunning, startDate, endDate) => {
-
+  console.log('called')
   let url = `${getBaseUrl()}?table=sessions&days=${days}`;
   
   if (userid) {
