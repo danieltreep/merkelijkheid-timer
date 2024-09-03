@@ -10,6 +10,7 @@
                 <button @click="changeWorkLocation('🐧 Office')">🐧 Office</button>
                 <button @click="changeWorkLocation('🏡 Home')">🏡 Home</button>
                 <button @click="changeWorkLocation('☕ Half day')">☕ Half day</button>
+                <button @click="changeWorkLocation('🚗 On the road')">🚗 On the road</button>
             </div>
         </div>
         <div class="position-relative">

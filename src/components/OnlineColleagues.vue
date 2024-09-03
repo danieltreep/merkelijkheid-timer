@@ -3,11 +3,12 @@
   <OnlineColleagueAccordion id="1" title="🐧 Office" :statuses="statusesOfToday" :open="true" />
   <OnlineColleagueAccordion id="2" title="🏡 Home" :statuses="statusesOfToday" :open="true"/>
   <OnlineColleagueAccordion id="3" title="☕ Half day" :statuses="statusesOfToday" />
-  <OnlineColleagueAccordion id="4" title="⛔️ Fixed day off" :statuses="statusesOfToday" />
-  <OnlineColleagueAccordion id="5" title="🏖️ Vacation day" :statuses="statusesOfToday" />
-  <OnlineColleagueAccordion id="6" title="🤮 Sick" :statuses="statusesOfToday" />
-  <OnlineColleagueAccordion id="7" title="🎄 Holiday" :statuses="statusesOfToday" />
-  <OnlineColleagueAccordion id="8" title="👻 Unknown" :statuses="statusesOfToday" />
+  <OnlineColleagueAccordion id="4" title="🚗 On the road" :statuses="statusesOfToday" />
+  <OnlineColleagueAccordion id="5" title="⛔️ Fixed day off" :statuses="statusesOfToday" />
+  <OnlineColleagueAccordion id="6" title="🏖️ Vacation day" :statuses="statusesOfToday" />
+  <OnlineColleagueAccordion id="7" title="🤮 Sick" :statuses="statusesOfToday" />
+  <OnlineColleagueAccordion id="8" title="🎄 Holiday" :statuses="statusesOfToday" />
+  <OnlineColleagueAccordion id="9" title="👻 Unknown" :statuses="statusesOfToday" />
 
 </template>
 <script setup>

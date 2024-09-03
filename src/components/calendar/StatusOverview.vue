@@ -3,6 +3,7 @@
         <div class="status ms-auto">🐧 {{ daysInOffice }}</div>
         <div class="status">🏡 {{ daysAtHome }}</div>
         <div class="status">☕ {{ daysInOfficeNoLunch }}</div>
+        <div class="status">🚗 {{ daysOnTheRoad }}</div>
         <div class="status">⛔️ {{ daysFixedDayOff }}</div>
         <div class="status">🤮 {{ daysSick }}</div>
         <div class="status">🏖️ {{ daysVacation }}</div>
@@ -29,6 +30,9 @@ const daysAtHome = computed(() => {
 })
 const daysInOfficeNoLunch = computed(() => {
     return statusesInThisYear.value.filter(status => status.location === '☕ Half day').length
+})
+const daysOnTheRoad = computed(() => {
+    return statusesInThisYear.value.filter(status => status.location === '🚗 On the road').length
 })
 const daysFixedDayOff = computed(() => {
     return statusesInThisYear.value.filter(status => status.status === '⛔️ Fixed day off').length
