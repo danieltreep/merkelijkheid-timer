@@ -41,11 +41,11 @@ import ShareSessionListItem from '@/components/sessions/ShareSessionListItem.vue
 
 // Refs
 const { sessionToBePatched } = storeToRefs(useSessionStore())
-const { users, user } = storeToRefs(useUserStore())
+const { usersNotArchived, user } = storeToRefs(useUserStore())
 const addedColleaguesIds = ref([]) // Sla id's op van collega's waarmee sessie gedeeld wordt
 
 const colleagues = computed(() => {
-    return users.value.filter(colleague => +colleague.user_id !== user.value.user_id)
+    return usersNotArchived.value.filter(colleague => +colleague.user_id !== user.value.user_id)
 })
 
 // Methods

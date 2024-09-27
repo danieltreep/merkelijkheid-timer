@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
     <div class="modal fade" id="editProjectModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editProjectModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content p-4">
@@ -97,4 +97,4 @@ if (projectToBePatched.value.available_tasks) {
     gap: .3rem;
 }
 
-</style>
+</style> -->

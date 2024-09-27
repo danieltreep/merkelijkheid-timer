@@ -30,7 +30,7 @@ import { storeToRefs } from "pinia";
 import { useUserStore } from '@/stores/user'
 import { useSessionStore } from '@/stores/session'
 
-const { users } = storeToRefs(useUserStore())
+const { usersNotArchived } = storeToRefs(useUserStore())
 const { allRunningSessions } = storeToRefs(useSessionStore())
 
 const props = defineProps({
@@ -44,7 +44,7 @@ const usersWithThisStatus = computed(() => {
 
   if (props.title === '👻 Unknown') {
     const userIdsOfStatuses = props.statuses?.map(status => String(status.user_id));
-    return users?.value.filter(user => !userIdsOfStatuses.includes(user.user_id));
+    return usersNotArchived?.value.filter(user => !userIdsOfStatuses.includes(user.user_id));
   }
   return props.statuses?.filter(status => status.location === props.title || status.status === props.title)
 })

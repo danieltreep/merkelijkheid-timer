@@ -39,7 +39,17 @@ const loginUser = async (response) => {
         is_clocking: 0,
         is_admin: 0,
         email: user.value.email,
-        photo: picture
+        photo: picture,
+        functie: null,
+        personal_email: null,
+        phonenumber: null,
+        date_of_birth: null,
+        street_and_house: null,
+        zipcode: null,
+        city: null,
+        type_of_contract: null,
+        employee_since: null,
+        is_archived: 0
       });
     } else {
       user.value.user_id = await getUser(user.value.email);
