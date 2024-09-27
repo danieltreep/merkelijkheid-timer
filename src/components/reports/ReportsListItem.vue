@@ -7,7 +7,7 @@
                     {{ project.sessions.length }} 
                     <img src="@/assets/chevron-icon.svg" >
                 </button>
-                <div class="bolletje me-3" :style="{backgroundColor: project.color}"></div>
+                <img :src="project.sessions[0].logo" class="small-logo me-2">
                 <p class="mb-0 me-3">{{ project.client_name }}</p>
                 <div class="project" :class="project.project_name === 'General' ? 'pinguin' : '' ">{{ project.project_name === 'General' ? '🐧' : project.project_name }}</div>
             </div>

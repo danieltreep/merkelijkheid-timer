@@ -3,7 +3,7 @@
     <input class="taskinput me-2" type="text" v-model="title" @blur="handleBlur" :disabled="!sessionOwned" :class="!sessionOwned ? 'disabled' : ''">
     
     <div class="position-relative d-flex align-items-center projectsection">
-      <div class="bolletje me-2" v-if="session.project_id" :style="{ backgroundColor: session?.color ? session.color : '' }"></div>
+      <img :src="session.logo" class="small-logo me-2">
       <p class="mb-0 me-3" v-if="session.project_id">{{ session?.client_name ? session.client_name : '' }}</p>
       <button class="project add-project-button" :disabled="!sessionOwned" :class="session?.project_name === 'General' ? 'pinguin' : '' " @click.stop="handleOpenSelector">
         {{ session?.project_name ? (session.project_name === 'General' ? '🐧' : session.project_name) : 'Project' }}<span v-if="session?.taskname">: {{ session?.taskname }}</span>

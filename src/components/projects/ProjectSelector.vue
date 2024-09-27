@@ -5,8 +5,8 @@
         </div>
         <div class="listwrapper p-3 px-4 pt-0">
             <div v-for="client in clientsNotArchived" :key="client.id" class="py-3  list-item ">
-                <div class="d-flex align-items-center  gap-3">
-                    <div class="bolletje" :style="{ backgroundColor: client.color }"></div>
+                <div class="d-flex align-items-center  gap-1">
+                    <img :src="client.logo" class="small-logo me-2">
                     <p class="mb-0 bedrijf">{{ client.client_name }}</p>
                 </div>
                     

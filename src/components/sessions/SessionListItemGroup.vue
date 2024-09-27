@@ -10,7 +10,7 @@
                 <div class="session-title">{{ sessions[0].title }}</div>
             </div>
             <div class="position-relative d-flex align-items-center projectsection">
-                <div class="bolletje me-2" v-if="sessions[0].project_id" :style="{ backgroundColor: sessions[0]?.color ? sessions[0].color : '' }"></div>
+                <img :src="sessions[0].logo" class="small-logo me-2">
                 <p class="mb-0 me-3" v-if="sessions[0].project_id">{{ sessions[0]?.client_name ? sessions[0].client_name : '' }}</p>
                 <div class="project" :class="sessions[0]?.project_name === 'General' ? 'pinguin' : '' " >
                     {{ sessions[0]?.project_name ? (sessions[0].project_name === 'General' ? '🐧' : sessions[0].project_name) : 'Project' }}<span v-if="sessions[0].taskname">: {{ sessions[0].taskname }}</span>

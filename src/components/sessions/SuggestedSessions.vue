@@ -1,10 +1,10 @@
 <template >
     <div class="suggested-sessions position-absolute px-2 pt-2 overflow-scroll bg-white" v-if="filteredSessions.length">
         
-        <li class="list-group-item d-grid p-2 py-3 py-md-2 px-3 align-items-center" @click="() => handleClick(session)" v-for="session in filteredSessions" :key="session.session_id">
+        <li v-for="session in filteredSessions" :key="session.session_id" class="list-group-item d-grid p-2 py-3 py-md-2 px-3 align-items-center" @click="() => handleClick(session)" >
             {{ session.title }}
             <div class="position-relative d-flex align-items-center projectsection">
-                <div class="bolletje me-2" :style="{ backgroundColor: session.color }"></div>
+                <img :src="session.logo" class="small-logo me-2">
                 <p class="mb-0 me-3" >{{ session.client_name }}</p>
                 <div class="project" :class="session.project_name === 'General' ? 'pinguin' : '' ">
                     {{ session.project_name === 'General' ? '🐧' : session.project_name }}: &nbsp; <span>{{ session.taskname }}</span>
@@ -43,7 +43,8 @@ const stackedSessions = computed(() => {
             color: session.color,
             project_name: session.project_name,
             taskname: session.taskname,
-            client_name: session.client_name
+            client_name: session.client_name,
+            logo: session.logo
         }
     })
   

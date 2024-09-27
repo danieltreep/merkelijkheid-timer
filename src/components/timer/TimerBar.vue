@@ -1,20 +1,18 @@
 <template>
   <div class="timerbar d-md-grid align-items-center py-2 pe-2 my-4 mb-5 position-relative">
+    <input
+      type="text"
+      v-model="currentSession.title"
+      placeholder="What are you working on?"
+      class="ps-0"
+      @click="showSuggestedSessions = true"
+      @blur="handleBlur"
+    />
 
-    
-      <input
-        type="text"
-        v-model="currentSession.title"
-        placeholder="What are you working on?"
-        class="ps-0"
-        @click="showSuggestedSessions = true"
-        @blur="handleBlur"
-      />
-  
-      <SuggestedSessions :search="currentSession.title" v-if="showSuggestedSessions" @handleClick="showSuggestedSessions = false"/>
+    <SuggestedSessions :search="currentSession.title" v-if="showSuggestedSessions" @handleClick="showSuggestedSessions = false"/>
 
     <div class="position-relative d-flex align-items-center">
-      <div class="bolletje me-2 d-none d-md-inline" v-if="currentSession.project_id" :style="{ backgroundColor: currentProject?.color ? currentProject.color : '' }"></div>
+      <img :src="currentClientLogo" class="small-logo me-2" v-if="currentClientLogo">
       <p class="mb-0 me-3 d-none d-md-inline" v-if="currentSession.project_id">{{ currentProject?.client_name ? currentProject.client_name : '' }}</p>
       
       <button class="add-project-button me-2" :class="currentProject?.project_name === 'General' ? 'pinguin' : '' " @click.stop="openProjectSelector = !openProjectSelector">
@@ -49,7 +47,7 @@
 
 <script setup>
 import { storeToRefs } from "pinia";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 // Stores
 import { useSessionStore } from "@/stores/session";
@@ -65,11 +63,15 @@ import SuggestedSessions from "@/components/sessions/SuggestedSessions.vue";
 // Refs
 const { currentSession, currentProject } = storeToRefs(useSessionStore());
 const { timerRunning } = storeToRefs(useTimerStore());
-const { tasks } = storeToRefs(useDataStore());
+const { tasks, clients, projects } = storeToRefs(useDataStore());
 const initialized = ref(false) // Houdt bij of de timer al geinitieerd is
 const editing = ref(false);
 const openProjectSelector = ref(false);
 const showSuggestedSessions = ref(false)
+
+const currentClientLogo = computed(() => {
+  return projects.value.find(project => project.project_id === currentSession.value.project_id)?.logo
+})
 
 // Methods
 function addProject(project) {
@@ -98,6 +100,8 @@ function handleBlur() {
     showSuggestedSessions.value = false
   }, 100);
 }
+
+
 
 </script>
 

@@ -3,21 +3,14 @@
         <div class="d-flex justify-content-between">
             <div>
                 <div class="client d-flex align-items-center">
-                    <div class="bolletje" :style="{backgroundColor: client.color}"></div>
+                    <img :src="client.sessions[0].logo" class="small-logo">
                     <p class="mb-0 ms-2">{{ client.client_name }}</p>
                 </div>
-                <div class="percentage"  :class="positive ? 'up' : 'down'">
+                <div class="percentage mt-2"  :class="positive ? 'up' : 'down'">
                     <span v-if="lastMonthTotalInTask">{{ lastMonthTotalInTask }} last month</span>
                     <span v-else>&nbsp;</span>
                 </div>
             </div>
-    
-            <!-- <div class="collegas d-flex">
-                <img src="@/assets/avatar.png" class="avatar">
-                <img src="@/assets/avatar.png" class="avatar">
-                <img src="@/assets/avatar.png" class="avatar">
-            </div> -->
-
         </div>
         <p class="big-number">{{ client.total_time_elapsed }}</p>
 
