@@ -2,17 +2,23 @@
     <div class="location-popup">
         <p class="mb-3 fw-medium">Where are you working today?</p>
         
-        <div class="d-flex gap-3">
-            <input type="radio" name="location" id="merkelijkheid" value="merkelijkheid" v-model="location" checked>
-            <label for="merkelijkheid">
-                <p class="fs-3 mb-0">🏢</p>
-                Merkelijkheid
+        <div class="d-flex gap-2">
+            <input type="radio" name="location" id="office" value="🐧 Office" v-model="location" checked>
+            <label for="office">
+                <p class="fs-5 mb-0 emoji">🐧</p>
+                Office
             </label>
             
-            <input type="radio" name="location" id="home" value="home" v-model="location" >
+            <input type="radio" name="location" id="home" value="🏡 Home" v-model="location" >
             <label for="home">
-                <p class="fs-3 mb-0">🏡</p>
+                <p class="fs-5 mb-0 emoji">🏡</p>
                 Home
+            </label>
+
+            <input type="radio" name="location" id="halfday" value="☕ Half day" v-model="location" >
+            <label for="halfday">
+                <p class="fs-5 mb-0 emoji">☕</p>
+                Half day
             </label>
         </div>
 
@@ -29,11 +35,12 @@ import { useUserStore } from '@/stores/user'
 import postData from '@/composables/postData';
 
 const { user } = storeToRefs(useUserStore())
-const location = ref('merkelijkheid')
+const location = ref('🐧 Office')
+
+const emit = defineEmits(['close'])
 
 async function handleSubmit() {
     const today = new Date()
-    console.log(today)
 
     const year = today.getFullYear()
     const month = today.getMonth() + 1
@@ -41,7 +48,9 @@ async function handleSubmit() {
 
     const todayString = `${year}-${month}-${day}`
     
-    await postData('presences', {date: todayString, user_id: user.value.user_id, location: location.value})
+    await postData('statuses', {date: todayString, user_id: user.value.user_id, status: null, location: location.value})
+
+    emit('close')
 }
 </script>
 
@@ -49,8 +58,8 @@ async function handleSubmit() {
 .location-popup {
     position: absolute;
     right: -1rem;
-    width: 300px;
-    font-size: 13px;
+    width: 350px;
+    font-size: 12px;
     top: calc(100% + 15px);
     background-color: white;
     box-shadow: var(--bs);

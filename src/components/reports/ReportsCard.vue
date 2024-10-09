@@ -3,7 +3,7 @@
         <div class="d-flex justify-content-between">
             <div>
                 <div class="client d-flex align-items-center">
-                    <img :src="client.sessions[0].logo" class="small-logo">
+                    <img :src="client.sessions[0]?.logo" class="small-logo">
                     <p class="mb-0 ms-2">{{ client.client_name }}</p>
                 </div>
                 <div class="percentage mt-2"  :class="positive ? 'up' : 'down'">

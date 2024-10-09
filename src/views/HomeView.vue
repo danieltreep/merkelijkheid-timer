@@ -39,7 +39,7 @@ import OnlineColleagues from '@/components/OnlineColleagues.vue'
 import SessionList from "@/components/sessions/SessionList.vue";
 
 // Refs
-const { projects, clients, sessions, tasks, sessionsOfAmountDays } = storeToRefs(useDataStore());
+const { projects, clients, sessions, tasks, sessionsOfAmountDays, statuses } = storeToRefs(useDataStore());
 const { groupSessionsByDay } = storeToRefs(useSessionStore());
 const { users, user } = storeToRefs(useUserStore());
 
@@ -52,6 +52,7 @@ onMounted(async () => {
   clients.value = await getData('clients');
   users.value = await getData('users');
   tasks.value = await getData('tasks');
+  statuses.value = await getData('statuses', user.value.user_id)
 });
 
 </script>

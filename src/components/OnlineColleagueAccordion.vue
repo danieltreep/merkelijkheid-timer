@@ -1,6 +1,6 @@
 <template>
   <div class="accordion-item" >
-    <div class="accordion-header py-3 py-md-2 ">
+    <div class="accordion-header pt-3 py-md-2 ">
       <div class="position-relative d-flex align-items-center">
         <p class="mb-0 title">{{ title }} </p>
         <button class=" show-content-button d-flex align-items-center ms-auto gap-2 justify-content-center" :class="open ? '' : 'collapsed'" type="button" data-bs-toggle="collapse" :data-bs-target="`#accordion-${id}`" aria-expanded="true" :aria-controls="`accordion-${id}`">
@@ -10,11 +10,11 @@
       </div>
     </div>
     <div :id="`accordion-${id}`" class="accordion-collapse" :class="open ? 'show' : 'collapse'">
-      <div class="accordion-body p-0">
-        <div class="avatar-container pe-4 d-flex">
+      <div class="accordion-body">
+        <div class="avatar-container pe-4 pt-2 d-flex">
           <div v-for="user in usersWithThisStatus" :key="user.user_id" class="avatar-wrapper">
-            <div class="avatar position-relative">
-              <img :src="user.photo" alt="">
+            <div class="avatar position-relative" :class="{birthday: isUserBirthdayToday(user.date_of_birth)}">
+              <img :src="user.photo"  alt="">
               <div class="indicator" v-if="checkIfOnline(user)"></div>
             </div>
           </div>
@@ -49,6 +49,13 @@ const usersWithThisStatus = computed(() => {
   return props.statuses?.filter(status => status.location === props.title || status.status === props.title)
 })
 
+function isUserBirthdayToday(day) {
+  const today = new Date();
+  const birthDate = new Date(day);
+  
+  return today.getDate() === birthDate.getDate() && today.getMonth() === birthDate.getMonth();
+}
+
 const checkIfOnline = (user) => {
   return allRunningSessions.value.some(session => +session.user_id === +user.user_id)
 }
@@ -56,10 +63,26 @@ const checkIfOnline = (user) => {
 
 <style scoped>
 .avatar-wrapper img {
-    height: 35px;
-    width: 35px;
-    border-radius: 50%;
-    border: 1px solid white;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  border: 1px solid white;
+  position: relative;
+}
+
+.avatar.birthday::after {
+  content: '';
+  position: absolute;
+  height: 16px;
+  width: 16px;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-40%) rotate(10deg);
+  background-image: url('@/assets/partyhat.svg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  z-index: 2;
+  overflow: visible;
 }
 
 .avatar-wrapper {

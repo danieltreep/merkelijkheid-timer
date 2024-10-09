@@ -31,7 +31,6 @@ import { getFirstDayOfPreviousMonth, getLastDayOfPreviousMonth, makeDateSqlCompa
 import ReportsCard from "@/components/reports/ReportsCard.vue";
 import ReportsFilter from "@/components/reports/ReportsFilter.vue";
 import ClientSearchbar from "@/components/clients/ClientSearchbar.vue";
-import FilterByTask from "@/components/reports/FilterByTask.vue";
 import FilterByUser from "@/components/reports/FilterByUser.vue";
 
 // Refs

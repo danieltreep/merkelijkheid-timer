@@ -25,6 +25,7 @@
                 <button @click="changeWorkStatus('🤮 Sick')">🤮 Sick</button>
                 <button @click="changeWorkStatus('🏖️ Vacation day')">🏖️ Vacation day</button>
                 <button @click="changeWorkStatus('🎄 Holiday')">🎄 Holiday</button>
+                <button @click="changeWorkStatus('🦙 Leave')">🦙 Leave</button>
             </div>
         </div>
         <button class="position-absolute reset-button" @click="resetDay" v-if="filledIn || statusFilledIn">

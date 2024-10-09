@@ -13,8 +13,7 @@
 
 <script setup>
 import { storeToRefs } from "pinia";
-import { onBeforeMount, ref, watch, computed, onMounted } from "vue";
-import { useRoute } from 'vue-router'
+import { onMounted } from "vue";
 import { useDataStore } from '@/stores/data';
 import { useUserStore } from '@/stores/user';
 import getData from '@/composables/getData';

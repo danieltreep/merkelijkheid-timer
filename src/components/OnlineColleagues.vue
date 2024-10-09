@@ -8,7 +8,8 @@
   <OnlineColleagueAccordion id="6" title="🏖️ Vacation day" :statuses="statusesOfToday" />
   <OnlineColleagueAccordion id="7" title="🤮 Sick" :statuses="statusesOfToday" />
   <OnlineColleagueAccordion id="8" title="🎄 Holiday" :statuses="statusesOfToday" />
-  <OnlineColleagueAccordion id="9" title="👻 Unknown" :statuses="statusesOfToday" />
+  <OnlineColleagueAccordion id="9" title="🦙 Leave" :statuses="statusesOfToday" />
+  <OnlineColleagueAccordion id="10" title="👻 Unknown" :statuses="statusesOfToday" />
 
 </template>
 <script setup>

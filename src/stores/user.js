@@ -16,6 +16,17 @@ export const useUserStore = defineStore("user", () => {
   const usersArchive = computed(() => {
     return users.value.filter(user => user.is_archived === '1')
   })
+
+  const currentUser = computed(() => {
+    return usersNotArchived.value.find(u => +u.user_id === +user.value.user_id)
+  })
   
-  return { user, users, userAuthenticated, usersNotArchived, usersArchive };
+  const isUserBirthdayToday = computed(() => {
+    if (!currentUser.value?.date_of_birth) return false;
+    const today = new Date();
+    const birthDate = new Date(currentUser.value?.date_of_birth);
+    return today.getDate() === birthDate.getDate() && today.getMonth() === birthDate.getMonth();
+  });
+  
+  return { user, users, userAuthenticated, usersNotArchived, usersArchive, isUserBirthdayToday };
 }); 

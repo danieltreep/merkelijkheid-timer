@@ -8,6 +8,7 @@
         <div class="status">🤮 {{ daysSick }}</div>
         <div class="status">🏖️ {{ daysVacation }}</div>
         <div class="status">🎄 {{ daysHoliday }}</div>
+        <div class="status">🦙 {{ daysVerlof }}</div>
     </div>
 </template>
 
@@ -45,6 +46,9 @@ const daysVacation = computed(() => {
 })
 const daysHoliday = computed(() => {
     return statusesInThisYear.value.filter(status => status.status === '🎄 Holiday').length
+})
+const daysVerlof = computed(() => {
+    return statusesInThisYear.value.filter(status => status.status === '🦙 Leave').length
 })
 </script>
 

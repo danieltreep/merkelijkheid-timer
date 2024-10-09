@@ -6,17 +6,15 @@
 
       <nav class="ms-lg-auto me-lg-4 mx-auto mt-5 mt-lg-0 d-none d-md-inline" >
         <RouterLink :to="{name: 'home'}">Time tracker</RouterLink>
-        <!-- <RouterLink :to="{name: 'clients'}">Clients</RouterLink> -->
         <RouterLink :to="{name: 'reports'}">Reports</RouterLink>
       </nav>
     
       <div  class="align-items-center d-none d-lg-flex position-relative" >
         <RouterLink :to="{name: 'profile'}">
-          <img class="avatar" v-if="user.picture" :src="user.picture" >
+          <img class="avatar" :class="{birthday: isUserBirthdayToday}" v-if="user.picture" :src="user.picture" >
           <div class="empty-avatar" v-if="!user.picture">{{ getUserInitials() }} </div>
         </RouterLink>
-        <!-- <LocationPopup /> -->
-
+        <LocationPopup v-if="!hasStatusToday && checkForPopup" />
       </div>
     </header>
 
@@ -29,14 +27,23 @@
 
 <script setup>
 import { RouterLink, RouterView } from "vue-router";
-import { onMounted, ref } from 'vue'
+import { onMounted, computed, ref } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { storeToRefs } from "pinia";
 
 import Toast from '@/components/Toast.vue'
 import LocationPopup from '@/components/LocationPopup.vue'
+import { useDataStore } from "./stores/data";
 
-const { user, userAuthenticated } = storeToRefs(useUserStore());
+const { user, userAuthenticated, isUserBirthdayToday } = storeToRefs(useUserStore());
+const { statuses } = storeToRefs(useDataStore())
+
+const checkForPopup = ref(false)
+
+const hasStatusToday = computed(() => {
+  const today = new Date().toISOString().split('T')[0];
+  return statuses.value.some(status => status.date === today);
+});
 
 function getUserInitials() {
   const voorletter = user.value.given_name.slice(0, 1);
@@ -49,6 +56,9 @@ onMounted(() => {
   if (localStorage.getItem('user')) {
     user.value = JSON.parse(localStorage.getItem('user'))
   }
+  setTimeout(() => {
+    checkForPopup.value = true
+  }, 1000)
 })
 
 </script>
@@ -60,6 +70,18 @@ onMounted(() => {
   width: 44px;
   border-radius: 50%;
   border: 2px solid #AEDCE4;
+}
+.avatar.birthday::after {
+  content: '';
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-40%) rotate(10deg);
+  background-image: url('@/assets/partyhat.svg');
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 .empty-avatar {
   height: 44px;
