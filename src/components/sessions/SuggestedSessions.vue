@@ -80,7 +80,7 @@ function handleClick(session) {
     currentSession.value.project_id = session.project_id
     currentSession.value.task_id = session.task_id 
 
-    startTimerStore()
+    startTimerStore()    
     emit('handleClick')
 }
 </script>

@@ -33,7 +33,7 @@ export const useSessionStore = defineStore("session", () => {
     currentSession.value.stopped_at = null;
     currentSession.value.created_at = null;
     currentSession.value.time_elapsed = `00:00:00`;
-    currentSession.value.shared_with = [];
+    currentSession.value.shared_with = []; 
   }
 
   const groupSessionsByDay = computed(() => {

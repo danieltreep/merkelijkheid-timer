@@ -3,6 +3,7 @@ import { defineStore, storeToRefs } from "pinia";
 import getData from '@/composables/getData';
 import getSessions from '@/composables/getSessions';
 import { useUserStore } from "./user";
+import { useDeliverablesStore } from "./deliverables";
 
 export const useDataStore = defineStore("data", () => {
 
@@ -19,6 +20,7 @@ export const useDataStore = defineStore("data", () => {
   const projectToBePatched = ref({})
   
   const { user } = storeToRefs(useUserStore())
+  const { deliverables, todos } = storeToRefs(useDeliverablesStore())
 
   const toast = ref({
     message: 'Record deleted succesfully',
@@ -52,6 +54,12 @@ export const useDataStore = defineStore("data", () => {
         break;
       case 'tasks':
         tasks.value = await getData('tasks');
+        break;
+      case 'deliverables':
+        deliverables.value = await getData('deliverables');
+        break;
+      case 'todos':
+        todos.value = await getData('todos', user.value.user_id);
         break;
       case 'statuses':
         statuses.value = await getData('statuses', user.value.user_id);

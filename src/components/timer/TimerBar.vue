@@ -29,7 +29,7 @@
 
     </div>
 
-    <Timer v-if="!editing || timerRunning" @initialized="initialized = true" :initialized="initialized"/>
+    <Timer v-if="!editing || timerRunning"/>
     <TimerEditable v-else="editing" />
 
     <div class="options d-flex flex-column justify-content-around align-items-center ms-2 h-100 d-none d-md-flex">
@@ -63,8 +63,7 @@ import SuggestedSessions from "@/components/sessions/SuggestedSessions.vue";
 // Refs
 const { currentSession, currentProject } = storeToRefs(useSessionStore());
 const { timerRunning } = storeToRefs(useTimerStore());
-const { tasks, clients, projects } = storeToRefs(useDataStore());
-const initialized = ref(false) // Houdt bij of de timer al geinitieerd is
+const { tasks, projects } = storeToRefs(useDataStore());
 const editing = ref(false);
 const openProjectSelector = ref(false);
 const showSuggestedSessions = ref(false)

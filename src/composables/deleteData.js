@@ -1,7 +1,7 @@
 import { useDataStore } from '@/stores/data'
 import { getBaseUrl } from './functions';
 
-const deleteData = async (table, id) => {
+const deleteData = async (table, id, deliverable_id) => {
 
   const { updateTable, triggerToast } = useDataStore();
 
@@ -10,7 +10,7 @@ const deleteData = async (table, id) => {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ id, table })
+    body: JSON.stringify({ id, table, deliverable_id })
   })
     .then((res) => {
       if (!res.ok) {

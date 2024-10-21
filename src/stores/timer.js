@@ -13,9 +13,11 @@ export const useTimerStore = defineStore("timer", () => {
     const { currentSession } = storeToRefs(useSessionStore())
     const { resetCurrentSession } = useSessionStore()
     const { user } = storeToRefs(useUserStore());
+    const initialized = ref(false) // Houdt bij of de timer al geinitieerd is
 
     const currentSessionId = ref(null)
     const timerRunning = ref(false);
+    const todoOrDeliverableTimerId = ref(null) // Onthoud welke deliverable of todo de timer heeft aangezet
 
     let timerInterval = null;
 
@@ -31,8 +33,8 @@ export const useTimerStore = defineStore("timer", () => {
                 is_running: 1, 
                 shared_with: JSON.stringify(currentSession.value.shared_with)
             })
+            timerInterval = setInterval(clockRunning, 1000);
         }
-        timerInterval = setInterval(clockRunning, 1000);
     }
 
     function continueTimerStore(session) {
@@ -79,7 +81,6 @@ export const useTimerStore = defineStore("timer", () => {
         resetCurrentSession();
         document.title = 'Merkelijkheid Today';
     }
-  
 
     return {
         currentSessionId,
@@ -87,6 +88,8 @@ export const useTimerStore = defineStore("timer", () => {
         startTimerStore,
         stopTimerStore,
         clearTimerStore,
-        continueTimerStore
+        continueTimerStore,
+        initialized,
+        todoOrDeliverableTimerId
     };
 });

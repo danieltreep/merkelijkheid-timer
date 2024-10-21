@@ -9,6 +9,7 @@
   --groen: #5EC04E;
   --rood: #EE7170;
   --border: #CED4DA;
+  --border-licht: #E8E8E8;
   --br: 12px;
   --bs: 1px 1px 5px rgba(0, 0, 0, .1);
   --lichtpaars: #F7F2FC;
@@ -16,6 +17,9 @@
 body {
   font-family: 'Helvetica Neue';
   background-color: var(--bg);
+}
+p {
+  margin-bottom: 0;
 }
 #app {
   min-height: 100svh;

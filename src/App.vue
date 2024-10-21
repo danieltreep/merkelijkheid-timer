@@ -7,6 +7,7 @@
       <nav class="ms-lg-auto me-lg-4 mx-auto mt-5 mt-lg-0 d-none d-md-inline" >
         <RouterLink :to="{name: 'home'}">Time tracker</RouterLink>
         <RouterLink :to="{name: 'reports'}">Reports</RouterLink>
+        <RouterLink :to="{name: 'tasks'}">Tasks</RouterLink>
       </nav>
     
       <div  class="align-items-center d-none d-lg-flex position-relative" >

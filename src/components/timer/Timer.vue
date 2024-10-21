@@ -37,14 +37,11 @@ import ClearButton from '@/components/timer/ClearButton.vue'
 import EditRunningTimer from '@/components/timer/EditRunningTimer.vue'
 
 // Props and emits
-const emit = defineEmits(['reset', 'initialized']);
-const props = defineProps({
-  initialized: Boolean
-})
+const emit = defineEmits(['reset']);
 
 // Refs
 const { currentSession, runningSession } = storeToRefs(useSessionStore());
-const { timerRunning } = storeToRefs(useTimerStore());
+const { timerRunning, initialized } = storeToRefs(useTimerStore());
 const showStartTimeChanger = ref(false)
 
 // Methods
@@ -64,17 +61,17 @@ function clearTimer() {
 onMounted(() => {
 
   // Watch functie werkt alleen als het de eerste render is
-  if (!props.initialized) {
-
+  if (!initialized.value) {
+    
     watch(runningSession, (newVal) => {
 
       // Als runningSession in data store een waarde heeft update de sessie met info van de lopende sessie
       if (newVal.length) {
         continueTimerStore(newVal[0]);
-        
       }
     }, { once: true });
-    emit('initialized') // Bij de eerste keer zet initialized ref -> true
+   
+    initialized.value = true // Bij de eerste keer zet initialized ref -> true
   }
 });
 

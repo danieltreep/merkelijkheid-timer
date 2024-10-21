@@ -199,8 +199,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             // Send the JSON response
             echo json_encode($data);
         }
-    } 
+    }
 
+    elseif ($table === 'deliverables' && isset($_GET['clientid'])) {
+        $clientid = $_GET['clientid'];
+        
+        // Query to select all deliverables for the given client_id
+        $result = $conn->query("SELECT * FROM deliverables WHERE client_id = $clientid");
+        
+        // Fetch the data and encode it as JSON
+        $data = [];
+        while ($row = $result->fetch_assoc()) {
+            $data[] = $row;
+        }
+        
+        // Close the database connection
+        $conn->close();
+        
+        // Send the JSON response
+        echo json_encode($data);
+    }
     elseif ($table === 'todos' && isset($_GET['user_id'])) {
 
         // There always is a user ID
@@ -244,6 +262,115 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         // Send the JSON response
         echo json_encode($data);
 
+    }  elseif ($table === 'clients' && isset($_GET['clientid'])) {
+        
+        $clientid = $_GET['clientid'];
+        
+        // Query that merges the tables: clients and contacts
+        $clientResult = $conn->query("SELECT * FROM clients WHERE client_id = $clientid");
+        $contactResult = $conn->query("SELECT * FROM contacts WHERE client_id = $clientid");
+        $contractResult = $conn->query("SELECT * FROM contracts WHERE client_id = $clientid");
+        $googleAdsResult = $conn->query("SELECT * FROM googleads_connections WHERE client_id = $clientid");
+        $facebookResult = $conn->query("SELECT * FROM facebook_connections WHERE client_id = $clientid");
+        $googleSeoResult = $conn->query("SELECT * FROM google_seo_connections WHERE client_id = $clientid");
+        $linkedinResult = $conn->query("SELECT * FROM linkedin_connections WHERE client_id = $clientid");
+        $linkedinAdsResult = $conn->query("SELECT * FROM linkedin_ads_connections WHERE client_id = $clientid");
+        $websiteResult = $conn->query("SELECT * FROM website_connections WHERE client_id = $clientid");
+        $deliverablesResult = $conn->query("SELECT * FROM deliverables WHERE client_id = $clientid");
+        $hubspotResult = $conn->query("SELECT * FROM hubspot_connections WHERE client_id = $clientid");
+        $leadinfoResult = $conn->query("SELECT * FROM leadinfo_connections WHERE client_id = $clientid");
+
+        $clientData = $clientResult->fetch_assoc();
+        $clientData['contacts'] = [];
+
+        while ($contactRow = $contactResult->fetch_assoc()) {
+            $clientData['contacts'][] = $contactRow;
+        }
+
+        $clientData['contracts'] = [];
+
+        while ($contractRow = $contractResult->fetch_assoc()) {
+            $clientData['contracts'][] = $contractRow;
+        }
+
+        $clientData['googleads_connections'] = null;
+        if ($googleAdsRow = $googleAdsResult->fetch_assoc()) {
+            $clientData['googleads_connections'] = $googleAdsRow;
+        }
+
+        $clientData['facebook_connections'] = null;
+        if ($facebookRow = $facebookResult->fetch_assoc()) {
+            $clientData['facebook_connections'] = $facebookRow;
+        }
+
+        $clientData['google_seo_connections'] = null;
+        if ($googleSeoRow = $googleSeoResult->fetch_assoc()) {
+            $clientData['google_seo_connections'] = $googleSeoRow;
+        }
+
+        $clientData['linkedin_connections'] = null;
+        if ($linkedinRow = $linkedinResult->fetch_assoc()) {
+            $clientData['linkedin_connections'] = $linkedinRow;
+        }
+
+        $clientData['linkedin_ads_connections'] = null;
+        if ($linkedinAdsRow = $linkedinAdsResult->fetch_assoc()) {
+            $clientData['linkedin_ads_connections'] = $linkedinAdsRow;
+        }
+
+        $clientData['website_connections'] = null;
+        if ($websiteRow = $websiteResult->fetch_assoc()) {
+            $clientData['website_connections'] = $websiteRow;
+        }
+
+        $clientData['hubspot_connections'] = null;
+        if ($hubspotRow = $hubspotResult->fetch_assoc()) {
+            $clientData['hubspot_connections'] = $hubspotRow;
+        }
+
+        $clientData['leadinfo_connections'] = null;
+        if ($leadinfoRow = $leadinfoResult->fetch_assoc()) {
+            $clientData['leadinfo_connections'] = $leadinfoRow;
+        }
+
+        $clientData['deliverables'] = [];
+        while ($deliverablesRow = $deliverablesResult->fetch_assoc()) {
+            $clientData['deliverables'][] = $deliverablesRow;
+        }
+        
+        // Close the database connection
+        $conn->close();
+    
+        // Send the JSON response
+        echo json_encode($clientData);
+
+    } elseif ($table === 'clients') {
+        
+        $clientResult = $conn->query("
+            SELECT clients.*, website_connections.stats_id, linkedin_connections.linkedin_id, linkedin_ads_connections.linkedin_ads_id, googleads_connections.googleads_id, googleads_connections.googleads_dashboard, website_connections.website_dashboard, linkedin_connections.linkedin_dashboard, linkedin_ads_connections.linkedin_ads_dashboard, google_seo_connections.seranking 
+            FROM clients 
+            INNER JOIN website_connections 
+            ON clients.client_id = website_connections.client_id
+            INNER JOIN linkedin_connections 
+            ON clients.client_id = linkedin_connections.client_id
+            INNER JOIN linkedin_ads_connections 
+            ON clients.client_id = linkedin_ads_connections.client_id
+            INNER JOIN googleads_connections 
+            ON clients.client_id = googleads_connections.client_id
+            INNER JOIN google_seo_connections 
+            ON clients.client_id = google_seo_connections.client_id
+        ");
+
+        $data = [];
+        while ($row = $clientResult->fetch_assoc()) {
+            $data[] = $row;
+        }
+        
+        // Close the database connection
+        $conn->close();
+    
+        // Send the JSON response
+        echo json_encode($data);
     } else {
 
         // Perform a SELECT query
@@ -321,8 +448,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
             $conn->rollback();
             $response = array('status' => 'error', 'message' => implode(' ', $errorMessages));
         }
-    } 
-    else if ($table == 'todos' && $deliverable_id) {
+    } else if ($table == 'todos' && $deliverable_id) {
         // Delete all todos with the given deliverable_id
         $sqlTodos = "DELETE FROM todos WHERE deliverable_id = " . $conn->real_escape_string($deliverable_id);
 
@@ -354,71 +480,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'PATCH') {
     $id = $requestData['id']; 
     $table = $requestData['table']; 
     $data = $requestData['data']; 
-    $deliverable_id = $requestData['deliverable_id'];
+    $idprefix = $table === 'statuses' ? substr_replace($table, '', -2) . '_' : substr_replace($table, '', -1) . '_';
 
-    if ($table == 'todos' && $deliverable_id) {
-        // Initialize the SET part of the SQL query
-        $setClause = '';
+    // Initialize the SET part of the SQL query
+    $setClause = '';
 
-        // Construct the SET part of the SQL query
-        foreach ($data as $column => $value) {
-            if ($value === null) {
-                $setClause .= $conn->real_escape_string($column) . " = NULL, ";
-            } else {
-                $setClause .= $conn->real_escape_string($column) . " = '" . $conn->real_escape_string($value) . "', ";
-            }
-        }
-
-        // Remove the trailing comma
-        $setClause = rtrim($setClause, ', ');
-
-        // Construct the SQL query for the update operation
-        $sql = "UPDATE todos SET " . $setClause . " WHERE deliverable_id = " . $conn->real_escape_string($deliverable_id);
-
-        // Execute the update query
-        if ($conn->query($sql) === TRUE) {
-            $response = array('status' => 'success', 'message' => 'Todos updated successfully');
+    // Construct the SET part of the SQL query
+    foreach ($data as $column => $value) {
+        if ($value === null) {
+            $setClause .= $conn->real_escape_string($column) . " = NULL, ";
         } else {
-            $response = array('status' => 'error', 'message' => 'Error updating todos: ' . $conn->error);
+            $setClause .= $conn->real_escape_string($column) . " = '" . $conn->real_escape_string($value) . "', ";
         }
-
-        // Send the JSON response
-        echo json_encode($response);
-    } else {
-
-        $idprefix = $table === 'statuses' ? substr_replace($table, '', -2) . '_' : substr_replace($table, '', -1) . '_';
-    
-        // Initialize the SET part of the SQL query
-        $setClause = '';
-    
-        // Construct the SET part of the SQL query
-        foreach ($data as $column => $value) {
-            if ($value === null) {
-                $setClause .= $conn->real_escape_string($column) . " = NULL, ";
-            } else {
-                $setClause .= $conn->real_escape_string($column) . " = '" . $conn->real_escape_string($value) . "', ";
-            }
-        }
-    
-        // Remove the trailing comma
-        $setClause = rtrim($setClause, ', ');
-    
-        // Construct the SQL query for the update operation
-        $sql = "UPDATE " . $conn->real_escape_string($table) . 
-               " SET " . $setClause .
-               " WHERE " . $idprefix . "id = " . $conn->real_escape_string($id);
-    
-        // Execute the update query
-        if ($conn->query($sql) === TRUE) {
-            $response = array('status' => 'success', 'message' => 'Record updated successfully');
-        } else {
-            $response = array('status' => 'error', 'message' => 'Error updating record: ' . $conn->error);
-        }
-    
-        // Send the JSON response
-        echo json_encode($response);
     }
 
+    // Remove the trailing comma
+    $setClause = rtrim($setClause, ', ');
+
+    // Construct the SQL query for the update operation
+    $sql = "UPDATE " . $conn->real_escape_string($table) . 
+           " SET " . $setClause .
+           " WHERE " . $idprefix . "id = " . $conn->real_escape_string($id);
+
+    // Execute the update query
+    if ($conn->query($sql) === TRUE) {
+        $response = array('status' => 'success', 'message' => 'Record updated successfully');
+    } else {
+        $response = array('status' => 'error', 'message' => 'Error updating record: ' . $conn->error);
+    }
+
+    // Send the JSON response
+    echo json_encode($response);
 }
 
 ?>
