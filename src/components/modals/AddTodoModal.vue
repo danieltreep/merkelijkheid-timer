@@ -19,12 +19,12 @@
                                     <p class="mb-0 bedrijf">{{ client.client_name }}</p>
                                 </div>
                                     
-                                <div class="ms-auto">
+                                <div class="ms-auto d-flex gap-2">
                                     <button 
                                         v-for="(project, index) in filterProjectsByClient(client.client_name)" 
                                         :key="index"
                                         @click="() => handleClick(project)"
-                                        class="ms-2 project"
+                                        class="project"
                                         :class="project.project_name === 'General' ? 'pinguin' : ''"
                                     >
                                         {{ project.project_name === 'General' ? '🐧' : project.project_name }}

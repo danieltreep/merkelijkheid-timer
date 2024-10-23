@@ -46,7 +46,7 @@ function formatDate(date) {
 
 function getBaseUrl() {
     if (window.location.href.includes('localhost')) {
-        return 'http://localhost/merkelijkheid-timer/api.php'
+        return 'http://localhost/merkelijkheid-os-api.php'
     } else {
         return 'https://merkelijkheid.today/api.php'
     }
@@ -117,7 +117,7 @@ function calculateChange(current, previous) {
     const percentageDifference = (difference / previousSeconds) * 100;
 
     if (difference < 0) {
-        return `-${Math.abs(Math.round(percentageDifference))}%`;
+        return `-${Math.abs(Math.round(percentageDifference))}%`; 
     } else {
         return `${Math.round(percentageDifference)}%`;
     }
@@ -141,7 +141,7 @@ function groupSessionsByClient(sessions, clients) {
         })
     })
 
-    return clientSessions
+    return clientSessions.filter(client => client.sessions.length)
 }
 
 function dateToYYYYMMDD(date) {

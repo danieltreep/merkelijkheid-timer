@@ -36,7 +36,7 @@ import FilterByUser from "@/components/reports/FilterByUser.vue";
 // Refs
 const { projects, sessions, clients, sessionsOfAmountDays } = storeToRefs(useDataStore());
 const { users } = storeToRefs(useUserStore());
-const { sessionsByClient, lastMonthSessions, filterUser } = storeToRefs(useReportsStore());
+const { sessionsByClient, lastMonthSessions, filterUser } = storeToRefs(useReportsStore()); 
 
 // Lifecycle
 onBeforeMount(async () => {

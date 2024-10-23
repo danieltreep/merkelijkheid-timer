@@ -161,6 +161,7 @@ function stopTimer() {
     display: grid;
     grid-template-columns: 85px 1fr 45px 35px;
     align-items: center;
+    /* padding-block: 2px; */
 }
 .child-todo .subtodo {
     margin-left: 42px;

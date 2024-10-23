@@ -11,7 +11,7 @@
     </div>
     <div :id="`accordion-${id}`" class="accordion-collapse" :class="open ? 'show' : 'collapse'">
       <div class="accordion-body">
-        <div class="avatar-container pe-4 pt-2 d-flex">
+        <div class="avatar-container pe-4 d-flex">
           <div v-for="user in usersWithThisStatus" :key="user.user_id" class="avatar-wrapper">
             <div class="avatar position-relative" :class="{birthday: isUserBirthdayToday(user.date_of_birth)}">
               <img :src="user.photo"  alt="">

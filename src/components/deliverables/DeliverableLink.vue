@@ -34,7 +34,7 @@ const link = ref(props.deliverable.link || '')
 const showTooltip = ref(false)
 
 function formatLink(link) {
-    if (link.length > 12) {
+    if (link.length > 20) {
         return `${link.slice(8, 12)}...${link.slice(-6)}`;
     }
     return link.slice(8);

@@ -201,6 +201,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         }
     } 
 
+    elseif ($table === 'deliverables' && isset($_GET['clientid'])) {
+        $clientid = $_GET['clientid'];
+        
+        // Query to select all deliverables for the given client_id
+        $result = $conn->query("SELECT * FROM deliverables WHERE client_id = $clientid");
+        
+        // Fetch the data and encode it as JSON
+        $data = [];
+        while ($row = $result->fetch_assoc()) {
+            $data[] = $row;
+        }
+        
+        // Close the database connection
+        $conn->close();
+        
+        // Send the JSON response
+        echo json_encode($data);
+    }
+
     elseif ($table === 'todos' && isset($_GET['user_id'])) {
 
         // There always is a user ID

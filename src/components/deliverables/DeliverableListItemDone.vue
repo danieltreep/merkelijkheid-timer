@@ -15,8 +15,6 @@ import { storeToRefs } from "pinia";
 
 // Stores
 import { useDataStore } from "@/stores/data";
-import { useTimerStore } from "@/stores/timer";
-import { useUserStore } from "@/stores/user";
 
 // Composables
 import { dateToDDMMYYYY } from '@/composables/functions';
