@@ -19,7 +19,7 @@
                 >
                     <div class="taskcolor" :style="{background: task.taskcolor}"></div>
                     {{ task.taskname }}
-                </li>
+                </li> 
             </ul>
         </div>
     </div>

@@ -10,13 +10,20 @@ export const useReportsStore = defineStore("reports", () => {
   const lastMonthSessions = ref([])
   const filterUser = ref({})
 
+  const startDateRef = ref(new Date())
+  const endDateRef = ref(new Date())
+
   const sessionsByClient = computed(() => groupSessionsByClient(sessions.value, clientsNotArchived.value))
   const lastMonthGroupedByClient = computed(() => groupSessionsByClient(lastMonthSessions.value, clientsNotArchived.value))
+
+
 
   return { 
     sessionsByClient,
     lastMonthSessions,
     lastMonthGroupedByClient,
-    filterUser
+    filterUser,
+    startDateRef,
+    endDateRef
   };
 });

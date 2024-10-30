@@ -13,7 +13,7 @@
   </main>
 </template>
 
-<script setup>
+<script setup> 
 import { storeToRefs } from "pinia";
 import { onBeforeMount, ref, watch } from "vue";
 
@@ -46,10 +46,6 @@ onBeforeMount(async () => {
   sessions.value = await getSessions(filterUser.value.user_id, sessionsOfAmountDays.value);
   lastMonthSessions.value = await getSessions(null, null, null, makeDateSqlCompatible(getFirstDayOfPreviousMonth()), makeDateSqlCompatible(getLastDayOfPreviousMonth()));
 });
-
-watch(filterUser, async () => {
-  sessions.value = await getSessions(filterUser.value.user_id, sessionsOfAmountDays.value);
-})
 
 </script>
 

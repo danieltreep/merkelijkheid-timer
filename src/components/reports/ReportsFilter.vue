@@ -38,12 +38,13 @@
                 />
                 
             </div>
+            
             <button class="btn select-button mt-4" @click="handleSubmit">Select</button>
         </div>
     </div>
 </template>
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { storeToRefs } from "pinia";
 
 // Stores
@@ -55,16 +56,12 @@ import { makeDateSqlCompatible } from '@/composables/functions'
 
 // Components
 import ReportsFilterDateInput from '@/components/reports/ReportsFilterDateInput.vue'
+import { useReportsStore } from '@/stores/reports';
 
 // Refs
 const { sessionsOfAmountDays, sessions } = storeToRefs(useDataStore());
+const { filterUser, startDateRef, endDateRef } = storeToRefs(useReportsStore())
 const showOptions = ref(false)
-
-const lastWeek = new Date()
-lastWeek.setDate(lastWeek.getDate() - sessionsOfAmountDays.value)
-
-const startDateRef = ref(lastWeek)
-const endDateRef = ref(new Date())
 
 const startDateString = computed(() => formatDate(startDateRef.value))
 const endDateString = computed(() => formatDate(endDateRef.value))
@@ -74,15 +71,16 @@ async function handleSubmit() {
     showOptions.value = false;
     
     if (sessionsOfAmountDays.value === 'custom') {
-        sessions.value = await getSessions(null, null, null, makeDateSqlCompatible(startDateRef.value), makeDateSqlCompatible(endDateRef.value));
-
+        sessions.value = await getSessions(filterUser.value.user_id, null, null, makeDateSqlCompatible(startDateRef.value), makeDateSqlCompatible(endDateRef.value)); 
+        console.log('filter: custom')
     } else {
+        console.log('filter: not custom')
         endDateRef.value = new Date();
 
         const startDate = new Date();
         startDate.setDate(endDateRef.value.getDate() - sessionsOfAmountDays.value)
         startDateRef.value = startDate
-        sessions.value = await getSessions(null, sessionsOfAmountDays.value);
+        sessions.value = await getSessions(filterUser.value.user_id, sessionsOfAmountDays.value);
     }
 }
 
@@ -104,6 +102,12 @@ function handleStartChange(date) {
 function handleEndChange(date) {
     endDateRef.value = date
 }
+
+onMounted(() => {
+    const lastWeek = new Date()
+    lastWeek.setDate(lastWeek.getDate() - sessionsOfAmountDays.value)
+    startDateRef.value = lastWeek
+})
 
 </script>
 <style scoped>

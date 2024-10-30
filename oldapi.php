@@ -144,7 +144,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             LEFT JOIN tasks ON tasks.task_id = sessions.task_id
         ";
 
-        if (isset($_GET['startdate']) && isset($_GET['enddate'])) { // Haal sessies op op tussen aangegeven data
+        if (isset($_GET['startdate']) && isset($_GET['enddate']) && isset($_GET['userid'])) { // Haal sessies op tussen aangegeven data voor een specifieke gebruiker
+            $endDate = $_GET['enddate'];
+            $startDate = $_GET['startdate'];
+            $userid = $_GET['userid'];
+
+            $endDateTimestamp = strtotime($endDate);
+            $startDateTimestamp = strtotime($startDate);
+
+            $formattedStartDate = date('Y-m-d 00:00:00', $startDateTimestamp);
+            $formattedEndDate = date('Y-m-d 23:59:59', $endDateTimestamp);
+
+            $enddate = "BETWEEN '$formattedStartDate' AND '$formattedEndDate'";
+
+            $query .= "
+                WHERE (user_id = $userid OR JSON_CONTAINS(shared_with, '\"$userid\"', '$')) AND sessions.created_at $enddate
+                ORDER BY sessions.created_at DESC
+            ";
+        } elseif (isset($_GET['startdate']) && isset($_GET['enddate'])) { // Haal sessies op tussen aangegeven data
             $endDate = $_GET['enddate'];
             $startDate = $_GET['startdate'];
 
@@ -279,6 +296,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $deliverablesResult = $conn->query("SELECT * FROM deliverables WHERE client_id = $clientid");
         $hubspotResult = $conn->query("SELECT * FROM hubspot_connections WHERE client_id = $clientid");
         $leadinfoResult = $conn->query("SELECT * FROM leadinfo_connections WHERE client_id = $clientid");
+        $linkedinConversionTrackersResult = $conn->query("SELECT * FROM linkedin_conversion_trackers WHERE client_id = $clientid");
 
         $clientData = $clientResult->fetch_assoc();
         $clientData['contacts'] = [];
@@ -336,6 +354,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $clientData['deliverables'] = [];
         while ($deliverablesRow = $deliverablesResult->fetch_assoc()) {
             $clientData['deliverables'][] = $deliverablesRow;
+        }
+
+        $clientData['linkedin_conversion_trackers'] = [];
+        while ($linkedinConversionTrackersRow = $linkedinConversionTrackersResult->fetch_assoc()) {
+            $clientData['linkedin_conversion_trackers'][] = $linkedinConversionTrackersRow;
         }
         
         // Close the database connection
@@ -480,27 +503,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'PATCH') {
     $id = $requestData['id']; 
     $table = $requestData['table']; 
     $data = $requestData['data']; 
-    $idprefix = $table === 'statuses' ? substr_replace($table, '', -2) . '_' : substr_replace($table, '', -1) . '_';
+    $deliverable_id = $requestData['deliverable_id'];
 
-    // Initialize the SET part of the SQL query
-    $setClause = '';
-
-    // Construct the SET part of the SQL query
-    foreach ($data as $column => $value) {
-        if ($value === null) {
-            $setClause .= $conn->real_escape_string($column) . " = NULL, ";
-        } else {
-            $setClause .= $conn->real_escape_string($column) . " = '" . $conn->real_escape_string($value) . "', ";
+    // Function to construct the SET part of the SQL query
+    function constructSetClause($data, $conn) {
+        $setClause = '';
+        foreach ($data as $column => $value) {
+            if ($value === null) {
+                $setClause .= $conn->real_escape_string($column) . " = NULL, ";
+            } else {
+                $setClause .= $conn->real_escape_string($column) . " = '" . $conn->real_escape_string($value) . "', ";
+            }
         }
+        return rtrim($setClause, ', ');
     }
 
-    // Remove the trailing comma
-    $setClause = rtrim($setClause, ', ');
-
-    // Construct the SQL query for the update operation
-    $sql = "UPDATE " . $conn->real_escape_string($table) . 
-           " SET " . $setClause .
-           " WHERE " . $idprefix . "id = " . $conn->real_escape_string($id);
+    if ($table == 'todos' && $deliverable_id) {
+        $setClause = constructSetClause($data, $conn);
+        $sql = "UPDATE todos SET " . $setClause . " WHERE deliverable_id = " . $conn->real_escape_string($deliverable_id);
+    } else {
+        $idprefix = $table === 'statuses' ? substr_replace($table, '', -2) . '_' : substr_replace($table, '', -1) . '_';
+        $setClause = constructSetClause($data, $conn);
+        $sql = "UPDATE " . $conn->real_escape_string($table) . 
+               " SET " . $setClause .
+               " WHERE " . $idprefix . "id = " . $conn->real_escape_string($id);
+    }
 
     // Execute the update query
     if ($conn->query($sql) === TRUE) {

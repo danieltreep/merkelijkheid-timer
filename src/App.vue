@@ -35,6 +35,7 @@ import { storeToRefs } from "pinia";
 import Toast from '@/components/Toast.vue'
 import LocationPopup from '@/components/LocationPopup.vue'
 import { useDataStore } from "./stores/data";
+import getData from '@/composables/getData';
 
 const { user, userAuthenticated, isUserBirthdayToday } = storeToRefs(useUserStore());
 const { statuses } = storeToRefs(useDataStore())
@@ -53,9 +54,10 @@ function getUserInitials() {
   return voorletter + achterletter;
 }
 
-onMounted(() => {
+onMounted(async () => {
   if (localStorage.getItem('user')) {
     user.value = JSON.parse(localStorage.getItem('user'))
+    statuses.value = await getData('statuses', user.value.user_id)
   }
   setTimeout(() => {
     checkForPopup.value = true

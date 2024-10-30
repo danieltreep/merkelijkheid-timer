@@ -37,19 +37,31 @@ import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
 
 // Stores
+import { useDataStore } from "@/stores/data";
 import { useUserStore } from "@/stores/user";
 import { useReportsStore } from "@/stores/reports";
+import getSessions from "@/composables/getSessions";
+
+import { makeDateSqlCompatible } from '@/composables/functions'
 
 // Refs
+const { sessions, sessionsOfAmountDays } = storeToRefs(useDataStore());
+const { filterUser, startDateRef, endDateRef } = storeToRefs(useReportsStore()); 
+
 const { users } = storeToRefs(useUserStore())
-const { filterUser } = storeToRefs(useReportsStore())
+
 const show = ref(false)
 
 // Methods
-function changeUser(user) {
+async function changeUser(user) {
     show.value = false
     filterUser.value = user
 
+    if (sessionsOfAmountDays.value === 'custom') {
+        sessions.value = await getSessions(filterUser.value.user_id, null, null, makeDateSqlCompatible(startDateRef.value), makeDateSqlCompatible(endDateRef.value)); 
+    } else {
+        sessions.value = await getSessions(filterUser.value.user_id, sessionsOfAmountDays.value);
+    }
 }
 
 </script>
