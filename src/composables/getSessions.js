@@ -2,7 +2,7 @@ import { getBaseUrl } from './functions';
 
 const getSessions = async (userid, days, isrunning, startDate, endDate) => {
  
-  let url = `${getBaseUrl()}?table=sessions`;
+  let url = `${getBaseUrl()}&table=sessions`;
   
   if (days) {
     url += `&days=${days}`; 

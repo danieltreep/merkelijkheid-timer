@@ -1,85 +1,58 @@
 <template>
-    <li class="deliverable list-group-item p-3 mb-2">
-        <div class="status d-flex align-items-center justify-content-center" :class="deliverable.status">
-            <img src="@/assets/check-icon-white.svg" alt="">
+    <li class="deliverable list-group-item p-3 ps-4 mb-0">
+        <div class="d-flex align-items-center">
+            <DeliverableDone :deliverable="deliverable" />
+            <DeliverableLogo :deliverable="deliverable" v-if="displayLogo !== false" />
         </div>
-        <img class="logo" :src="returnClient(deliverable.client_id).logo">
-        <p>{{ deliverable.deliverable_title }}</p>
-        <p :class="{hasPassed: isDatePassed(deliverable.due_date)}">{{ dateToDDMMYYYY(deliverable.due_date) }}</p>
+        <div class="d-flex flex-column justify-content-center align-items-start ms-3">
+            <p class="parent_deliverable" v-if="deliverable.parent_deliverable_title">{{ deliverable.parent_deliverable_title }}</p>
+            <p class="mb-0">{{ deliverable.deliverable_title }}</p>
+        </div>
+        <p class="completed"><img src="@/assets/icon-check.svg" v-if="deliverable.updated_on"> {{ dateToDDMMYYYY(deliverable.updated_on) }}</p>
         <DeliverableLink :deliverable="deliverable" />
     </li>
 </template>
 
 <script setup>
-import { storeToRefs } from "pinia";
-
-// Stores
-import { useDataStore } from "@/stores/data";
 
 // Composables
 import { dateToDDMMYYYY } from '@/composables/functions';
-import DeliverableLink from "@/components/deliverables/DeliverableLink.vue";
 
-// Refs
-const { clients } = storeToRefs(useDataStore());
+// Components
+import DeliverableLink from "@/components/deliverables/DeliverableLink.vue";
+import DeliverableDone from "@/components/deliverables/DeliverableDone.vue";
+import DeliverableLogo from "@/components/deliverables/DeliverableLogo.vue";
 
 const props = defineProps({
-    deliverable: Object
+    deliverable: Object,
+    displayLogo: Boolean
 })
-
-// Methods
-function returnClient(id) {
-    return clients.value.find(c => c.client_id === id)
-}
-
-function isDatePassed(dueDate) {
-    const currentDate = new Date();
-    const date = new Date(dueDate);
-    return date < currentDate;
-}
 
 </script>
 
 <style scoped>
 .deliverable {
     display: grid;
-    grid-template-columns: 45px 50px 1fr 100px 120px;
+    grid-template-columns: minmax(10px, auto) 1fr 110px 140px;
     border: 1px solid var(--border-licht);
     border-radius: var(--br);
     align-items: center;
     position: relative;
+    height: 72px;
+    background-color: white;
 }
-.status {
-    height: 28px;
-    width: 28px;
-    border: 1px solid var(--border-licht);
-    border-radius: 50%;
+.completed {
+    color: var(--groen);
+    font-size: 12px;
 }
-.logo {
-    height: 34px;
-    width: 34px;
+p {
+    line-height: 1;
 }
-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    padding: .7rem .5rem;
-    border-radius: 8px;
-}
-button:hover {
-    background-color: var(--hover);
-}
-.hasPassed {
-    color: #EE7170;
-}
-.Done {
-    background-color: var(--paars);
-}
-.status img {
-    scale: 1.3;
-}
-.add-todo img {
-    scale: 1.2;
+.parent_deliverable {
+    font-size: 10px;
+    color: var(--body);
+    line-height: 1;
+    font-weight: 500;
+    margin-bottom: 2px;
 }
 </style>

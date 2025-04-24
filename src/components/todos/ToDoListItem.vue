@@ -32,7 +32,7 @@
 
 <script setup>
 import { storeToRefs } from "pinia";
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 
 // Stores
 import { useDataStore } from "@/stores/data";

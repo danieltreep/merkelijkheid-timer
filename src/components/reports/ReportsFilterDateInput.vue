@@ -42,6 +42,7 @@ onMounted(() => {
 
     startDateInput.addEventListener('changeDate', (e) => {
         const startDate = startDatePicker.getDate();
+        emit('handleStartChange', startDate)
         endDatePicker.setOptions({
             minDate: startDate
         });
@@ -50,7 +51,6 @@ onMounted(() => {
             endDatePicker.setDate(startDate);
         }
         
-        emit('handleStartChange', startDate)
     });
 
     endDateInput.addEventListener('changeDate', (e) => {

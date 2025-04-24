@@ -28,5 +28,5 @@ export const useUserStore = defineStore("user", () => {
     return today.getDate() === birthDate.getDate() && today.getMonth() === birthDate.getMonth();
   });
   
-  return { user, users, userAuthenticated, usersNotArchived, usersArchive, isUserBirthdayToday };
+  return { user, users, currentUser, userAuthenticated, usersNotArchived, usersArchive, isUserBirthdayToday };
 }); 

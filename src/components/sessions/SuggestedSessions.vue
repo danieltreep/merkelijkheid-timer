@@ -80,8 +80,11 @@ function handleClick(session) {
     currentSession.value.project_id = session.project_id
     currentSession.value.task_id = session.task_id 
 
-    startTimerStore()    
-    emit('handleClick')
+    startTimerStore()   
+    
+    setTimeout(() => {
+        emit('handleClick')
+    }, 200)
 }
 </script>
 <style scoped>
@@ -93,14 +96,14 @@ function handleClick(session) {
     border-radius: 0 0 var(--br) var(--br);
     box-shadow: var(--bs);
     z-index: 1;
-    width: 560px;
+    width: 720px;
     max-height: 300px;
     overflow-y: scroll;
     border-bottom: .6rem solid white;
 }
 .list-group-item {
     padding-left: 0;
-    grid-template-columns: 170px 1fr;
+    grid-template-columns: 290px 1fr;
     border-radius: 8px;
     cursor: pointer;
     /* gap: 1rem; */

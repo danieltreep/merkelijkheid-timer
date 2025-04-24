@@ -33,8 +33,8 @@
                 <ReportsFilterDateInput 
                     :startDate="startDateRef"
                     :endDate="endDateRef"
-                    @handleStartChange="handleStartChange" 
-                    @handleEndChange="handleEndChange"
+                    @handleStartChange="$value => startDateRef = $value" 
+                    @handleEndChange="$value => endDateRef = $value"
                 />
                 
             </div>
@@ -49,6 +49,7 @@ import { storeToRefs } from "pinia";
 
 // Stores
 import { useDataStore } from "@/stores/data";
+import { useReportsStore } from '@/stores/reports';
 
 // Composables
 import getSessions from '@/composables/getSessions'
@@ -56,7 +57,6 @@ import { makeDateSqlCompatible } from '@/composables/functions'
 
 // Components
 import ReportsFilterDateInput from '@/components/reports/ReportsFilterDateInput.vue'
-import { useReportsStore } from '@/stores/reports';
 
 // Refs
 const { sessionsOfAmountDays, sessions } = storeToRefs(useDataStore());
@@ -95,18 +95,12 @@ function formatDate(date) {
     return formattedDate;
 }
 
-function handleStartChange(date) {
-    startDateRef.value = date
-}
-
-function handleEndChange(date) {
-    endDateRef.value = date
-}
-
 onMounted(() => {
-    const lastWeek = new Date()
-    lastWeek.setDate(lastWeek.getDate() - sessionsOfAmountDays.value)
-    startDateRef.value = lastWeek
+    if (sessionsOfAmountDays.value !== 'custom') {
+        const lastWeek = new Date()
+        lastWeek.setDate(lastWeek.getDate() - sessionsOfAmountDays.value)
+        startDateRef.value = lastWeek
+    }
 })
 
 </script>

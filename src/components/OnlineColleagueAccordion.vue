@@ -66,7 +66,7 @@ const checkIfOnline = (user) => {
   height: 40px;
   width: 40px;
   border-radius: 50%;
-  border: 1px solid white;
+  border: 2px solid white;
   position: relative;
 }
 
@@ -128,7 +128,8 @@ button.collapsed img {
   display: none;
 }
 .avatar-container {
-  overflow-x: scroll; 
+  overflow-x: scroll;
+  padding-top: .3rem;
   -ms-overflow-style: none;  /* Internet Explorer 10+ */
   scrollbar-width: none;  /* Firefox */
 }

@@ -1,7 +1,7 @@
 import { getBaseUrl } from './functions';
 
 const getUser = async (email) => {
-  const url = `${getBaseUrl()}?table=users&email=${encodeURI(email)}`;
+  const url = `${getBaseUrl()}&table=users&email=${encodeURI(email)}`;
 
   try {
     const response = await fetch(url);

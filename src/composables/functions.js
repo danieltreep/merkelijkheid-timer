@@ -46,9 +46,9 @@ function formatDate(date) {
 
 function getBaseUrl() {
     if (window.location.href.includes('localhost')) {
-        return 'http://localhost/merkelijkheid-os-api.php'
+        return 'http://localhost/merkelijkheid-os-api.php?key=EYghIFldmh2h3qKFbj409ks'
     } else {
-        return 'https://merkelijkheid.today/api.php'
+        return 'https://merkelijkheid.today/api.php?key=EYghIFldmh2h3qKFbj409ks'
     }
 }
 
@@ -162,6 +162,12 @@ function dateToDDMMYYYY(d) {
     return `${day}/${month}/${year}`;
 }
 
+function isDatePassed(dueDate) {
+    const currentDate = new Date();
+    const date = new Date(dueDate);
+    return date < currentDate;
+}
+
 export { 
     prefixZero, 
     makeDateSqlCompatible,
@@ -175,5 +181,6 @@ export {
     groupSessionsByClient,
     calculateChange,
     dateToYYYYMMDD,
-    dateToDDMMYYYY
+    dateToDDMMYYYY,
+    isDatePassed
 };

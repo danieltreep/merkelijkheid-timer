@@ -27,6 +27,7 @@ import { useReportsStore } from "@/stores/reports";
 // Composables
 import getData from "@/composables/getData";
 import getSessions from "@/composables/getSessions";
+import { makeDateSqlCompatible } from '@/composables/functions'
 
 // Components
 import ReportsList from "@/components/reports/ReportsList.vue";
@@ -36,7 +37,7 @@ import FilterByUser from "@/components/reports/FilterByUser.vue";
 
 // Refs
 const { projects, sessions, clients, tasks, sessionsOfAmountDays } = storeToRefs(useDataStore());
-const { filterUser, sessionsByClient } = storeToRefs(useReportsStore());
+const { filterUser, sessionsByClient, startDateRef, endDateRef } = storeToRefs(useReportsStore());
 const { users } = storeToRefs(useUserStore());
 const activeTask = ref({})
 const route = useRoute()
@@ -57,11 +58,20 @@ onBeforeMount(async () => {
   projects.value = await getData('projects');
   clients.value = await getData('clients');
   tasks.value = await getData('tasks');
-  sessions.value = await getSessions(filterUser.value.user_id, sessionsOfAmountDays.value);
+
+  if (sessionsOfAmountDays.value === 'custom') {
+    console.log('sessionsOfAmountDays is custom')
+    sessions.value = await getSessions(filterUser.value.user_id, null, null, makeDateSqlCompatible(startDateRef.value), makeDateSqlCompatible(endDateRef.value));
+  } else {
+    console.log('sessionsOfAmountDays is not custom')
+    sessions.value = await getSessions(filterUser.value.user_id, sessionsOfAmountDays.value);
+  }
+
+
 });
 
-watch(filterUser, async () => {
-  sessions.value = await getSessions(filterUser.value.user_id, sessionsOfAmountDays.value);
+watch(filterUser, async (newFilterUser) => {
+  sessions.value = await getSessions(newFilterUser.user_id, sessionsOfAmountDays.value);
 })
 </script>
 

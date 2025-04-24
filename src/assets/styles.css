@@ -13,6 +13,7 @@
   --br: 12px;
   --bs: 1px 1px 5px rgba(0, 0, 0, .1);
   --lichtpaars: #F7F2FC;
+  --body: #858585;
 }
 body {
   font-family: 'Helvetica Neue';
@@ -131,4 +132,7 @@ input:hover {
 .small-logo {
   height: 25px;
   width: 25px;
+}
+.cursor-pointer {
+  cursor: pointer;
 }

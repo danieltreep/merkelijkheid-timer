@@ -1,4 +1,5 @@
 <template>
+  <div ref="options">
     <button class="more-button"  @click="openOptions = !openOptions" >
       <img src="@/assets/more-icon.svg" >
     </button>
@@ -17,9 +18,10 @@
         Delete
       </button>
     </div>
+  </div>
 </template>
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { storeToRefs } from 'pinia'
 
 // Stores
@@ -36,6 +38,7 @@ const props = defineProps({
 // Refs
 const { sessionToBePatched } = storeToRefs(useSessionStore())
 const openOptions = ref(false);
+const options = ref(null)
 
 // Methods
 function handleDelete() {
@@ -47,6 +50,21 @@ function handleChange() {
   openOptions.value = false;
   sessionToBePatched.value = props.session;
 }
+
+function handleClickOutside(event) {
+  if (!options.value.contains(event.target) && !event.target.classList.contains('more-button')) {
+    openOptions.value = false;
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
+})
+
 </script>
 <style scoped>
 .options {

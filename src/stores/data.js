@@ -64,6 +64,9 @@ export const useDataStore = defineStore("data", () => {
       case 'statuses':
         statuses.value = await getData('statuses', user.value.user_id);
         break;
+      case 'upcoming_weeks_deliverables':
+        deliverables.value = await getData('upcoming_weeks_deliverables', user.value.user_id);
+        break;
     }
   }
 

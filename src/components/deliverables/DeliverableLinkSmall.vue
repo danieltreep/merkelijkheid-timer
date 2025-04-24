@@ -1,11 +1,11 @@
 <template>
     <div class="position-relative d-flex justify-content-end me-2" >
         <div class="link" v-if="deliverable.link" @click="showTooltip = !showTooltip">
-            <img src="@/assets/icon-file.svg" class="me-2">
+            <img src="@/assets/icon-file.svg" class="me-2 file-icon">
             {{ formatLink(deliverable.link)}}
         </div>  
         <button class="add-link" v-else @click="showTooltip = !showTooltip">
-            <img src="@/assets/icon-plus.svg" class="me-2">
+            <img src="@/assets/icon-plus.svg" class="me-2" style="width: 10px;">
             Add link
         </button>
         <div class="add-link-tooltip d-flex gap-2 p-2" v-if="showTooltip">
@@ -14,6 +14,8 @@
             <a class="open-link d-flex align-items-center gap-3" target="_blank" :href="link" v-if="link.length">
                 <img src="@/assets/icon-open-link.svg">
             </a>
+
+            <img src="" alt="">
         </div>
     </div>
 </template>
@@ -26,7 +28,7 @@ import patchData from '@/composables/patchData'
 
 // Props
 const props = defineProps({
-    deliverable: Object,
+    deliverable: Object
 })
 
 // Refs
@@ -70,18 +72,17 @@ onBeforeUnmount(() => {
 <style scoped>
 .link,
 .add-link {
-    background-color: var(--bg);
+    background-color: white;
     border-radius: 30px;
-    padding: .2rem 1rem;
-    height: 30px;
+    padding: 0rem .8rem;
+    height: 26px;
     width: fit-content;
     display: flex;
     align-items: center;
     border: none;
-    font-size: 12px;
+    font-size: 10px;
     font-weight: 500;
     cursor: pointer;
-    white-space: nowrap;
 }
 .link:hover,
 .add-link:hover {
@@ -116,5 +117,9 @@ onBeforeUnmount(() => {
 }
 .add-link-tooltip input::placeholder {
     color: grey;
+}
+.file-icon {
+    height: 12px;
+    width: 7px;
 }
 </style>
