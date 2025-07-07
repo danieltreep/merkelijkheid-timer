@@ -4,10 +4,12 @@
     
     <div class="position-relative d-flex align-items-center projectsection">
       <img :src="session.logo" class="small-logo me-2">
-      <p class="mb-0 me-3" v-if="session.project_id">{{ session?.client_name ? session.client_name : '' }}</p>
-      <button class="project add-project-button" :disabled="!sessionOwned" :class="session?.project_name === 'General' ? 'pinguin' : '' " @click.stop="handleOpenSelector">
-        {{ session?.project_name ? (session.project_name === 'General' ? '🐧' : session.project_name) : 'Project' }}<span v-if="session?.taskname">: {{ session?.taskname }}</span>
-        
+      <p class="mb-0 me-3 client-name" v-if="session.project_id">{{ session?.client_name ? session.client_name : '' }}</p>
+      <button class="project add-project-button me-2" :disabled="!sessionOwned" :class="session?.project_name === 'General' ? 'pinguin' : '' " @click.stop="handleOpenSelector">
+        <div class="no-overflow">
+          <span>{{ session?.project_name ? (session.project_name === 'General' ? '🐧' : session.project_name) : 'Project' }}</span>
+          <span v-if="session?.taskname">: {{ session?.taskname }}</span>
+        </div>
       </button>
 
       <ProjectSelector v-if="openProjectSelector && sessionOwned" target="changeTask" @handleClick="addProject" @close="openProjectSelector = false"/>
@@ -22,7 +24,10 @@
       </button>
   
       <SessionOptions :session="session" v-if="sessionOwned"/>
-      <img class="avatar mx-lg-1" :src="imgUrl?.photo" v-if="!sessionOwned">
+      <button class="mx-lg-1 p-0 bg-transparent border-0 position-relative not-owned-button" v-if="!sessionOwned" @click="handleDeleteSharedWith">
+        <img class="avatar" :src="imgUrl?.photo" >
+        <img class="cross-icon" src="@/assets/cross-icon-white.svg" alt="Deel deze taak">
+      </button>
     </div>
     
 
@@ -85,6 +90,11 @@ function handleOpenSelector() {
   openProjectSelector.value = !openProjectSelector.value
   sessionToBePatched.value = props.session
 }
+
+function handleDeleteSharedWith() {
+  const newSharedWith = props.session.shared_with.filter(user_id => +user_id !== +user.value.user_id)
+  patchData('sessions', props.session.session_id, {shared_with: JSON.stringify(newSharedWith)})
+}
 </script>
 
 <style scoped>
@@ -100,6 +110,19 @@ button:disabled {
   /* background-color: var(--tag); */
   color: black;
   cursor: text;
+}
+.add-project-button, .client-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  /* max-width: 100%; */
+}
+.no-overflow {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+  max-width: 200px;
 }
 .play-button {
   padding: .7rem;
@@ -123,6 +146,24 @@ input:hover:not(.disabled) {
   height: 28px;
   width: 28px;
   border-radius: 50%;
+}
+
+.not-owned-button .cross-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  background-color: rgba(0, 0, 0, 0.37);
+  border-radius: 50%;
+  padding: 4px;
+  /* transition: opacity 0.3s ease-in-out; */
+}
+
+.not-owned-button:hover .cross-icon {
+  opacity: 1;
 }
 
 @media (max-width: 768px) {

@@ -11,9 +11,11 @@
             </div>
             <div class="position-relative d-flex align-items-center projectsection">
                 <img :src="sessions[0].logo" class="small-logo me-2">
-                <p class="mb-0 me-3" v-if="sessions[0].project_id">{{ sessions[0]?.client_name ? sessions[0].client_name : '' }}</p>
-                <div class="project" :class="sessions[0]?.project_name === 'General' ? 'pinguin' : '' " >
-                    {{ sessions[0]?.project_name ? (sessions[0].project_name === 'General' ? '🐧' : sessions[0].project_name) : 'Project' }}<span v-if="sessions[0].taskname">: {{ sessions[0].taskname }}</span>
+                <p class="mb-0 me-3 client-name" v-if="sessions[0].project_id">{{ sessions[0]?.client_name ? sessions[0].client_name : '' }}</p>
+                <div class="project add-project-button me-2" :class="sessions[0]?.project_name === 'General' ? 'pinguin' : '' " >
+                    <div class="no-overflow">
+                        {{ sessions[0]?.project_name ? (sessions[0].project_name === 'General' ? '🐧' : sessions[0].project_name) : 'Project' }}<span v-if="sessions[0].taskname">: {{ sessions[0].taskname }}</span>
+                    </div>
                 </div>
             </div>      
 
@@ -125,7 +127,19 @@ function replaceSpaces(string) {
     padding-inline: 2rem 1rem;
     align-items: center;
 }
-
+.add-project-button, .client-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  /* max-width: 100%; */
+}
+.no-overflow {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+  max-width: 200px;
+}
 .accordion-body {
     background-color: #F9F9F9;
     padding-inline: 0;

@@ -5,9 +5,11 @@
             {{ session.title }}
             <div class="position-relative d-flex align-items-center projectsection">
                 <img :src="session.logo" class="small-logo me-2">
-                <p class="mb-0 me-3" >{{ session.client_name }}</p>
-                <div class="project" :class="session.project_name === 'General' ? 'pinguin' : '' ">
-                    {{ session.project_name === 'General' ? '🐧' : session.project_name }}: &nbsp; <span>{{ session.taskname }}</span>
+                <p class="mb-0 me-3 client-name" >{{ session.client_name }}</p>
+                <div class="project add-project-button me-2" :class="session.project_name === 'General' ? 'pinguin' : '' ">
+                    <div class="no-overflow">
+                        {{ session.project_name === 'General' ? '🐧' : session.project_name }}: &nbsp; <span>{{ session.taskname }}</span>
+                    </div>
                 </div>
             </div>
         </li>
@@ -112,7 +114,19 @@ function handleClick(session) {
 .list-group-item:hover {
     background-color: #fafafa;
 }
-
+.add-project-button, .client-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  /* max-width: 100%; */
+}
+.no-overflow {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+  max-width: 200px;
+}
 
 @media (max-width: 768px) {
     .suggested-sessions {

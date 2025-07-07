@@ -15,7 +15,7 @@
                         v-for="(project, index) in filterProjectsByClient(client.client_name)" 
                         :key="index"
                         @click="() => handleClick(project)"
-                        class="me-2"
+                        class="me-2 project-button"
                         :class="project.project_name === 'General' ? 'pinguin' : '' "
                         data-bs-toggle="modal" :data-bs-target="target === 'addTask' ? '#addTaskModal' : '#changeTaskModal'"
                     >
@@ -89,6 +89,9 @@ onBeforeUnmount(() => {
 }
 .bedrijf {
     font-weight: 500;
+    /* overflow: hidden; */
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 .search {
     border: 1px solid var(--border);
@@ -109,6 +112,9 @@ button {
     border: none;
     transition: .1s;
     height: 30.8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 button:hover {
   background-color: #D8D8D8;
