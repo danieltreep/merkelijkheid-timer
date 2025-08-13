@@ -1,5 +1,5 @@
 <template>
-    <div class="position-relative ms-auto mt-auto pe-4">
+    <div class="position-relative mt-auto pe-3">
         <button class="d-flex align-items-center open-options" @click="show = !show">
             {{ activeTask }}
             <img class="ms-2" src="@/assets/chevron-icon.svg">

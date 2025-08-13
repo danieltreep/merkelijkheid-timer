@@ -5,10 +5,12 @@
         <img src="@/assets/icon-arrow-left.svg">
         Back to overview
       </button>
-      <FilterByTask :tasks="tasks" @change-task-filter="(task) => activeTask = task"/>
-      <FilterByUser />
-      <ReportsFilter />
+        <FilterByTask :tasks="tasks" @change-task-filter="(task) => activeTask = task"/>
+        <FilterByUser />
+        <ReportsFilter />
+        <ExportReports :sessions="sessionsByClientThatMatchTask" :task="activeTask" />
     </div>
+
   
     <ReportsList :sessions="sessionsByClientThatMatchTask" />      
   </main>
@@ -34,6 +36,7 @@ import ReportsList from "@/components/reports/ReportsList.vue";
 import ReportsFilter from "@/components/reports/ReportsFilter.vue";
 import FilterByTask from "@/components/reports/FilterByTask.vue";
 import FilterByUser from "@/components/reports/FilterByUser.vue";
+import ExportReports from "@/components/reports/ExportReports.vue";
 
 // Refs
 const { projects, sessions, clients, tasks, sessionsOfAmountDays } = storeToRefs(useDataStore());

@@ -1,5 +1,5 @@
 <template>
-    <div class="position-relative mt-auto pe-4">
+    <div class="position-relative mt-auto pe-3">
         <button class="d-flex align-items-center open-options" @click="show = !show">
             <img class="small-avatar" v-if="filterUser.photo" :src="filterUser.photo">
             {{ filterUser.username ? filterUser.username : 'Iedereen' }}
